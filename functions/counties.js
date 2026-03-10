@@ -1,132 +1,33 @@
 // /functions/counties.js
-import { loadSitesRegistry } from './_lib.js';
+import { loadSitesRegistryFromKV } from './_lib.js';
 
-/** Index page listing all county directories */
-export const onRequestGet = async ({ request }) => {
-  let sites;
+/** Index page listing all county directories (path-based: directory.mineralrightsforum.com/) */
+export const onRequestGet = async ({ request, env }) => {
+  let sitesMap;
 
-  // Load site config
   try {
-    sites = await loadSitesRegistry();
+    sitesMap = await loadSitesRegistryFromKV(env);
   } catch (err) {
     return html(500, `<!doctype html><h1>Config error</h1><pre>${escapeHtml(String(err))}</pre>`);
   }
 
-  // Filter for county-specific directories (and parish directories for Louisiana)
-  const countyDirectories = Object.entries(sites)
-    .filter(([domain]) => {
-      // Exclude general directories
-      if (domain.includes('mineral-services-directory')) return false;
-      if (domain.includes('permian-basin')) return false; // Not a county
-      // Include county-specific domains (format: *-county-*.mineralrightsforum.com)
-      // Also include parish-specific domains for Louisiana (format: *-parish-*.mineralrightsforum.com)
-      return (domain.includes('-county-') || domain.includes('-parish-')) && domain.includes('.mineralrightsforum.com');
+  const baseUrl = new URL(request.url).origin;
+
+  // sitesMap is { [slug]: config } from KV
+  const countyDirectories = Object.entries(sitesMap)
+    .filter(([slug, config]) => {
+      if (!slug || !config) return false;
+      const divType = (config.division_type || '').toLowerCase();
+      return divType === 'county' || divType === 'parish' || divType === 'area';
     })
-    .map(([domain, config]) => {
-      // Extract county/parish name from domain
-      // e.g., "reeves-county-texas.mineralrightsforum.com" -> "Reeves County, TX"
-      // e.g., "orleans-parish-louisiana.mineralrightsforum.com" -> "Orleans Parish, LA"
-      const domainParts = domain.replace('.mineralrightsforum.com', '').split('-');
-      const countyIndex = domainParts.indexOf('county');
-      const parishIndex = domainParts.indexOf('parish');
-      const isParish = parishIndex !== -1;
-      const divisionIndex = isParish ? parishIndex : countyIndex;
-      
-      if (divisionIndex === -1) {
-        // Fallback: try to extract from page_title or serving_line
-        const title = config.page_title || config.serving_line || domain;
-        return {
-          domain,
-          name: title.split(',')[0].trim(),
-          state: 'TX',
-          url: `https://${domain}/`,
-          config
-        };
-      }
-
-      // Extract county/parish name (everything before "county" or "parish")
-      const divisionParts = domainParts.slice(0, divisionIndex);
-      const divisionName = divisionParts
-        .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-        .join(' ');
-
-      // Extract state (everything after "county" or "parish") and convert to abbreviation
-      // Join all parts after the division word to handle multi-word states like "new-mexico"
-      const stateParts = domainParts.slice(divisionIndex + 1);
-      const stateNameFromDomain = stateParts.length > 0 
-        ? stateParts.join('-').toLowerCase() 
-        : 'texas';
-      
-      // Map full state name to abbreviation (domain format: hyphenated lowercase)
-      const stateNameToAbbrMap = {
-        'alabama': 'AL',
-        'alaska': 'AK',
-        'arizona': 'AZ',
-        'arkansas': 'AR',
-        'california': 'CA',
-        'colorado': 'CO',
-        'connecticut': 'CT',
-        'delaware': 'DE',
-        'florida': 'FL',
-        'georgia': 'GA',
-        'hawaii': 'HI',
-        'idaho': 'ID',
-        'illinois': 'IL',
-        'indiana': 'IN',
-        'iowa': 'IA',
-        'kansas': 'KS',
-        'kentucky': 'KY',
-        'louisiana': 'LA',
-        'maine': 'ME',
-        'maryland': 'MD',
-        'massachusetts': 'MA',
-        'michigan': 'MI',
-        'minnesota': 'MN',
-        'mississippi': 'MS',
-        'missouri': 'MO',
-        'montana': 'MT',
-        'nebraska': 'NE',
-        'nevada': 'NV',
-        'new-hampshire': 'NH',
-        'new-jersey': 'NJ',
-        'new-mexico': 'NM',
-        'new-york': 'NY',
-        'north-carolina': 'NC',
-        'north-dakota': 'ND',
-        'ohio': 'OH',
-        'oklahoma': 'OK',
-        'oregon': 'OR',
-        'pennsylvania': 'PA',
-        'rhode-island': 'RI',
-        'south-carolina': 'SC',
-        'south-dakota': 'SD',
-        'tennessee': 'TN',
-        'texas': 'TX',
-        'utah': 'UT',
-        'vermont': 'VT',
-        'virginia': 'VA',
-        'washington': 'WA',
-        'west-virginia': 'WV',
-        'wisconsin': 'WI',
-        'wyoming': 'WY'
-      };
-      
-      const stateAbbr = stateNameToAbbrMap[stateNameFromDomain] || 'TX';
-      
-      // Use "Parish" for Louisiana, "County" for all other states
-      const divisionType = (stateAbbr === 'LA' || isParish) ? 'Parish' : 'County';
-      const fullName = `${divisionName} ${divisionType}`;
-
-      return {
-        domain,
-        name: fullName,
-        state: stateAbbr,
-        url: `https://${domain}/`,
-        config
-      };
-    })
+    .map(([slug, config]) => ({
+      slug,
+      name: config.display_label || config.division_name || slug,
+      state: config.state || '',
+      url: `${baseUrl}/${slug}`,
+      config
+    }))
     .sort((a, b) => {
-      // Sort alphabetically by county name
       const nameA = a.name.toLowerCase();
       const nameB = b.name.toLowerCase();
       return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
@@ -135,10 +36,8 @@ export const onRequestGet = async ({ request }) => {
   // Group counties by state
   const countiesByState = {};
   countyDirectories.forEach(county => {
-    const state = county.state;
-    if (!countiesByState[state]) {
-      countiesByState[state] = [];
-    }
+    const state = (county.state && county.state.trim()) ? county.state : '_';
+    if (!countiesByState[state]) countiesByState[state] = [];
     countiesByState[state].push(county);
   });
 
@@ -193,7 +92,8 @@ export const onRequestGet = async ({ request }) => {
     'WA': 'Washington',
     'WV': 'West Virginia',
     'WI': 'Wisconsin',
-    'WY': 'Wyoming'
+    'WY': 'Wyoming',
+    '_': 'Areas'
   };
 
   // Reverse mapping (full name -> abbreviation) for fallback lookup
@@ -306,7 +206,11 @@ export const onRequestGet = async ({ request }) => {
 
   // Build HTML grouped by state
   const pageUrl = new URL(request.url).origin;
-  const sortedStates = Object.keys(countiesByState).sort();
+  const sortedStates = Object.keys(countiesByState).sort((a, b) => {
+    if (a === '_') return 1;
+    if (b === '_') return -1;
+    return a.localeCompare(b);
+  });
   const stateSections = sortedStates
     .map((stateAbbr, index) => {
       const stateName = stateNames[stateAbbr] || stateAbbr;
@@ -319,7 +223,7 @@ export const onRequestGet = async ({ request }) => {
         return `
           <li class="county-list-item">
             <a href="${escapeAttr(county.url)}" class="county-list-link">
-              <h3 class="county-list-name">${escapeHtml(county.name)} ${county.state}</h3>
+              <h3 class="county-list-name">${escapeHtml(county.name)}</h3>
               ${description ? `<span class="county-list-desc">${escapeHtml(description)}</span>` : ''}
             </a>
           </li>
@@ -349,8 +253,8 @@ export const onRequestGet = async ({ request }) => {
         ? `<img src="${escapeAttr(finalFlagUrl)}" alt="${escapeHtml(stateName)} flag" class="state-flag" width="32" height="24" loading="lazy" />`
         : '';
       
-      // Use "parishes" for Louisiana, "counties" for all other states
-      const divisionPlural = stateAbbr === 'LA' ? 'parishes' : 'counties';
+      // Use "parishes" for Louisiana, "areas" for no-state, "counties" otherwise
+      const divisionPlural = stateAbbr === 'LA' ? 'parishes' : stateAbbr === '_' ? 'areas' : 'counties';
       const countText = `(${counties.length} ${divisionPlural})`;
       
       // Start with all states collapsed (will expand first on desktop via JS)
@@ -1266,7 +1170,7 @@ export const onRequestGet = async ({ request }) => {
       <div class="cta-blocks-container">
         <div class="cta-block">
           <p class="cta-text">
-            Business Owners - would you like to appear on one of our directory pages? We offer paid <a href="https://reeves-county-texas.mineralrightsforum.com">County-specific Directories</a> and a general <a href="https://mineral-services-directory.mineralrightsforum.com">Nationwide Directory</a>. Limitations apply.
+            Business Owners - would you like to appear on one of our directory pages? We offer paid <a href="https://directory.mineralrightsforum.com">County-specific Directories</a> and a general <a href="https://mineral-services-directory.mineralrightsforum.com">Nationwide Directory</a>. Limitations apply.
           </p>
           <button id="applyForListingBtn" class="cta-button">
             Apply for Listing

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>
+    body { font-family: Arial, sans-serif; font-size: 13px; margin: 8px; }
+    input[type="search"] { width: 100%; padding: 8px; margin-bottom: 8px; box-sizing: border-box; }
+    #list { max-height: 400px; overflow-y: auto; border: 1px solid #ccc; padding: 4px; }
+    .item { padding: 4px 0; }
+    .item label { cursor: pointer; display: block; }
+    .item input { margin-right: 6px; }
+    .section { font-weight: bold; color: #555; padding: 6px 0 2px 0; border-top: 1px solid #eee; margin-top: 4px; }
+    .section:first-child { border-top: none; margin-top: 0; }
+    button { margin-top: 12px; padding: 10px 20px; background: #1a73e8; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
+    button:hover { background: #1557b0; }
+    .hint { font-size: 11px; color: #666; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div class="hint">Search and select counties. Use * for all, state:XX for a state, or individual slugs.</div>
+  <input type="search" id="search" placeholder="Search counties..." />
+  <div id="list"></div>
+  <button id="apply">Apply</button>
+
+  <script>
+    (function() {
+      const data = <?!= data ?>;
+      const currentValue = <?!= JSON.stringify(currentValue) ?>;
+      const row = <?!= row ?>;
+      const col = <?!= col ?>;
+
+      const selected = new Set();
+      if (currentValue) {
+        currentValue.split(',').forEach(function(s) {
+          const v = s.trim();
+          if (v) selected.add(v);
+        });
+      }
+
+      function render(filter) {
+        const list = document.getElementById('list');
+        list.innerHTML = '';
+        const f = (filter || '').toLowerCase();
+        const items = (data.items || []).filter(function(it) {
+          if (!f) return true;
+          return (it.value + ' ' + it.label).toLowerCase().indexOf(f) >= 0;
+        });
+
+        const specials = items.filter(function(it) { return it.value === '*' || it.value.indexOf('state:') === 0; });
+        const counties = items.filter(function(it) { return it.value !== '*' && it.value.indexOf('state:') !== 0; });
+
+        function addSection(title, arr) {
+          if (arr.length === 0) return;
+          const div = document.createElement('div');
+          div.className = 'section';
+          div.textContent = title;
+          list.appendChild(div);
+          arr.forEach(function(it) {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'item';
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.value = it.value;
+            cb.checked = selected.has(it.value);
+            cb.id = 'cb-' + it.value.replace(/[^a-z0-9]/gi, '_');
+            cb.onchange = function() {
+              if (cb.checked) selected.add(it.value);
+              else selected.delete(it.value);
+            };
+            const lab = document.createElement('label');
+            lab.htmlFor = cb.id;
+            lab.appendChild(cb);
+            lab.appendChild(document.createTextNode(' ' + (it.label || it.value)));
+            itemDiv.appendChild(lab);
+            list.appendChild(itemDiv);
+          });
+        }
+
+        addSection('Quick options', specials);
+        addSection('Counties', counties);
+      }
+
+      document.getElementById('search').oninput = function() {
+        render(this.value);
+      };
+
+      document.getElementById('apply').onclick = function() {
+        const vals = Array.from(selected).sort();
+        google.script.run
+          .withSuccessHandler(function() { google.script.host.close(); })
+          .withFailureHandler(function(err) { alert('Error: ' + err); })
+          .setCountiesInCell(row, col, vals);
+      };
+
+      render();
+    })();
+  </script>
+</body>
+</html>

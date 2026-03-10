@@ -130,6 +130,19 @@ section>h2{
   border-color: #f0e9d0;
 }
 
+/* Sponsored ad card — image fills card, optional "Sponsored" label */
+.card--ad{
+  display: block;
+  padding: 0;
+  overflow: hidden;
+}
+.card--ad img{
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
 /* Replace old pill with diagonal corner ribbon (6) */
 .card .ribbon{
   position:absolute;

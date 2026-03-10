@@ -3,7 +3,11 @@
   "private": true,
   "scripts": {
     "build:css": "npx tailwindcss -c tailwind.config.js -i src/app.css -o public/styles.css --minify",
-    "build": "npm run build:css"
+    "build": "npm run build:css",
+    "create-master-sheet": "node scripts/create-master-sheet.js"
+  },
+  "dependencies": {
+    "googleapis": "^144.0.0"
   },
   "devDependencies": {
     "@tailwindcss/line-clamp": "^0.4.4",

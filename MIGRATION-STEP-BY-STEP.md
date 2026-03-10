@@ -91,7 +91,8 @@ This document is a sequential, actionable checklist for executing the migration 
 **Ref**: [Step 4: Create the New Apps Script](migrate-to-single-spreadsheet.md#step-4-create-the-new-apps-script), [Apps Script Code](migrate-to-single-spreadsheet.md#apps-script-code)
 
 - [ ] In master sheet: **Extensions → Apps Script**
-- [ ] Implement `doGet` to read Companies, Sites, and Ads tabs
+- [ ] Copy code from `scripts/AppsScript-Code.js` into the script editor (Code.gs)
+- [ ] Add `CountiesSidebar.html`: **File → New → HTML file**, name it `CountiesSidebar`, paste contents from `scripts/CountiesSidebar.html`
 - [ ] Build slug lookup: all slugs and slugs by state from Sites tab
 - [ ] Implement `expandCounties(val)`: `*`/empty → all slugs, `state:TX` → Texas slugs, else keep as-is
 - [ ] Expand `counties` for each company and ad row
@@ -99,7 +100,14 @@ This document is a sequential, actionable checklist for executing the migration 
 - [ ] Deploy as web app: **Execute as: Me**, **Who has access: Anyone**
 - [ ] Copy deployment URL
 
-### Step 3.2: Test Apps Script
+### Step 3.2: Multi-Select Counties (Companies tab)
+
+- [ ] **Directory** menu appears in the sheet (from `onOpen`)
+- [ ] To edit counties: select a cell in Companies column J (counties), then **Directory → Select counties**
+- [ ] Sidebar opens with searchable list of ~700 counties, states, and `*` (all)
+- [ ] Check/uncheck, click **Apply** to write comma-separated values to the cell
+
+### Step 3.3: Test Apps Script
 
 - [ ] `curl "YOUR_APPS_SCRIPT_URL"` returns valid JSON
 - [ ] Verify `companies`, `sites`, `ads` arrays present
@@ -176,7 +184,7 @@ This document is a sequential, actionable checklist for executing the migration 
 **Ref**: [Step 9: Update functions/counties.js](migrate-to-single-spreadsheet.md#step-9-update-functions_countiesjs)
 
 - [ ] Replace `loadSitesRegistry()` with `loadSitesRegistryFromKV(env)`
-- [ ] Update links to use path-based URLs: `https://directories.mineralrightsforum.com/${slug}`
+- [ ] Update links to use path-based URLs: `https://directory.mineralrightsforum.com/${slug}`
 - [ ] Use `display_label` from config for display
 
 ### Step 6.6: Update functions/sitemap.xml.js
@@ -209,29 +217,29 @@ This document is a sequential, actionable checklist for executing the migration 
 
 - [ ] **Immediately** after deploy, run refresh (before user traffic):
   ```bash
-  curl -X POST https://directories.mineralrightsforum.com/refresh \
+  curl -X POST https://directory.mineralrightsforum.com/refresh \
     -H "X-Refresh-Key: YOUR_REFRESH_KEY"
   ```
 - [ ] Verify response: `{ "status": "ok", "sites_updated": 78, ... }` (or your count)
 
 ### Step 7.3: Verify Endpoints
 
-- [ ] `curl https://directories.mineralrightsforum.com/reeves-county-texas` → 200, HTML page loads
+- [ ] `curl https://directory.mineralrightsforum.com/reeves-county-texas` → 200, HTML page loads
 - [ ] Verify `/health` and `/data.json` for county pages (path structure depends on routing implementation)
 - [ ] Repeat for 2–3 other county slugs
 
 ### Step 7.4: Verify Pages in Browser
 
-- [ ] Visit `https://directories.mineralrightsforum.com/reeves-county-texas` — page loads, companies display
-- [ ] Visit `https://directories.mineralrightsforum.com` — counties index loads
-- [ ] Visit `https://directories.mineralrightsforum.com/sitemap.xml` — valid XML
+- [ ] Visit `https://directory.mineralrightsforum.com/reeves-county-texas` — page loads, companies display
+- [ ] Visit `https://directory.mineralrightsforum.com` — counties index loads
+- [ ] Visit `https://directory.mineralrightsforum.com/sitemap.xml` — valid XML
 - [ ] If Ads tab has data: verify ad card appears in category grid
 
 ### Step 7.5: Update Refresh Schedule
 
 **Ref**: [Step 13: Update Refresh Schedule](migrate-to-single-spreadsheet.md#step-13-update-refresh-schedule)
 
-- [ ] Update cron/trigger: **one** POST to `/refresh` (any county or directories domain)
+- [ ] Update cron/trigger: **one** POST to `/refresh` (directory.mineralrightsforum.com)
 - [ ] Remove per-site refresh calls (78 → 1)
 
 ### Step 7.6: Update DOCUMENTATION.md
@@ -241,7 +249,7 @@ This document is a sequential, actionable checklist for executing the migration 
 - [ ] Update architecture: "Master Google Sheet (Companies + Sites + Ads)"
 - [ ] Update Apps Script section: single script, `MASTER_SHEET_URL`
 - [ ] Update KV structure: `directory:{slug}:config`, `directory:{slug}:ads`
-- [ ] Document path-based URLs: `directories.mineralrightsforum.com/{slug}`
+- [ ] Document path-based URLs: `directory.mineralrightsforum.com/{slug}`
 - [ ] Document counties multi-select and Ads tab
 - [ ] Remove references to per-site `sheet.url` and `sites.json`
 
@@ -253,7 +261,7 @@ This document is a sequential, actionable checklist for executing the migration 
 
 - [ ] Add row to Ads tab: image_url (R2 URL), link, category (e.g. Attorneys), counties (e.g. `state:TX`), priority 10, active TRUE
 - [ ] Run refresh
-- [ ] Visit `https://directories.mineralrightsforum.com/reeves-county-texas` (or another Texas county), verify ad appears in Attorneys section
+- [ ] Visit `https://directory.mineralrightsforum.com/reeves-county-texas` (or another Texas county), verify ad appears in Attorneys section
 
 ### Step 8.2: Rollback Plan (if needed)
 
@@ -268,9 +276,9 @@ This document is a sequential, actionable checklist for executing the migration 
 
 | Item | Value |
 |------|-------|
-| Refresh endpoint | `POST https://directories.mineralrightsforum.com/refresh` |
-| County page | `GET https://directories.mineralrightsforum.com/{slug}` |
-| Counties index | `GET https://directories.mineralrightsforum.com/` |
+| Refresh endpoint | `POST https://directory.mineralrightsforum.com/refresh` |
+| County page | `GET https://directory.mineralrightsforum.com/{slug}` |
+| Counties index | `GET https://directory.mineralrightsforum.com/` |
 | Refresh header | `X-Refresh-Key: YOUR_REFRESH_KEY` |
 
 ---

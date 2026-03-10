@@ -212,12 +212,12 @@ Cloudflare Pages Functions (serverless endpoints):
   - Google Analytics tracking
 
 **Special Handling**:
-- If host is `directories.mineralrightsforum.com`, delegates to `counties.js`
+- If host is `directory.mineralrightsforum.com`, delegates to `counties.js`
 
 #### `counties.js`
 **Purpose**: Index page listing all county directories
 
-**Routes**: `GET /` (only for `directories.mineralrightsforum.com`)
+**Routes**: `GET /` (only for `directory.mineralrightsforum.com`)
 
 **Functionality**:
 - Lists all county-specific directories from `sites.json`

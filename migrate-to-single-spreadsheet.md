@@ -61,14 +61,14 @@ sites.json (in repo) → loadSitesRegistry() → getSiteConfig(host)
 
 ```
 1 Master Google Sheet (Companies + Sites + Ads tabs) → 1 Apps Script → (single refresh) → Cloudflare KV
-Path-based URLs: https://directories.mineralrightsforum.com/{slug}
+Path-based URLs: https://directory.mineralrightsforum.com/{slug}
 KV keys: directory:{slug}:data, directory:{slug}:config, directory:{slug}:ads
 ```
 
-- **Path-based URLs**: County pages live at `https://directories.mineralrightsforum.com/{slug}` (e.g. `/baldwin-county-alabama`). The index is at `https://directories.mineralrightsforum.com/`. (Base domain may be `directory` or `directories` — confirm before deploy.)
+- **Path-based URLs**: County pages live at `https://directory.mineralrightsforum.com/{slug}` (e.g. `/baldwin-county-alabama`). The index is at `https://directory.mineralrightsforum.com/`. (Base domain is `directory.mineralrightsforum.com` — singular.)
 - One master sheet with Companies, Sites, and Ads tabs
 - One Apps Script URL in env var `MASTER_SHEET_URL`
-- POST to `https://directories.mineralrightsforum.com/refresh` fetches master sheet and updates KV for all directories
+- POST to `https://directory.mineralrightsforum.com/refresh` fetches master sheet and updates KV for all directories
 - Config and data loaded from `directory:{slug}:config`, `directory:{slug}:data`, etc. in KV
 
 ---
@@ -102,7 +102,7 @@ The Sites tab is the **source of truth for all directory pages**. It defines slu
 
 | Column | Type | Required | Description | Example |
 |--------|------|----------|-------------|---------|
-| `slug` | string | Yes | URL path segment; full URL = `directories.mineralrightsforum.com/{slug}` | "baldwin-county-alabama" |
+| `slug` | string | Yes | URL path segment; full URL = `directory.mineralrightsforum.com/{slug}` | "baldwin-county-alabama" |
 | `state` | string | No* | State code (2-letter) for grouping and multi-select. Blank for areas like Permian Basin. | "TX" |
 | `division_type` | string | Yes | `county`, `parish`, or `area` — controls display wording | "county" |
 | `division_name` | string | Yes | Display name (Baldwin, Orleans, Permian Basin, La Plata) | "Baldwin" |
@@ -141,9 +141,12 @@ The `counties` column in **Companies** and **Ads** must reference the Sites tab.
 
 **State codes**: Use 2-letter codes (TX, OK, NM, LA, etc.) that match the `state` column in the Sites tab. The Apps Script expands `state:TX` to all slugs for that state from the Sites tab. For Companies, the migration script or manual entry must populate `counties`; for Ads, same logic.
 
-**Multi-select UX**: With ~700 counties, a native dropdown is impractical. Options:
-- **A**: Type comma-separated slugs, or use `*` or `state:TX`. Use Data Validation (list from range) from a helper column if desired.
-- **B** (future): Custom Apps Script sidebar that reads Sites, groups by state, offers "All", "Select state", and individual county checkboxes, then writes back to the cell.
+**Multi-select UX**: Use the **Counties Reference** sheet in the master spreadsheet. It lists:
+- `*` = All counties
+- `state:TX` = All Texas (and `state:XX` for each state)
+- Individual slugs for specific counties
+
+Run `node scripts/add-counties-reference.js SPREADSHEET_ID` to create/update this sheet. Use Data Validation (list from range) on the Companies `counties` column, pointing to `Counties Reference!A2:A` for the dropdown (or copy-paste from the sheet).
 
 ---
 
@@ -401,20 +404,20 @@ Replace the refresh logic so that:
 
 1. Change the import: use `loadSitesRegistryFromKV` instead of `loadSitesRegistry`.
 2. Replace: `sites = await loadSitesRegistry()` with `sites = await loadSitesRegistryFromKV(env)`.
-3. The structure of `sites` is now `{ [slug]: config }` (not domain). Update any logic that assumed domain keys — use slug for links: `https://directories.mineralrightsforum.com/${slug}`.
+3. The structure of `sites` is now `{ [slug]: config }` (not domain). Update any logic that assumed domain keys — use slug for links: `https://directory.mineralrightsforum.com/${slug}`.
 4. Use `display_label` from config for display (or build from `division_type` + `division_name` + `state`).
 
 ---
 
 ### Step 10: Update functions/sitemap.xml.js
 
-1. **Path-based**: Base URL is `https://directories.mineralrightsforum.com`. Load `directory:index:config` to get all slugs.
+1. **Path-based**: Base URL is `https://directory.mineralrightsforum.com`. Load `directory:index:config` to get all slugs.
 2. Sitemap entries: index page (`/`), plus one entry per slug (`/{slug}`).
 3. Ensure the handler receives `env` (Cloudflare Pages passes it to `onRequestGet`).
 
 **Example logic**:
 ```javascript
-const baseUrl = 'https://directories.mineralrightsforum.com';
+const baseUrl = 'https://directory.mineralrightsforum.com';
 const sitesMap = await loadSitesRegistryFromKV(env); // { slug: config }
 const slugs = Object.keys(sitesMap);
 // Build sitemap: baseUrl/, baseUrl/baldwin-county-alabama, baseUrl/butler-county-alabama, ...
@@ -447,7 +450,7 @@ const slugs = Object.keys(sitesMap);
    curl https://reeves-county-texas.mineralrightsforum.com/health
    curl https://reeves-county-texas.mineralrightsforum.com/data.json
    ```
-6. Visit `https://reeves-county-texas.mineralrightsforum.com` and `https://directories.mineralrightsforum.com` in a browser.
+6. Visit `https://reeves-county-texas.mineralrightsforum.com` and `https://directory.mineralrightsforum.com` in a browser.
 
 ---
 
@@ -456,7 +459,7 @@ const slugs = Object.keys(sitesMap);
 If you use a cron or scheduled job to refresh:
 
 - **Before**: 78 separate POST requests (one per site).
-- **After**: One POST request to any site's `/refresh` (e.g. `https://directories.mineralrightsforum.com/refresh` or any county subdomain). That single call updates all 78 sites.
+- **After**: One POST request to any site's `/refresh` (e.g. `https://directory.mineralrightsforum.com/refresh` or any county subdomain). That single call updates all 78 sites.
 
 Update your cron script or Google Apps Script trigger to call the refresh endpoint once.
 
@@ -470,7 +473,7 @@ Update the project's `DOCUMENTATION.md` to reflect the new architecture:
 - Update the Apps Script section to describe the single script and `MASTER_SHEET_URL`
 - Update the refresh workflow to "one call updates all sites"
 - Update the KV namespace structure to include `directory:{slug}:config`, `directory:{slug}:ads`
-- Document path-based URLs: `directories.mineralrightsforum.com/{slug}`
+- Document path-based URLs: `directory.mineralrightsforum.com/{slug}`
 - Document counties multi-select (`*`, `state:TX`, comma-separated slugs)
 - Document Ads tab and R2 image workflow
 - Remove references to per-site `sheet.url` in `sites.json`
@@ -483,7 +486,7 @@ After the migration, to add a new directory page:
 
 1. **Add row to Sites tab**: slug, state, division_type, division_name, page_title, return_url, directory_intro, seo_title, seo_description, category_order, theme.
 2. **Add companies** (optional): Add rows to Companies tab with the new slug in the `counties` column (or use `state:TX` etc.).
-3. **Run refresh**: `curl -X POST https://directories.mineralrightsforum.com/refresh -H "X-Refresh-Key: YOUR_KEY"`.
+3. **Run refresh**: `curl -X POST https://directory.mineralrightsforum.com/refresh -H "X-Refresh-Key: YOUR_KEY"`.
 
 No code changes, DNS, or custom domains needed — path-based URLs use a single domain.
 
@@ -774,7 +777,7 @@ A full implementation would use `googleapis` to read each source sheet and write
 ### Manual Refresh
 
 ```bash
-curl -X POST https://directories.mineralrightsforum.com/refresh \
+curl -X POST https://directory.mineralrightsforum.com/refresh \
   -H "X-Refresh-Key: YOUR_REFRESH_KEY"
 ```
 
@@ -809,12 +812,12 @@ One call updates all 78 sites.
 - [ ] `functions/_lib.js` has `getSlugFromPath`, `loadDirectoryConfigFromKV`, `loadSitesRegistryFromKV`, and `directory:{slug}:*` in `KV_KEYS`
 - [ ] `functions/index.js` uses path-based routing, `loadDirectoryConfigFromKV(env, slug)`, loads ads from KV, renders ad cards in category grids
 - [ ] `functions/counties.js` uses `loadSitesRegistryFromKV(env)`
-- [ ] `functions/sitemap.xml.js` handles directories host (no config load) and county hosts (load from KV)
+- [ ] `functions/sitemap.xml.js` handles directory host (no config load) and county paths (load from KV)
 - [ ] `sites.json` removed or deprecated
 - [ ] Initial refresh run immediately after deploy
 - [ ] Spot-check 5 counties: page loads, companies display, SEO correct, ads display (if any)
 - [ ] Counties index page loads and lists all directories
-- [ ] `directories.mineralrightsforum.com/sitemap.xml` returns valid sitemap
+- [ ] `directory.mineralrightsforum.com/sitemap.xml` returns valid sitemap
 - [ ] `/health` and `/data.json` work for county pages (extract slug from path; use `directory:{slug}:*` keys)
 - [ ] GTM events still fire (optional manual check)
 - [ ] `DOCUMENTATION.md` updated
@@ -881,7 +884,7 @@ If something goes wrong:
 - [ ] Verify health and data.json for 3–5 sites
 - [ ] Visit 3–5 county pages in browser
 - [ ] Verify ads display (if Ads tab has data)
-- [ ] Visit directories.mineralrightsforum.com
-- [ ] Verify directories.mineralrightsforum.com/sitemap.xml
+- [ ] Visit directory.mineralrightsforum.com
+- [ ] Verify directory.mineralrightsforum.com/sitemap.xml
 - [ ] Update cron/schedule to single refresh call
 - [ ] Update DOCUMENTATION.md

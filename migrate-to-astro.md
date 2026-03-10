@@ -18,7 +18,7 @@ Google Sheets (78 separate) → Apps Script (78 URLs) → Cloudflare KV → Clou
 - **Cloudflare Pages Functions**: `functions/index.js` (~1,900 lines) builds full HTML via template literals
 - **Tailwind CSS v3** compiled to `public/styles.css`
 - **Cloudflare KV**: Per-site keys (`site:{host}:data`, `site:{host}:etag`, etc.)
-- **Special host**: `directories.mineralrightsforum.com` uses `counties.js` for the index of all directories
+- **Special host**: `directory.mineralrightsforum.com` uses `counties.js` for the index of all directories
 
 ### Key Files
 
@@ -117,7 +117,7 @@ Master Google Sheet (Companies + Sites tabs) → Single Apps Script → Cloudfla
    - Fetch from master Apps Script
    - For each site in `sites`: filter companies where `counties` includes slug; write `site:{host}:data` and `site:{host}:config` to KV
    - `site:{host}:config` = site metadata from Sites tab
-   - Write `site:directories.mineralrightsforum.com:config` = full sites array (for counties index page)
+   - Write `site:directory.mineralrightsforum.com:config` = full sites array (for counties index page)
 
 7. **Update `functions/index.js` and `_lib.js`**
    - Load site config from KV (`site:{host}:config`) instead of `sites.json`
@@ -207,7 +207,7 @@ Master Google Sheet (Companies + Sites tabs) → Single Apps Script → Cloudfla
    - `DirectoryStructuredData.astro` – render `<script type="application/ld+json">` from `companies` and `site`
 
 7. **Counties index**
-   - `src/pages/index.astro` or conditional routing for `directories.mineralrightsforum.com`
+   - `src/pages/index.astro` or conditional routing for `directory.mineralrightsforum.com`
    - Load sites list from KV (`site:directories:config` or similar — populated at refresh from Sites tab)
    - Port `counties.js` logic into Astro (state grouping, flags, links)
 
@@ -238,7 +238,7 @@ Master Google Sheet (Companies + Sites tabs) → Single Apps Script → Cloudfla
 5. **Build and deploy**
    - Build command: `npm run build`
    - Output: Cloudflare Pages with Functions (Astro SSR)
-   - Custom domains: same 78 subdomains + `directories.mineralrightsforum.com`
+   - Custom domains: same 78 subdomains + `directory.mineralrightsforum.com`
 
 6. **Host-based routing**
    - Astro middleware or `getStaticPaths`/dynamic routes
@@ -412,7 +412,7 @@ county-directory-astro/
 - [ ] Apps Script returns `{ ok: true, companies: [...], sites: [...], updated_at, etag }`
 - [ ] Add MASTER_SHEET_URL to env
 - [ ] Update functions/refresh.js: fetch from master, filter by county, write data + config to KV
-- [ ] Update functions/refresh.js: write site:directories.mineralrightsforum.com:config for counties index
+- [ ] Update functions/refresh.js: write site:directory.mineralrightsforum.com:config for counties index
 - [ ] Update functions/index.js and _lib.js: load site config from KV
 - [ ] Validate: compare KV data and rendered output before/after
 
@@ -452,7 +452,7 @@ county-directory-astro/
 - [ ] Port /sitemap.xml endpoint
 - [ ] Port /robots.txt endpoint
 - [ ] Build and deploy to Cloudflare Pages
-- [ ] Add custom domains (78 subdomains + directories.mineralrightsforum.com)
+- [ ] Add custom domains (78 subdomains + directory.mineralrightsforum.com)
 - [ ] Verify host-based routing
 
 ### Phase 5: Cutover and Cleanup
