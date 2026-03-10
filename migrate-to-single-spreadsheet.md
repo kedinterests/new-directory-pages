@@ -1,6 +1,8 @@
 # Migration Plan: Single Master Spreadsheet (No Astro)
 
-This document provides a detailed, step-by-step plan to migrate from **78 separate Google Sheets** to **one master spreadsheet** with two tabs (Companies + Sites). The existing Cloudflare Pages Functions architecture remains unchanged; only the data source and refresh logic change.
+This document provides a detailed, step-by-step plan to migrate from **78 separate Google Sheets** to **one master spreadsheet** with three tabs (Companies + Sites + Ads). The existing Cloudflare Pages Functions architecture remains unchanged; only the data source and refresh logic change. The structure supports expansion to ~700 counties across ~20 states.
+
+**For a sequential execution checklist**, see [MIGRATION-STEP-BY-STEP.md](MIGRATION-STEP-BY-STEP.md).
 
 ---
 
@@ -9,14 +11,17 @@ This document provides a detailed, step-by-step plan to migrate from **78 separa
 1. [Overview](#overview)
 2. [Current vs Target Architecture](#current-vs-target-architecture)
 3. [Master Spreadsheet Structure](#master-spreadsheet-structure)
-4. [Step-by-Step Migration](#step-by-step-migration)
-5. [Adding a New County (Post-Migration)](#adding-a-new-county-post-migration)
-6. [Code Changes Reference](#code-changes-reference)
-7. [Apps Script Code](#apps-script-code)
-8. [Migration Script (Node.js)](#migration-script-nodejs)
-9. [Refresh Workflow](#refresh-workflow)
-10. [Validation Checklist](#validation-checklist)
-11. [Rollback Plan](#rollback-plan)
+4. [Counties Multi-Select and Sites Reference](#counties-multi-select-and-sites-reference)
+5. [Sponsored Ads (Image Ads)](#sponsored-ads-image-ads)
+6. [Ad Image Storage: GAM vs R2](#ad-image-storage-gam-vs-r2)
+7. [Step-by-Step Migration](#step-by-step-migration)
+8. [Adding a New County (Post-Migration)](#adding-a-new-county-post-migration)
+9. [Code Changes Reference](#code-changes-reference)
+10. [Apps Script Code](#apps-script-code)
+11. [Migration Script (Node.js)](#migration-script-nodejs)
+12. [Refresh Workflow](#refresh-workflow)
+13. [Validation Checklist](#validation-checklist)
+14. [Rollback Plan](#rollback-plan)
 
 ---
 
@@ -55,15 +60,16 @@ sites.json (in repo) → loadSitesRegistry() → getSiteConfig(host)
 ### Target
 
 ```
-1 Master Google Sheet (Companies + Sites tabs) → 1 Apps Script → (single refresh) → Cloudflare KV
-Site config in KV: site:{host}:config
-Companies in KV: site:{host}:data
+1 Master Google Sheet (Companies + Sites + Ads tabs) → 1 Apps Script → (single refresh) → Cloudflare KV
+Path-based URLs: https://directories.mineralrightsforum.com/{slug}
+KV keys: directory:{slug}:data, directory:{slug}:config, directory:{slug}:ads
 ```
 
-- One master sheet with Companies tab and Sites tab
+- **Path-based URLs**: County pages live at `https://directories.mineralrightsforum.com/{slug}` (e.g. `/baldwin-county-alabama`). The index is at `https://directories.mineralrightsforum.com/`. (Base domain may be `directory` or `directories` — confirm before deploy.)
+- One master sheet with Companies, Sites, and Ads tabs
 - One Apps Script URL in env var `MASTER_SHEET_URL`
-- POST to any site's `/refresh` fetches master sheet and updates KV for all 78 sites
-- Site config loaded from `site:{host}:config` in KV (populated at refresh from Sites tab)
+- POST to `https://directories.mineralrightsforum.com/refresh` fetches master sheet and updates KV for all directories
+- Config and data loaded from `directory:{slug}:config`, `directory:{slug}:data`, etc. in KV
 
 ---
 
@@ -84,27 +90,96 @@ Companies in KV: site:{host}:data
 | `hidden` | boolean | No | Alternative to plan=hidden | FALSE |
 | `counties` | string | Yes | Comma-separated county slugs | "reeves-county-texas, ward-county-texas" |
 
-**`counties` format**: Comma-separated list of slugs. Slug = domain stem without `.mineralrightsforum.com`. Example: `reeves-county-texas.mineralrightsforum.com` → slug is `reeves-county-texas`.
+**`counties` format**: See [Counties Multi-Select and Sites Reference](#counties-multi-select-and-sites-reference) below. Supports `*` (all counties), `state:TX` (all Texas counties), or comma-separated slugs. The Apps Script expands state codes at read time using the Sites tab.
 
-**Multi-county companies**: To list a company on multiple county pages, put all slugs in the `counties` column: `reeves-county-texas, ward-county-texas, midland-county-texas`.
+**Multi-county companies**: To list a company on multiple county pages, use the multi-select syntax: `*` for all, `state:TX` for all Texas, or `reeves-county-texas, ward-county-texas, midland-county-texas` for specific counties.
 
-### Tab 2: Sites
+### Tab 2: Sites (Counties)
+
+The Sites tab is the **source of truth for all directory pages**. It defines slug, division type (county/parish/area), display name, SEO, and metadata. Both Companies and Ads reference this tab for county selection (via `state` and slug).
+
+**Data source**: The [Comprehensive Counties List](https://docs.google.com/spreadsheets/d/13x6qveVTnRR1GPe7gF7ilAiFgsIATnETLkeriJBRDcY/edit) spreadsheet has all counties in column B (URLs like `baldwin-county-alabama.mineralrightsforum.com`). Parse the slug from column B (everything before `.mineralrightsforum.com`). Skip rows with "New State Below" or other non-county entries.
 
 | Column | Type | Required | Description | Example |
 |--------|------|----------|-------------|---------|
-| `slug` | string | Yes | County slug; domain = `{slug}.mineralrightsforum.com` | "reeves-county-texas" |
-| `serving_line` | string | Yes | Display text | "Serving Reeves County, Texas" |
-| `page_title` | string | Yes | Main heading (use `\n` for line break) | "Reeves County, TX Mineral Rights\nProfessionals Directory" |
-| `return_url` | string | Yes | Back-to-forum link | "https://www.mineralrightsforum.com/c/texas-mineral-rights/reeves-county-tx/741" |
-| `directory_intro` | string | Yes | Intro paragraph | "Since 2009, the Mineral Rights Forum..." |
-| `seo_title` | string | Yes | Page title tag | "Reeves County TX Mineral Rights \| Oil & Gas Directory" |
-| `seo_description` | string | Yes | Meta description | "Find trusted Reeves County, TX mineral rights..." |
+| `slug` | string | Yes | URL path segment; full URL = `directories.mineralrightsforum.com/{slug}` | "baldwin-county-alabama" |
+| `state` | string | No* | State code (2-letter) for grouping and multi-select. Blank for areas like Permian Basin. | "TX" |
+| `division_type` | string | Yes | `county`, `parish`, or `area` — controls display wording | "county" |
+| `division_name` | string | Yes | Display name (Baldwin, Orleans, Permian Basin, La Plata) | "Baldwin" |
+| `page_title` | string | Yes | Main heading (use `\n` for line break) | "Baldwin County, AL Mineral Rights\nProfessionals Directory" |
+| `return_url` | string | Yes | Back-to-forum link | "https://www.mineralrightsforum.com/c/alabama-mineral-rights/baldwin-county-al/741" |
+| `directory_intro` | string | Yes | Page description (text at top). Use template with `{display_name}` placeholder; same for all except the name. | "Since 2009, the Mineral Rights Forum has helped thousands of mineral owners... Use this directory to find professionals serving {display_name}." |
+| `seo_title` | string | Yes | Page title tag | "Baldwin County AL Mineral Rights \| Oil & Gas Directory" |
+| `seo_description` | string | Yes | Meta description | "Find trusted Baldwin County, AL mineral rights..." |
 | `category_order` | string | No | `alpha` or comma-separated custom order | "alpha" |
 | `theme` | string | No | Theme name | "default" |
 
-**Row order**: One row per county. The slug must exactly match the domain stem. Include all 78 county/parish directories. Exclude non-county domains (e.g. `mineral-services-directory`, `permian-basin`) if they exist in current `sites.json`.
+**Display logic** (built from `division_type` + `division_name` + `state`):
+- `county` → "{division_name} County, {state}" (e.g. "Baldwin County, Alabama")
+- `parish` → "{division_name} Parish, {state}" (e.g. "Orleans Parish, Louisiana")
+- `area` → "{division_name}" only — **do not use "County" or "Parish"** (e.g. "Permian Basin")
+
+**Permian Basin**: Slug `permian-basin` is an area, not a county. Use `division_type` = `area`, `division_name` = "Permian Basin", `state` = "TX" or blank. Never append "County" when displaying.
+
+**Row order**: One row per directory. Include all counties, parishes, and areas (e.g. Permian Basin). Exclude "New State Below" and other separator rows. Structure supports ~700 counties across ~20 states.
 
 **`page_title` newlines**: Use either (a) an actual line break in the cell (Alt+Enter in Google Sheets) or (b) the literal characters `\n`. The frontend expects a newline character for the break; if you use `\n`, the Apps Script or migration script should convert it to a real newline when building the config.
+
+---
+
+## Counties Multi-Select and Sites Reference
+
+The `counties` column in **Companies** and **Ads** must reference the Sites tab. Valid values:
+
+| Value | Meaning |
+|-------|---------|
+| `*` | All counties (all slugs from Sites tab) |
+| `state:TX` | All counties in Texas (slugs where Sites.state = `TX`) |
+| `state:OK` | All counties in Oklahoma |
+| `reeves-county-texas, ward-county-texas` | Specific comma-separated slugs |
+| *(empty)* | All counties (same as `*`) |
+
+**State codes**: Use 2-letter codes (TX, OK, NM, LA, etc.) that match the `state` column in the Sites tab. The Apps Script expands `state:TX` to all slugs for that state from the Sites tab. For Companies, the migration script or manual entry must populate `counties`; for Ads, same logic.
+
+**Multi-select UX**: With ~700 counties, a native dropdown is impractical. Options:
+- **A**: Type comma-separated slugs, or use `*` or `state:TX`. Use Data Validation (list from range) from a helper column if desired.
+- **B** (future): Custom Apps Script sidebar that reads Sites, groups by state, offers "All", "Select state", and individual county checkboxes, then writes back to the cell.
+
+---
+
+## Sponsored Ads (Image Ads)
+
+A third tab **Ads** stores sponsored image placements. Each ad appears as the first card in a category grid on matching county pages.
+
+### Tab 3: Ads
+
+| Column | Type | Required | Description | Example |
+|--------|------|----------|-------------|---------|
+| `image_url` | string | Yes | Image URL (R2 or any) | `https://pub-xxx.r2.dev/ads/attorney-banner.png` |
+| `link` | string | Yes | Target URL on click | `https://example.com?utm_adv=attorneys` |
+| `category` | string | Yes | Must match a Companies category | `Attorneys` |
+| `counties` | string | No | Same format as Companies: `*`, `state:TX`, or comma-separated slugs | `state:TX` or blank |
+| `priority` | number | No | Higher = shown when multiple match (default 0) | `10` |
+| `active` | boolean | No | If false, skip (default true) | `TRUE` |
+
+**Placement**: Ads appear as the first card in the category grid on matching county pages. One ad per category per page (highest priority wins).
+
+**Category matching**: Must match exactly (case-insensitive) a category that exists in Companies data. If the category has no companies on a county page, the ad still shows if that category section exists.
+
+---
+
+## Ad Image Storage: GAM vs R2
+
+**Recommendation: Use R2** for simplicity.
+
+| Approach | Pros | Cons |
+|----------|------|------|
+| **R2** | Full control; upload image, get URL, paste in spreadsheet. No external ad server. Same Cloudflare stack as Pages. | No built-in impression/click reporting. |
+| **Google Ad Manager (GAM)** | Impression and click reporting; ad serving infrastructure. | Requires GAM integration; custom creatives need to be configured in GAM; more complex setup. |
+
+**R2 workflow**: Upload images to Cloudflare R2 bucket, set public access or use signed URLs. Copy the public URL into the `image_url` column. No code changes needed for storage; the app only consumes the URL.
+
+**GAM workflow** (if chosen): Create custom creative in GAM, get the tag/URL. The spreadsheet would store the GAM creative ID or tag URL. The frontend would need to load the GAM tag instead of a simple `<img>` + `<a>`. More complex; only recommended if reporting is required.
 
 ---
 
@@ -129,9 +204,14 @@ Companies in KV: site:{host}:data
 4. Create a second tab named **Sites**.
 5. Add the header row in row 1:
    ```
-   slug | serving_line | page_title | return_url | directory_intro | seo_title | seo_description | category_order | theme
+   slug | state | division_type | division_name | page_title | return_url | directory_intro | seo_title | seo_description | category_order | theme
    ```
-6. Do **not** populate data yet; that happens in Step 3 and 4.
+6. Create a third tab named **Ads**.
+7. Add the header row in row 1:
+   ```
+   image_url | link | category | counties | priority | active
+   ```
+8. Do **not** populate data yet; that happens in Step 3 and 4.
 
 ---
 
@@ -139,12 +219,21 @@ Companies in KV: site:{host}:data
 
 The migration script does two things:
 1. Reads all 78 existing Google Sheets and merges company rows into the Companies tab, adding the correct `counties` value for each row.
-2. Reads `sites.json` and populates the Sites tab.
+2. Populates the Sites tab (from `sites.json` or from the [Comprehensive Counties List](https://docs.google.com/spreadsheets/d/13x6qveVTnRR1GPe7gF7ilAiFgsIATnETLkeriJBRDcY/edit)).
 
 **Prerequisites**:
 - Node.js 18+
 - Access to all 78 sheet IDs (from `sites.json` — extract from each `sheet.url` query param `sheetId=...`)
 - Google Sheets API credentials (service account or OAuth) **or** manual export/import
+
+**Google Sheets API credentials (Option A)**:
+1. Go to [Google Cloud Console](https://console.cloud.google.com/), create or select a project
+2. Enable **Google Sheets API** (APIs & Services → Library → search "Google Sheets API")
+3. Create a **Service Account** (APIs & Services → Credentials → Create Credentials → Service Account)
+4. Download the JSON key file. Store securely (e.g. `./google-credentials.json`)
+5. Add `google-credentials.json` to `.gitignore` — never commit it
+6. Share the master sheet and source sheets with the service account email (e.g. `xxx@project.iam.gserviceaccount.com`) with Editor access
+7. Set `GOOGLE_APPLICATION_CREDENTIALS` env var to the path of the JSON file, or pass the path as a CLI argument to the migration script
 
 **Option A: Automated script with Google Sheets API**
 
@@ -164,6 +253,8 @@ The migration script does two things:
 - Import Companies CSV into the Companies tab and Sites CSV into the Sites tab.
 
 **Slug derivation**: For domain `reeves-county-texas.mineralrightsforum.com`, slug = `reeves-county-texas` (everything before `.mineralrightsforum.com`).
+
+**State derivation**: For slug `reeves-county-texas`, state = last segment after `county-` or `parish-` (e.g. `texas` → `TX`). The migration script should map full state names to 2-letter codes: texas→TX, oklahoma→OK, new-mexico→NM, louisiana→LA, etc. Populate the `state` column in the Sites tab from this mapping.
 
 **Getting the exact site count**: Run this in Node to count county/parish entries in `sites.json`:
 ```javascript
@@ -185,24 +276,27 @@ console.log(count); // Use this for Sites tab row count
 
 ---
 
-### Step 3: Populate the Sites Tab from sites.json
+### Step 3: Populate the Sites Tab
 
-If not done by the migration script, manually create the Sites tab:
+**Option A: From Comprehensive Counties List**
 
-1. For each entry in `sites.json` where the domain is a county/parish directory (exclude `mineral-services-directory`, `permian-basin`, etc.):
-2. Extract the slug: `reeves-county-texas.mineralrightsforum.com` → `reeves-county-texas`
-3. Add a row:
-   - `slug` = slug
-   - `serving_line` = from `serving_line`
-   - `page_title` = from `page_title` (preserve `\n` if present)
-   - `return_url` = from `return_url`
-   - `directory_intro` = from `directory_intro`
-   - `seo_title` = from `seo.title`
-   - `seo_description` = from `seo.description`
-   - `category_order` = from `category_order` (default "alpha")
-   - `theme` = from `theme` (default "default")
+Use the [Comprehensive Counties List](https://docs.google.com/spreadsheets/d/13x6qveVTnRR1GPe7gF7ilAiFgsIATnETLkeriJBRDcY/edit) (column B has URLs). For each row in column B:
+- Parse slug: `baldwin-county-alabama.mineralrightsforum.com` → `baldwin-county-alabama`
+- Skip "New State Below" and other non-county rows
+- Derive `division_type`: if slug contains `parish` → `parish`; if slug is `permian-basin` → `area`; else → `county`
+- Derive `division_name`: parse from slug (e.g. `baldwin-county-alabama` → "Baldwin"; `la-plata-county-colorado` → "La Plata"; `permian-basin` → "Permian Basin")
+- Derive `state`: last segment after `county-` or `parish-` (e.g. `alabama` → `AL`). Blank for `area` type.
+- Populate remaining columns (page_title, return_url, directory_intro, seo_title, seo_description) — use templates with `{display_name}` for directory_intro
 
-**Important**: The Sites tab must include a row for every county/parish domain that currently exists in `sites.json`. Do **not** add `directories.mineralrightsforum.com` — that host is the index page and gets its data from the sites map, not from the Sites tab. Count the county/parish entries in `sites.json` (exclude `mineral-services-directory`, `permian-basin`, and any other non-county domains) to get the exact row count.
+**Option B: From sites.json (for existing 78)**
+
+If migrating from current `sites.json`:
+1. For each county/parish domain (exclude `mineral-services-directory`, `permian-basin`):
+2. Extract slug: `reeves-county-texas.mineralrightsforum.com` → `reeves-county-texas`
+3. Set `division_type` = `parish` if slug contains `parish`, else `county`
+4. Set `division_name` from slug (e.g. "Reeves", "Orleans")
+5. Set `state` from slug (e.g. `texas` → `TX`)
+6. Copy page_title, return_url, directory_intro, seo_title, seo_description, category_order, theme from `sites.json`
 
 ---
 
@@ -213,14 +307,14 @@ If not done by the migration script, manually create the Sites tab:
 3. Implement the `doGet` function to:
    - Read the **Companies** sheet: all rows, headers in row 1.
    - Read the **Sites** sheet: all rows, headers in row 1.
-   - Build `companies` array: each row becomes an object with keys from headers (lowercase, spaces to underscores).
-   - Build `sites` array: each row becomes an object with keys from headers.
-   - For each site object, add a `domain` field: `domain = slug + '.mineralrightsforum.com'`.
-   - For each site object, ensure `seo` is an object: `{ title: seo_title, description: seo_description }` (to match current `site.seo` shape).
-   - Return JSON: `{ ok: true, companies: [...], sites: [...], updated_at: ISO string, etag: hash }`.
+   - Read the **Ads** sheet (if present): all rows, headers in row 1.
+   - Build `companies` array: each row becomes an object with keys from headers (lowercase, spaces to underscores). **Expand `counties`**: if value is `*` or empty, replace with comma-separated list of all slugs from Sites; if value starts with `state:`, expand to slugs for that state from Sites; otherwise keep as-is.
+   - Build `sites` array: each row becomes an object with keys from headers. Add `domain = slug + '.mineralrightsforum.com'`. Ensure `seo` is `{ title: seo_title, description: seo_description }`.
+   - Build `ads` array: each row becomes an object. **Expand `counties`** same as Companies. Filter out rows where `active` is false.
+   - Return JSON: `{ ok: true, companies: [...], sites: [...], ads: [...], updated_at: ISO string, etag: hash }`.
 4. Deploy as web app: **Execute as: Me**, **Who has access: Anyone**.
 5. Copy the deployment URL (e.g. `https://script.google.com/macros/s/.../exec`).
-6. Test: `curl "YOUR_APPS_SCRIPT_URL"` and verify you get valid JSON with `companies` and `sites` arrays.
+6. Test: `curl "YOUR_APPS_SCRIPT_URL"` and verify you get valid JSON with `companies`, `sites`, and `ads` arrays.
 
 See [Apps Script Code](#apps-script-code) below for a full implementation.
 
@@ -242,19 +336,22 @@ Replace the refresh logic so that:
 
 1. On POST `/refresh` (with valid `X-Refresh-Key`):
 2. Fetch `env.MASTER_SHEET_URL` (no query params needed).
-3. Parse response; validate `ok`, `companies` (array), `sites` (array).
+3. Parse response; validate `ok`, `companies` (array), `sites` (array). Accept `ads` (array) or default to `[]`.
 4. For each site in `sites`:
-   - Skip if `site.slug` is empty (would produce invalid domain).
-   - `host` = `site.domain` (e.g. `reeves-county-texas.mineralrightsforum.com`)
-   - Filter `companies` where `counties` (split by comma, trim, lowercase) includes `site.slug` (case-insensitive).
+   - Skip if `site.slug` is empty.
+   - `slug` = `site.slug` (e.g. `baldwin-county-alabama`)
+   - Filter `companies` where `counties` (split by comma, trim, lowercase) includes `slug` (case-insensitive).
    - Filter out hidden companies using the **full** hidden logic from current `refresh.js`: `plan` in (hidden, hide, h), `hidden` (true, 'true', 'yes', 1, 'hidden', 'hide'), `status === 'hidden'`, `visible === false`, `show === false`.
+   - Filter `ads` for this site: `counties` (split by comma, trim, lowercase) includes `slug` OR `counties` is empty/whitespace (all counties).
+   - Build config with: `division_type`, `division_name`, `state`, `page_title`, `return_url`, `directory_intro`, `seo: {title, description}`, `category_order`, `theme`. Build `display_label` from division_type + division_name + state (see Display logic in Sites tab).
    - Write to KV:
-     - `site:{host}:data` = JSON.stringify(filtered companies)
-     - `site:{host}:config` = JSON.stringify(site config object: serving_line, page_title, return_url, directory_intro, seo: {title, description}, category_order, theme — **no** sheet or url)
-     - `site:{host}:etag` = hash of companies
-     - `site:{host}:updated_at` = ISO timestamp
-     - Delete `site:{host}:last_error` on success
-5. Write `site:directories.mineralrightsforum.com:config` = JSON object mapping each `site.domain` to its config (for counties index). Shape: `{ "reeves-county-texas.mineralrightsforum.com": { serving_line, page_title, ... }, ... }`.
+     - `directory:{slug}:data` = JSON.stringify(filtered companies)
+     - `directory:{slug}:ads` = JSON.stringify(filtered ads for this site)
+     - `directory:{slug}:config` = JSON.stringify(config)
+     - `directory:{slug}:etag` = hash of companies
+     - `directory:{slug}:updated_at` = ISO timestamp
+     - Delete `directory:{slug}:last_error` on success
+5. Write `directory:index:config` = JSON object mapping each `slug` to its config (for counties index). Shape: `{ "baldwin-county-alabama": { slug, division_type, division_name, state, page_title, ... }, ... }`.
 6. Return JSON: `{ status: 'ok', sites_updated: 78, duration_ms: ... }`.
 
 **Error handling**:
@@ -267,30 +364,36 @@ Replace the refresh logic so that:
 
 ### Step 7: Update functions/_lib.js
 
-1. Add new function `loadSiteConfigFromKV(env, host)`:
-   - `keys = KV_KEYS(host)`
-   - `configKey = 'site:' + host + ':config'`
+1. Add `getSlugFromPath(request)`: Extract slug from path (e.g. `/baldwin-county-alabama` → `baldwin-county-alabama`). Root path `/` returns null.
+
+2. Add new function `loadDirectoryConfigFromKV(env, slug)`:
+   - `keys = KV_KEYS(slug)` (uses `directory:` prefix)
+   - `configKey = 'directory:' + slug + ':config'`
    - `const raw = await env.DIRECTORIES_KV.get(configKey)`
-   - If !raw, throw new Error(`No config for host: ${host}`)
+   - If !raw, throw new Error(`No config for slug: ${slug}`)
    - Return `JSON.parse(raw)`
 
-2. Add new function `loadSitesRegistryFromKV(env)`:
-   - `const raw = await env.DIRECTORIES_KV.get('site:directories.mineralrightsforum.com:config')`
+3. Add new function `loadSitesRegistryFromKV(env)`:
+   - `const raw = await env.DIRECTORIES_KV.get('directory:index:config')`
    - If !raw, throw new Error('No sites registry in KV')
-   - Return `JSON.parse(raw)` — this is the `{ domain: config }` map
+   - Return `JSON.parse(raw)` — this is the `{ [slug]: config }` map
 
-3. **Keep** `loadSitesRegistry()` and `getSiteConfig()` for backward compatibility during transition, or remove them once all callers use KV. The plan assumes we **remove** usage of `sites.json` and use KV only.
+4. **Keep** `loadSitesRegistry()` and `getSiteConfig()` for backward compatibility during transition, or remove them once all callers use KV. The plan assumes we **remove** usage of `sites.json` and use KV only.
 
 ---
 
-### Step 8: Update functions/index.js
+### Step 8: Update functions/index.js and Routing
 
-1. Change the import: add `loadSiteConfigFromKV` from `_lib.js`.
-2. Replace the site config loading block:
-   - **Before**: `sites = await loadSitesRegistry(); site = getSiteConfig(sites, host);`
-   - **After**: `site = await loadSiteConfigFromKV(env, host);`
-3. Remove the `sites` variable if unused.
-4. The rest of the logic (KV data, grouping, rendering) stays the same. The `site` object must have: `serving_line`, `seo`, `page_title`, `return_url`, `directory_intro`, `category_order`, `theme`.
+**Routing**: With path-based URLs, the county page handler must run for `GET /{slug}`. Use a dynamic route (e.g. `[[path]].js` or `[slug].js`) that catches paths like `/baldwin-county-alabama`. Root `GET /` is handled by counties.js (index page).
+
+1. Change the import: add `getSlugFromPath`, `loadDirectoryConfigFromKV` from `_lib.js`.
+2. Extract slug from request path: `slug = getSlugFromPath(request)`. If slug is null or empty, delegate to counties.js (index).
+3. Replace the site config loading: `site = await loadDirectoryConfigFromKV(env, slug)`.
+4. Load data from KV: `directory:{slug}:data` (companies), `directory:{slug}:ads` (JSON array). Default ads to `[]` if missing.
+5. In the section loop (where category sections are built): for each category, filter ads where `category` matches (case-insensitive). Sort by `priority` descending. Take the first (highest priority). If an ad exists, prepend an ad card as the first item in the category grid: `<a href="${ad.link}" target="_blank" rel="noopener"><img src="${ad.image_url}" alt="Sponsored" /></a>` with class `card card--ad`.
+6. Add `.card--ad` styles in `src/app.css` so the ad card fits the grid and is visually distinct (e.g. "Sponsored" label).
+7. Replace `{display_name}` in `directory_intro` with the computed display label (from `division_type` + `division_name` + `state`).
+8. The `site` object must have: `division_type`, `division_name`, `state`, `display_label`, `seo`, `page_title`, `return_url`, `directory_intro`, `category_order`, `theme`.
 
 ---
 
@@ -298,31 +401,23 @@ Replace the refresh logic so that:
 
 1. Change the import: use `loadSitesRegistryFromKV` instead of `loadSitesRegistry`.
 2. Replace: `sites = await loadSitesRegistry()` with `sites = await loadSitesRegistryFromKV(env)`.
-3. The `counties.js` handler receives `{ request, env }`; ensure `env` is passed (it is in the current `onRequestGet`).
-4. The structure of `sites` must remain `{ [domain]: config }` so that `Object.entries(sites)` and the filter/map logic work unchanged.
+3. The structure of `sites` is now `{ [slug]: config }` (not domain). Update any logic that assumed domain keys — use slug for links: `https://directories.mineralrightsforum.com/${slug}`.
+4. Use `display_label` from config for display (or build from `division_type` + `division_name` + `state`).
 
 ---
 
 ### Step 10: Update functions/sitemap.xml.js
 
-1. **Special case for directories**: When `host === 'directories.mineralrightsforum.com'`, generate the sitemap without loading site config (the base URL is all that's needed). Do not call `loadSiteConfigFromKV` for this host — the KV key for directories stores the sites map, not a single-site config.
-2. **For county hosts**: Replace `loadSitesRegistry` + `getSiteConfig` with `loadSiteConfigFromKV(env, host)`.
+1. **Path-based**: Base URL is `https://directories.mineralrightsforum.com`. Load `directory:index:config` to get all slugs.
+2. Sitemap entries: index page (`/`), plus one entry per slug (`/{slug}`).
 3. Ensure the handler receives `env` (Cloudflare Pages passes it to `onRequestGet`).
 
 **Example logic**:
 ```javascript
-const host = getHost(request);
-if (host === 'directories.mineralrightsforum.com') {
-  // No config needed; generate sitemap for index page only
-} else {
-  try {
-    await loadSiteConfigFromKV(env, host); // Validates host exists
-  } catch (err) {
-    return new Response(`<!-- Error: ${String(err)} -->`, { status: 500, ... });
-  }
-}
-const baseUrl = `https://${host}`;
-// ... build sitemap XML
+const baseUrl = 'https://directories.mineralrightsforum.com';
+const sitesMap = await loadSitesRegistryFromKV(env); // { slug: config }
+const slugs = Object.keys(sitesMap);
+// Build sitemap: baseUrl/, baseUrl/baldwin-county-alabama, baseUrl/butler-county-alabama, ...
 ```
 
 ---
@@ -371,25 +466,26 @@ Update your cron script or Google Apps Script trigger to call the refresh endpoi
 
 Update the project's `DOCUMENTATION.md` to reflect the new architecture:
 
-- Change "Google Sheets (78 separate)" to "Master Google Sheet (Companies + Sites tabs)"
+- Change "Google Sheets (78 separate)" to "Master Google Sheet (Companies + Sites + Ads tabs)"
 - Update the Apps Script section to describe the single script and `MASTER_SHEET_URL`
 - Update the refresh workflow to "one call updates all sites"
-- Update the KV namespace structure to include `site:{host}:config`
+- Update the KV namespace structure to include `directory:{slug}:config`, `directory:{slug}:ads`
+- Document path-based URLs: `directories.mineralrightsforum.com/{slug}`
+- Document counties multi-select (`*`, `state:TX`, comma-separated slugs)
+- Document Ads tab and R2 image workflow
 - Remove references to per-site `sheet.url` in `sites.json`
 
 ---
 
 ## Adding a New County (Post-Migration)
 
-After the migration, to add a new county directory:
+After the migration, to add a new directory page:
 
-1. **Add row to Sites tab**: slug, serving_line, page_title, return_url, directory_intro, seo_title, seo_description, category_order, theme.
-2. **Add companies** (optional): Add rows to Companies tab with the new county slug in the `counties` column.
-3. **Cloudflare DNS**: Add CNAME record for `{slug}.mineralrightsforum.com` pointing to your Pages project.
-4. **Cloudflare Pages**: Add custom domain `{slug}.mineralrightsforum.com` in the Pages dashboard.
-5. **Run refresh**: `curl -X POST https://directories.mineralrightsforum.com/refresh -H "X-Refresh-Key: YOUR_KEY"`.
+1. **Add row to Sites tab**: slug, state, division_type, division_name, page_title, return_url, directory_intro, seo_title, seo_description, category_order, theme.
+2. **Add companies** (optional): Add rows to Companies tab with the new slug in the `counties` column (or use `state:TX` etc.).
+3. **Run refresh**: `curl -X POST https://directories.mineralrightsforum.com/refresh -H "X-Refresh-Key: YOUR_KEY"`.
 
-No code changes or redeploy needed.
+No code changes, DNS, or custom domains needed — path-based URLs use a single domain.
 
 ---
 
@@ -398,30 +494,36 @@ No code changes or redeploy needed.
 ### functions/_lib.js — New Functions
 
 ```javascript
-export const KV_KEYS = (host) => ({
-  data: `site:${host}:data`,
-  config: `site:${host}:config`,
-  etag: `site:${host}:etag`,
-  updated: `site:${host}:updated_at`,
-  lastError: `site:${host}:last_error`,
+export const KV_KEYS = (slug) => ({
+  data: `directory:${slug}:data`,
+  config: `directory:${slug}:config`,
+  ads: `directory:${slug}:ads`,
+  etag: `directory:${slug}:etag`,
+  updated: `directory:${slug}:updated_at`,
+  lastError: `directory:${slug}:last_error`,
 });
 
-export async function loadSiteConfigFromKV(env, host) {
-  const key = `site:${host}:config`;
+export function getSlugFromPath(request) {
+  const path = new URL(request.url).pathname.replace(/^\/|\/$/g, '');
+  return path || null;
+}
+
+export async function loadDirectoryConfigFromKV(env, slug) {
+  const key = `directory:${slug}:config`;
   const raw = await env.DIRECTORIES_KV.get(key);
-  if (!raw) throw new Error(`No config for host: ${host}`);
+  if (!raw) throw new Error(`No config for slug: ${slug}`);
   return JSON.parse(raw);
 }
 
 export async function loadSitesRegistryFromKV(env) {
-  const key = 'site:directories.mineralrightsforum.com:config';
+  const key = 'directory:index:config';
   const raw = await env.DIRECTORIES_KV.get(key);
   if (!raw) throw new Error('No sites registry in KV');
   return JSON.parse(raw);
 }
 ```
 
-Note: Add `config` to `KV_KEYS` if not present. Existing keys (`data`, `etag`, `updated`, `lastError`) stay the same.
+Note: `functions/health.js` and `functions/data.json.js` need updates for path-based routing — they receive requests with path (e.g. `/baldwin-county-alabama`), so extract slug from path and use `directory:{slug}:*` keys. `data.json` returns companies only; ads are rendered server-side in the HTML.
 
 ### functions/refresh.js — New Logic (Pseudocode)
 
@@ -450,6 +552,7 @@ export const onRequestPost = async ({ request, env }) => {
   if (!upstream?.ok || !Array.isArray(upstream.companies) || !Array.isArray(upstream.sites)) {
     return json({ ok: false, error: 'Invalid upstream response' }, { status: 502 });
   }
+  const ads = Array.isArray(upstream.ads) ? upstream.ads : [];
 
   let sitesUpdated = 0;
   const sitesMap = {};
@@ -458,10 +561,10 @@ export const onRequestPost = async ({ request, env }) => {
     const slug = String(site.slug || '').trim();
     if (!slug) continue; // Skip sites with empty slug
 
-    const host = site.domain;
+    const slugLower = slug.toLowerCase();
     const companiesForSite = upstream.companies.filter(row => {
       const rowCounties = String(row.counties || '').split(',').map(c => c.trim().toLowerCase()).filter(Boolean);
-      if (!rowCounties.includes(slug.toLowerCase())) return false;
+      if (!rowCounties.includes(slugLower)) return false;
       // Filter hidden (match current refresh.js logic)
       const plan = String(row.plan || '').toLowerCase().trim();
       if (plan === 'hidden' || plan === 'hide' || plan === 'h') return false;
@@ -473,28 +576,39 @@ export const onRequestPost = async ({ request, env }) => {
       return true;
     });
 
+    const adsForSite = ads.filter(ad => {
+      const adCounties = String(ad.counties || '').split(',').map(c => c.trim().toLowerCase()).filter(Boolean);
+      return adCounties.length === 0 || adCounties.includes(slugLower);
+    });
+
+    const displayLabel = buildDisplayLabel(site.division_type, site.division_name, site.state);
     const config = {
-      serving_line: site.serving_line,
+      slug,
+      division_type: site.division_type || 'county',
+      division_name: site.division_name || '',
+      state: site.state || '',
+      display_label: displayLabel,
       page_title: site.page_title,
       return_url: site.return_url,
-      directory_intro: site.directory_intro,
+      directory_intro: (site.directory_intro || '').replace(/\{display_name\}/g, displayLabel),
       seo: { title: site.seo_title, description: site.seo_description },
       category_order: site.category_order || 'alpha',
       theme: site.theme || 'default',
     };
 
-    const keys = KV_KEYS(host);
+    const keys = KV_KEYS(slug);
     await env.DIRECTORIES_KV.put(keys.data, JSON.stringify(companiesForSite));
+    await env.DIRECTORIES_KV.put(keys.ads, JSON.stringify(adsForSite));
     await env.DIRECTORIES_KV.put(keys.config, JSON.stringify(config));
     await env.DIRECTORIES_KV.put(keys.etag, quickHash(companiesForSite));
     await env.DIRECTORIES_KV.put(keys.updated, upstream.updated_at || new Date().toISOString());
     await env.DIRECTORIES_KV.delete(keys.lastError);
 
-    sitesMap[host] = config;
+    sitesMap[slug] = config;
     sitesUpdated++;
   }
 
-  await env.DIRECTORIES_KV.put('site:directories.mineralrightsforum.com:config', JSON.stringify(sitesMap));
+  await env.DIRECTORIES_KV.put('directory:index:config', JSON.stringify(sitesMap));
 
   return json({
     status: 'ok',
@@ -503,6 +617,8 @@ export const onRequestPost = async ({ request, env }) => {
   });
 };
 ```
+
+**buildDisplayLabel helper**: `county` → "{division_name} County, {state}"; `parish` → "{division_name} Parish, {state}"; `area` → "{division_name}" only (no County/Parish).
 
 **Important**: The filter for companies uses `row.counties` — ensure the Companies tab uses that exact column name. The slug comparison should be case-insensitive.
 
@@ -516,6 +632,7 @@ function doGet(e) {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     const companiesSheet = ss.getSheetByName('Companies');
     const sitesSheet = ss.getSheetByName('Sites');
+    const adsSheet = ss.getSheetByName('Ads');
 
     if (!companiesSheet || !sitesSheet) {
       return jsonResponse({ ok: false, error: 'Companies or Sites sheet not found' });
@@ -527,32 +644,69 @@ function doGet(e) {
     const companyHeaders = companiesData[0].map(h => String(h || '').toLowerCase().replace(/\s+/g, '_'));
     const siteHeaders = sitesData[0].map(h => String(h || '').toLowerCase().replace(/\s+/g, '_'));
 
-    const companies = [];
-    for (let i = 1; i < companiesData.length; i++) {
-      const row = companiesData[i];
-      const obj = {};
-      companyHeaders.forEach((h, j) => { obj[h] = row[j] !== undefined && row[j] !== null ? row[j] : ''; });
-      companies.push(obj);
-    }
-
+    // Build sites array and slug lookup maps
     const sites = [];
+    const allSlugs = [];
+    const slugsByState = {};
     for (let i = 1; i < sitesData.length; i++) {
       const row = sitesData[i];
       const obj = {};
       siteHeaders.forEach((h, j) => { obj[h] = row[j] !== undefined && row[j] !== null ? row[j] : ''; });
       const slug = String(obj.slug || '').trim();
-      obj.domain = slug ? slug + '.mineralrightsforum.com' : '';
+      if (!slug) continue;
       sites.push(obj);
+      allSlugs.push(slug.toLowerCase());
+      const state = String(obj.state || '').trim().toUpperCase();
+      if (state) {
+        if (!slugsByState[state]) slugsByState[state] = [];
+        slugsByState[state].push(slug.toLowerCase());
+      }
+    }
+
+    function expandCounties(val) {
+      const v = String(val || '').trim();
+      if (!v || v === '*') return allSlugs.join(', ');
+      const m = v.match(/^state:([a-zA-Z]{2})$/i);
+      if (m) {
+        const stateSlugs = slugsByState[m[1].toUpperCase()] || [];
+        return stateSlugs.join(', ');
+      }
+      return v; // Already comma-separated slugs
+    }
+
+    const companies = [];
+    for (let i = 1; i < companiesData.length; i++) {
+      const row = companiesData[i];
+      const obj = {};
+      companyHeaders.forEach((h, j) => { obj[h] = row[j] !== undefined && row[j] !== null ? row[j] : ''; });
+      obj.counties = expandCounties(obj.counties);
+      companies.push(obj);
+    }
+
+    let ads = [];
+    if (adsSheet) {
+      const adsData = adsSheet.getDataRange().getValues();
+      const adHeaders = adsData[0].map(h => String(h || '').toLowerCase().replace(/\s+/g, '_'));
+      for (let i = 1; i < adsData.length; i++) {
+        const row = adsData[i];
+        const obj = {};
+        adHeaders.forEach((h, j) => { obj[h] = row[j] !== undefined && row[j] !== null ? row[j] : ''; });
+        const active = obj.active;
+        if (active === false || active === 'false' || active === 'FALSE' || active === 0) continue;
+        obj.counties = expandCounties(obj.counties);
+        ads.push(obj);
+      }
     }
 
     const updated_at = new Date().toISOString();
-    const etag = Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, JSON.stringify({ companies, sites }))
+    const etag = Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, JSON.stringify({ companies, sites, ads }))
       .map(b => ('0' + (b & 0xFF).toString(16)).slice(-2)).join('');
 
     return jsonResponse({
       ok: true,
       companies,
       sites,
+      ads,
       updated_at,
       etag,
     });
@@ -567,7 +721,7 @@ function jsonResponse(obj) {
 }
 ```
 
-**Note**: The Apps Script normalizes headers to lowercase with underscores. Ensure your sheet headers match the expected names (`seo_title`, `seo_description`, etc.). The `sites` array includes a `domain` field derived from `slug`.
+**Note**: The Apps Script normalizes headers to lowercase with underscores. Ensure your sheet headers match the expected names (`seo_title`, `seo_description`, `state`, `division_type`, `division_name`, etc.). The `expandCounties` helper expands `*` or empty to all slugs, `state:TX` to all Texas slugs, and leaves comma-separated slugs as-is.
 
 **Optional**: Filter out company rows where `name` is empty or whitespace before adding to the `companies` array, to avoid blank entries. Similarly, filter out site rows where `slug` is empty.
 
@@ -646,20 +800,22 @@ One call updates all 78 sites.
 
 - [ ] Backup created (git branch, sites.json copy, optional sheet exports)
 - [ ] Master sheet has Companies tab with correct headers and data
-- [ ] Master sheet has Sites tab with correct row count (county/parish only; exclude directories, mineral-services-directory, permian-basin)
-- [ ] Apps Script returns valid JSON with `companies` and `sites`
+- [ ] Master sheet has Sites tab with `slug`, `state`, `division_type`, `division_name` and correct row count
+- [ ] Master sheet has Ads tab with correct headers (image_url, link, category, counties, priority, active)
+- [ ] Apps Script returns valid JSON with `companies`, `sites`, and `ads`
+- [ ] Apps Script expands `counties` (`*`, `state:TX`, comma-separated slugs) correctly
 - [ ] `MASTER_SHEET_URL` is set in Cloudflare Pages env
-- [ ] `functions/refresh.js` updated and deployed (with full hidden-company filter)
-- [ ] `functions/_lib.js` has `loadSiteConfigFromKV`, `loadSitesRegistryFromKV`, and `config` in `KV_KEYS`
-- [ ] `functions/index.js` uses `loadSiteConfigFromKV(env, host)`
+- [ ] `functions/refresh.js` updated and deployed (with full hidden-company filter and ads)
+- [ ] `functions/_lib.js` has `getSlugFromPath`, `loadDirectoryConfigFromKV`, `loadSitesRegistryFromKV`, and `directory:{slug}:*` in `KV_KEYS`
+- [ ] `functions/index.js` uses path-based routing, `loadDirectoryConfigFromKV(env, slug)`, loads ads from KV, renders ad cards in category grids
 - [ ] `functions/counties.js` uses `loadSitesRegistryFromKV(env)`
 - [ ] `functions/sitemap.xml.js` handles directories host (no config load) and county hosts (load from KV)
 - [ ] `sites.json` removed or deprecated
 - [ ] Initial refresh run immediately after deploy
-- [ ] Spot-check 5 counties: page loads, companies display, SEO correct
+- [ ] Spot-check 5 counties: page loads, companies display, SEO correct, ads display (if any)
 - [ ] Counties index page loads and lists all directories
 - [ ] `directories.mineralrightsforum.com/sitemap.xml` returns valid sitemap
-- [ ] `/health` and `/data.json` return expected data for county sites
+- [ ] `/health` and `/data.json` work for county pages (extract slug from path; use `directory:{slug}:*` keys)
 - [ ] GTM events still fire (optional manual check)
 - [ ] `DOCUMENTATION.md` updated
 
@@ -685,36 +841,46 @@ If something goes wrong:
 - [ ] Create backup (git branch, sites.json, optional sheet exports)
 - [ ] Create new Google Sheet
 - [ ] Add Companies tab with header row
-- [ ] Add Sites tab with header row
+- [ ] Add Sites tab with header row: `slug | state | division_type | division_name | page_title | return_url | directory_intro | seo_title | seo_description | category_order | theme`
+- [ ] Add Ads tab with header row
 - [ ] Run migration script to populate Companies from 78 sheets
-- [ ] Populate Sites from sites.json (via script or manual)
+- [ ] Populate Sites from [Comprehensive Counties List](https://docs.google.com/spreadsheets/d/13x6qveVTnRR1GPe7gF7ilAiFgsIATnETLkeriJBRDcY/edit) (column B) or sites.json
 - [ ] Verify row counts and sample data
 
 ### Phase 2: Apps Script
 
 - [ ] Create Apps Script in master sheet
-- [ ] Implement doGet to read both tabs
-- [ ] Return { ok, companies, sites, updated_at, etag }
+- [ ] Implement doGet to read Companies, Sites, and Ads tabs
+- [ ] Implement counties expansion (`*`, `state:TX`, comma-separated slugs)
+- [ ] Return { ok, companies, sites, ads, updated_at, etag }
 - [ ] Deploy as web app (Anyone)
 - [ ] Test with curl, verify JSON shape
 
-### Phase 3: Code Changes
+### Phase 3: R2 and Ad Assets (Optional)
+
+- [ ] Create R2 bucket for ad images (if using R2)
+- [ ] Configure public access or signed URLs
+- [ ] Document upload workflow for ad creatives
+
+### Phase 4: Code Changes
 
 - [ ] Add MASTER_SHEET_URL to Cloudflare Pages env
-- [ ] Update KV_KEYS to include config key
-- [ ] Add loadSiteConfigFromKV and loadSitesRegistryFromKV to _lib.js
-- [ ] Rewrite refresh.js for master sheet flow
-- [ ] Update index.js to use loadSiteConfigFromKV
+- [ ] Update KV_KEYS to use `directory:{slug}:*` prefix
+- [ ] Add getSlugFromPath, loadDirectoryConfigFromKV, loadSitesRegistryFromKV to _lib.js
+- [ ] Rewrite refresh.js for master sheet flow (including ads, path-based)
+- [ ] Update index.js for path-based routing (GET /{slug}), loadDirectoryConfigFromKV, render ad cards
+- [ ] Add .card--ad styles in src/app.css
 - [ ] Update counties.js to use loadSitesRegistryFromKV
 - [ ] Update sitemap.xml.js to use loadSiteConfigFromKV
 - [ ] Remove or deprecate sites.json
 
-### Phase 4: Deploy and Validate
+### Phase 5: Deploy and Validate
 
 - [ ] Deploy to Cloudflare Pages
 - [ ] Run initial refresh immediately (before traffic)
 - [ ] Verify health and data.json for 3–5 sites
 - [ ] Visit 3–5 county pages in browser
+- [ ] Verify ads display (if Ads tab has data)
 - [ ] Visit directories.mineralrightsforum.com
 - [ ] Verify directories.mineralrightsforum.com/sitemap.xml
 - [ ] Update cron/schedule to single refresh call
