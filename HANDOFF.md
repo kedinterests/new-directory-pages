@@ -71,17 +71,14 @@ node scripts/migrate-companies.js 1KHAw1w5_1ykLpsIsSiICHyCUnaf1yLYYBqTYfvrXwrw
 
 ### Immediate Next Steps (in order)
 
-1. **Deploy Apps Script as web app**
-   - Extensions → Apps Script → Deploy → New deployment
-   - Type: Web app
-   - Execute as: **Me**
-   - Who has access: **Anyone**
-   - Copy the deployment URL
+1. **Deploy Apps Script as web app** ✅
+   - URL: `https://script.google.com/a/macros/kedinterests.com/s/AKfycbwBcB3-vDWRu5j-MKzOtAaEz88viYSdfle2Oo0VC9p9ToRpl6guaY-o70dRIxcus3mi/exec`
 
-2. **Configure Cloudflare env vars**
-   - `MASTER_SHEET_URL` = Apps Script deployment URL
-   - `REFRESH_KEY` = secret key for refresh endpoint
-   - `DIRECTORIES_KV` = KV namespace (should already exist)
+2. **Cloudflare Pages project** ✅ (via Wrangler)
+   - Project: `directory-mineralrightsforum`
+   - URL: https://directory-mineralrightsforum.pages.dev
+   - KV namespace `DIRECTORIES_KV` created and bound
+   - **Add `REFRESH_KEY`** in dashboard: Settings → Environment variables (generate with `openssl rand -hex 32`)
 
 3. **Run refresh**
    - POST to refresh endpoint with `X-Refresh-Key` header

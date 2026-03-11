@@ -33,8 +33,8 @@ export const onRequestPost = async ({ request, env }) => {
   }
   const ads = Array.isArray(upstream.ads) ? upstream.ads : [];
 
-  let sitesUpdated = 0;
   const sitesMap = {};
+  const payloads = [];
 
   for (const site of upstream.sites) {
     const slug = String(site.slug || '').trim();
@@ -74,23 +74,39 @@ export const onRequestPost = async ({ request, env }) => {
       theme: site.theme || 'default',
     };
 
-    const keys = KV_KEYS(slug);
-    await env.DIRECTORIES_KV.put(keys.data, JSON.stringify(companiesForSite));
-    await env.DIRECTORIES_KV.put(keys.ads, JSON.stringify(adsForSite));
-    await env.DIRECTORIES_KV.put(keys.config, JSON.stringify(config));
-    await env.DIRECTORIES_KV.put(keys.etag, quickHash(companiesForSite));
-    await env.DIRECTORIES_KV.put(keys.updated, upstream.updated_at || new Date().toISOString());
-    await env.DIRECTORIES_KV.delete(keys.lastError);
-
     sitesMap[slug] = config;
-    sitesUpdated++;
+    const keys = KV_KEYS(slug);
+    payloads.push({
+      keys,
+      data: JSON.stringify(companiesForSite),
+      ads: JSON.stringify(adsForSite),
+      config: JSON.stringify(config),
+      etag: quickHash(companiesForSite),
+      updated: upstream.updated_at || new Date().toISOString(),
+    });
+  }
+
+  // Batch KV writes in parallel (50 sites at a time) to stay under function timeout
+  const BATCH_SIZE = 50;
+  for (let i = 0; i < payloads.length; i += BATCH_SIZE) {
+    const batch = payloads.slice(i, i + BATCH_SIZE);
+    await Promise.all(
+      batch.flatMap(({ keys, data, ads, config, etag, updated }) => [
+        env.DIRECTORIES_KV.put(keys.data, data),
+        env.DIRECTORIES_KV.put(keys.ads, ads),
+        env.DIRECTORIES_KV.put(keys.config, config),
+        env.DIRECTORIES_KV.put(keys.etag, etag),
+        env.DIRECTORIES_KV.put(keys.updated, updated),
+        env.DIRECTORIES_KV.delete(keys.lastError),
+      ])
+    );
   }
 
   await env.DIRECTORIES_KV.put('directory:index:config', JSON.stringify(sitesMap));
 
   return json({
     status: 'ok',
-    sites_updated: sitesUpdated,
+    sites_updated: payloads.length,
     duration_ms: Date.now() - t0,
   });
 };
