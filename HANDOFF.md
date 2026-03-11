@@ -1,7 +1,7 @@
 # Migration Handoff — Resume Here Tomorrow
 
-**Date:** March 10, 2025  
-**Status:** Migration in progress. Master spreadsheet set up, companies migrated, multi-select counties working.
+**Date:** March 11, 2025  
+**Status:** Pages loading, data flow working. Styling not yet applied.
 
 ---
 
@@ -54,6 +54,13 @@ node scripts/migrate-companies.js 1KHAw1w5_1ykLpsIsSiICHyCUnaf1yLYYBqTYfvrXwrw
 - `scripts/populate-sites.js` — fills Sites from Counties List or sites.json (695 sites)
 - `scripts/add-counties-reference.js` — Counties Reference + validation (Companies cleared, Ads applied)
 
+### 8. Cloudflare Pages + Refresh
+- Apps Script deployed as **public** web app (Who has access: Anyone)
+- Public URL: `https://script.google.com/macros/s/AKfycbyNw8dj3BQacyiVEg7ZdcBILTyeRWa2acl0sdNfOQ49JIyttGMqqnilCJmlBa9aa38/exec`
+- Cloudflare Pages project `directory-mineralrightsforum` via Wrangler
+- KV populated via refresh endpoint (batch KV writes to avoid function timeout)
+- Pages loading at `directory.mineralrightsforum.pages.dev` and custom domain
+
 ---
 
 ## Current State
@@ -69,25 +76,9 @@ node scripts/migrate-companies.js 1KHAw1w5_1ykLpsIsSiICHyCUnaf1yLYYBqTYfvrXwrw
 
 ## What Needs to Be Done Next
 
-### Immediate Next Steps (in order)
+### Immediate Next Steps
 
-1. **Deploy Apps Script as web app** ✅
-   - URL: `https://script.google.com/a/macros/kedinterests.com/s/AKfycbwBcB3-vDWRu5j-MKzOtAaEz88viYSdfle2Oo0VC9p9ToRpl6guaY-o70dRIxcus3mi/exec`
-
-2. **Cloudflare Pages project** ✅ (via Wrangler)
-   - Project: `directory-mineralrightsforum`
-   - URL: https://directory-mineralrightsforum.pages.dev
-   - KV namespace `DIRECTORIES_KV` created and bound
-   - **Add `REFRESH_KEY`** in dashboard: Settings → Environment variables (generate with `openssl rand -hex 32`)
-
-3. **Run refresh**
-   - POST to refresh endpoint with `X-Refresh-Key` header
-   - Or trigger via cron/Cloudflare Worker
-
-4. **Verify**
-   - Visit `https://directory.mineralrightsforum.com/`
-   - Visit a county page (e.g. `/reeves-county-texas`)
-   - Confirm companies and ads display correctly
+1. **Fix styling** — pages load but have no real styling yet (next session)
 
 ### Optional / Later
 
@@ -105,6 +96,7 @@ node scripts/migrate-companies.js 1KHAw1w5_1ykLpsIsSiICHyCUnaf1yLYYBqTYfvrXwrw
 | Service account | `cursor@mrf-county-directories.iam.gserviceaccount.com` |
 | Credentials | `google-credentials.json` (in .gitignore) |
 | sites.json | 78 entries with `sheet.url` (sheetId in query param) |
+| MASTER_SHEET_URL, REFRESH_KEY | Set in Cloudflare dashboard (Settings → Environment variables). Do not add to wrangler.toml — causes "Binding name already in use" on deploy. |
 
 ---
 

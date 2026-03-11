@@ -44,7 +44,7 @@ Click **Save and Deploy** (first deploy may fail until env vars are set — that
 
 | Variable | Value | Encrypted |
 |----------|-------|-----------|
-| `MASTER_SHEET_URL` | `https://script.google.com/a/macros/kedinterests.com/s/AKfycbwBcB3-vDWRu5j-MKzOtAaEz88viYSdfle2Oo0VC9p9ToRpl6guaY-o70dRIxcus3mi/exec` | No |
+| `MASTER_SHEET_URL` | `https://script.google.com/macros/s/AKfycbyNw8dj3BQacyiVEg7ZdcBILTyeRWa2acl0sdNfOQ49JIyttGMqqnilCJmlBa9aa38/exec` | No |
 | `REFRESH_KEY` | *(generate with `openssl rand -hex 32`)* | Yes |
 
 ---
@@ -85,18 +85,21 @@ Once the site is live:
 
 ```bash
 # Replace YOUR_REFRESH_KEY with the value you set
+# Use --max-time 90 to avoid indefinite hang
 curl -X POST https://directory.mineralrightsforum.com/refresh \
-  -H "X-Refresh-Key: YOUR_REFRESH_KEY"
+  -H "X-Refresh-Key: YOUR_REFRESH_KEY" --max-time 90
 ```
 
 Or use the `.pages.dev` URL if the custom domain isn't ready yet:
 
 ```bash
 curl -X POST https://YOUR_PROJECT.pages.dev/refresh \
-  -H "X-Refresh-Key: YOUR_REFRESH_KEY"
+  -H "X-Refresh-Key: YOUR_REFRESH_KEY" --max-time 90
 ```
 
 Expected response: `{"status":"ok","sites_updated":695,"duration_ms":...}`
+
+**Note:** The refresh function uses batched KV writes (50 sites per batch) to complete within the Cloudflare Functions timeout.
 
 ---
 
@@ -105,3 +108,5 @@ Expected response: `{"status":"ok","sites_updated":695,"duration_ms":...}`
 - **Index:** https://directory.mineralrightsforum.com/
 - **County page:** https://directory.mineralrightsforum.com/reeves-county-texas
 - **Health:** https://directory.mineralrightsforum.com/health
+
+**Note:** Pages load and data flow works, but styling is minimal/placeholder for now.

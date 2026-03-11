@@ -90,29 +90,29 @@ This document is a sequential, actionable checklist for executing the migration 
 
 **Ref**: [Step 4: Create the New Apps Script](migrate-to-single-spreadsheet.md#step-4-create-the-new-apps-script), [Apps Script Code](migrate-to-single-spreadsheet.md#apps-script-code)
 
-- [ ] In master sheet: **Extensions → Apps Script**
-- [ ] Copy code from `scripts/AppsScript-Code.js` into the script editor (Code.gs)
-- [ ] Add `CountiesSidebar.html`: **File → New → HTML file**, name it `CountiesSidebar`, paste contents from `scripts/CountiesSidebar.html`
-- [ ] Build slug lookup: all slugs and slugs by state from Sites tab
-- [ ] Implement `expandCounties(val)`: `*`/empty → all slugs, `state:TX` → Texas slugs, else keep as-is
-- [ ] Expand `counties` for each company and ad row
-- [ ] Return `{ ok, companies, sites, ads, updated_at, etag }`
-- [ ] Deploy as web app: **Execute as: Me**, **Who has access: Anyone**
-- [ ] Copy deployment URL
+- [x] In master sheet: **Extensions → Apps Script**
+- [x] Copy code from `scripts/AppsScript-Code.js` into the script editor (Code.gs)
+- [x] Add `CountiesSidebar.html`: **File → New → HTML file**, name it `CountiesSidebar`, paste contents from `scripts/CountiesSidebar.html`
+- [x] Build slug lookup: all slugs and slugs by state from Sites tab
+- [x] Implement `expandCounties(val)`: `*`/empty → all slugs, `state:TX` → Texas slugs, else keep as-is
+- [x] Expand `counties` for each company and ad row
+- [x] Return `{ ok, companies, sites, ads, updated_at, etag }`
+- [x] Deploy as web app: **Execute as: Me**, **Who has access: Anyone**
+- [x] Copy deployment URL
 
 ### Step 3.2: Multi-Select Counties (Companies tab)
 
-- [ ] **Directory** menu appears in the sheet (from `onOpen`)
-- [ ] To edit counties: select a cell in Companies column J (counties), then **Directory → Select counties**
-- [ ] Sidebar opens with searchable list of ~700 counties, states, and `*` (all)
-- [ ] Check/uncheck, click **Apply** to write comma-separated values to the cell
+- [x] **Directory** menu appears in the sheet (from `onOpen`)
+- [x] To edit counties: select a cell in Companies column J (counties), then **Directory → Select counties**
+- [x] Sidebar opens with searchable list of ~700 counties, states, and `*` (all)
+- [x] Check/uncheck, click **Apply** to write comma-separated values to the cell
 
 ### Step 3.3: Test Apps Script
 
-- [ ] `curl "YOUR_APPS_SCRIPT_URL"` returns valid JSON
-- [ ] Verify `companies`, `sites`, `ads` arrays present
-- [ ] Verify `counties` in companies are expanded (comma-separated slugs)
-- [ ] Verify `sites` have `slug`, `division_type`, `division_name`, `state`
+- [x] `curl "YOUR_APPS_SCRIPT_URL"` returns valid JSON
+- [x] Verify `companies`, `sites`, `ads` arrays present
+- [x] Verify `counties` in companies are expanded (comma-separated slugs)
+- [x] Verify `sites` have `slug`, `division_type`, `division_name`, `state`
 
 ---
 
@@ -135,9 +135,9 @@ This document is a sequential, actionable checklist for executing the migration 
 
 **Ref**: [Step 5: Add Environment Variable](migrate-to-single-spreadsheet.md#step-5-add-environment-variable)
 
-- [ ] Cloudflare Pages → **Settings → Environment Variables**
-- [ ] Add `MASTER_SHEET_URL` = your Apps Script deployment URL
-- [ ] Set for Production (and Preview if used)
+- [x] Cloudflare Pages → **Settings → Environment Variables**
+- [x] Add `MASTER_SHEET_URL` = your Apps Script deployment URL
+- [x] Set for Production (and Preview if used)
 
 ---
 
@@ -207,32 +207,32 @@ This document is a sequential, actionable checklist for executing the migration 
 
 ### Step 7.1: Deploy
 
-- [ ] Commit all code changes
-- [ ] Push to `main` (or trigger Cloudflare Pages deploy)
-- [ ] Wait for deployment to complete
+- [x] Commit all code changes
+- [x] Push to `main` (or trigger Cloudflare Pages deploy)
+- [x] Wait for deployment to complete
 
 ### Step 7.2: Run Initial Refresh
 
 **Ref**: [Step 12: Run Initial Refresh](migrate-to-single-spreadsheet.md#step-12-run-initial-refresh)
 
-- [ ] **Immediately** after deploy, run refresh (before user traffic):
+- [x] **Immediately** after deploy, run refresh (before user traffic):
   ```bash
   curl -X POST https://directory.mineralrightsforum.com/refresh \
     -H "X-Refresh-Key: YOUR_REFRESH_KEY"
   ```
-- [ ] Verify response: `{ "status": "ok", "sites_updated": 78, ... }` (or your count)
+- [x] Verify response: `{ "status": "ok", "sites_updated": 78, ... }` (or your count)
 
 ### Step 7.3: Verify Endpoints
 
-- [ ] `curl https://directory.mineralrightsforum.com/reeves-county-texas` → 200, HTML page loads
-- [ ] Verify `/health` and `/data.json` for county pages (path structure depends on routing implementation)
-- [ ] Repeat for 2–3 other county slugs
+- [x] `curl https://directory.mineralrightsforum.com/reeves-county-texas` → 200, HTML page loads
+- [x] Verify `/health` and `/data.json` for county pages (path structure depends on routing implementation)
+- [x] Repeat for 2–3 other county slugs
 
 ### Step 7.4: Verify Pages in Browser
 
-- [ ] Visit `https://directory.mineralrightsforum.com/reeves-county-texas` — page loads, companies display
-- [ ] Visit `https://directory.mineralrightsforum.com` — counties index loads
-- [ ] Visit `https://directory.mineralrightsforum.com/sitemap.xml` — valid XML
+- [x] Visit `https://directory.mineralrightsforum.com/reeves-county-texas` — page loads, companies display
+- [x] Visit `https://directory.mineralrightsforum.com` — counties index loads
+- [x] Visit `https://directory.mineralrightsforum.com/sitemap.xml` — valid XML
 - [ ] If Ads tab has data: verify ad card appears in category grid
 
 ### Step 7.5: Update Refresh Schedule
@@ -269,6 +269,12 @@ This document is a sequential, actionable checklist for executing the migration 
 
 - [ ] Keep `backup-pre-migration` branch
 - [ ] If rollback: revert code, restore `sites.json`, remove `MASTER_SHEET_URL`, re-run per-site refresh
+
+---
+
+## Phase 9: Styling
+
+- [ ] Apply real styling to directory pages (next session)
 
 ---
 
