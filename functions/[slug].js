@@ -216,7 +216,7 @@ export const onRequestGet = async ({ request, env, params }) => {
   </script>
   <script type="application/ld+json">${schemaJson}</script>
   <style>
-    :root{ --sticky-offset: 64px; --sticky-bar-height: 64px; --mrf-primary: #111827; --mrf-primary-700: #0f172a; --mrf-text-on-primary: #ffffff; --mrf-outline: #e5e7eb; --mrf-border: #e5e7eb; --mrf-subtle: #6b7280; --mrf-accent: #f59e0b; --mrf-accent-600: #d97706; }
+    :root{ --sticky-offset: 300px; --sticky-bar-height: 64px; --mrf-primary: #111827; --mrf-primary-700: #0f172a; --mrf-text-on-primary: #ffffff; --mrf-outline: #e5e7eb; --mrf-border: #e5e7eb; --mrf-subtle: #6b7280; --mrf-accent: #f59e0b; --mrf-accent-600: #d97706; }
     html{ scroll-behavior:smooth; }
     html, body { width: 100%; overflow-x: hidden; max-width: 100vw; }
     body{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;color:#111;line-height:1.5}
@@ -226,21 +226,19 @@ export const onRequestGet = async ({ request, env, params }) => {
     .container{max-width:1280px;margin:0 auto;padding:1rem}
     .shadow-soft{box-shadow:0 1px 2px rgba(0,0,0,.05),0 1px 3px rgba(0,0,0,.1)}
     .hidden{display:none !important}
-    .srch{width:100%;max-width:28rem}
-    .dir-sticky{ position: sticky; top: 0; z-index: 30; background: var(--mrf-primary); color: #f9fafb; border-bottom: 1px solid #020617; margin-bottom: 25px; }
-    .dir-sticky .container{ padding-top: 0.35rem; padding-bottom: 0.35rem; }
-    .dir-sticky h1, .dir-sticky p, .dir-sticky label{ color: #f9fafb; }
-    .dir-sticky .srch, .dir-sticky select{ background-color: #ffffff; color: #111827; border-color: #4b5563; }
-    .dir-sticky .featured-only-label{ color: #e5e7eb; font-size: .9rem; line-height: 1; }
-    .dir-sticky input[type="checkbox"]{ width: 1.5rem; height: 1.5rem; border-radius: 0.375rem; border: 2px solid #e5e7eb; background-color: #111827; accent-color: #BD1E2B; }
-    .dir-sticky input[type="checkbox"]:checked{ background-color: #ffffff; border-color: #BD1E2B; accent-color: #BD1E2B; }
-    #jump{ display:flex; flex-wrap:wrap; justify-content:center; gap:.5rem; margin-top:0; }
-    @media (max-width:1023px){ #jump{display:none} .container.mt-12{ display: none; } }
     .header-back-btn{ display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.625rem 1.25rem; font-size: 0.9375rem; font-weight: 500; color: #ffffff; background: #23456D; border: none; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
     .header-back-btn:hover{ background: #1a3454; transform: translateY(-1px); box-shadow: 0 2px 4px rgba(35, 69, 109, 0.2); }
     .card--ad { display: block; border: 1px solid var(--mrf-border); border-radius: 0.5rem; overflow: hidden; }
     .card--ad img { width: 100%; height: auto; display: block; }
-    @media (max-width: 767px){ .dir-sticky h1{ font-size: 1rem; } .dir-sticky .container{ padding-top:7.5px; padding-bottom: 7.5px; } .dir-sticky .filters-row{ display: none; } .dir-sticky{ margin-bottom: 0px !important; } :root{ --sticky-bar-height: 45px; } section h2.sticky{ top: calc(var(--sticky-bar-height) + 45px) !important; } .container.mt-12{ display: none !important; } }
+    @media (max-width: 767px){
+      .directory-hero { padding: 60px 20px 40px; }
+      .directory-hero h1 { font-size: 2rem; }
+      .search-container { flex-direction: column; }
+      .search-container input, .btn-search { width: 100%; }
+      .hero-footer { flex-direction: column; align-items: flex-start; }
+      :root{ --sticky-bar-height: 45px; }
+      section h2.sticky{ top: 60px !important; }
+    }
   </style>
 </head>
 <body class="bg-white">
@@ -261,30 +259,39 @@ export const onRequestGet = async ({ request, env, params }) => {
     </div>
   </header>
 
-  <div class="dir-sticky">
-    <div class="container py-1">
-      <div class="flex flex-col gap-2 md:flex-row items-center md:items-center md:justify-between">
-        <div><h1 class="text-xl font-bold whitespace-pre-line">${escapeHtml(page_title || 'Directory')}</h1></div>
-        <div class="flex gap-2 items-center filters-row">
-          <input id="q" class="srch border rounded-lg px-3 py-2" type="search" placeholder="Search this page">
-          <select id="cat" class="border rounded-lg px-2 py-2">
-            <option value="">Filter by Category</option>
-            ${categoryNames.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('')}
-          </select>
-          <label id="controls" class="flex items-center gap-2 text-sm featured-only-label">
-            <input id="onlyPremium" type="checkbox"> Featured<br>Only
-          </label>
+  <section class="directory-hero">
+    <div class="container">
+      <span class="accent-label">Mineral Rights Forum Directory</span>
+      <h1>${escapeHtml(display_label)}</h1>
+      <p class="subtitle">${escapeHtml(directory_intro || 'Search the most trusted network of mineral attorneys, buyers, and management specialists.')}</p>
+
+      <div class="search-container">
+        <input id="q" type="search" placeholder="Who are you looking for today?">
+        <button class="btn-search" onclick="applyFilter()">Search Now</button>
+      </div>
+
+      <div class="hero-footer">
+        <label class="featured-toggle">
+          <div class="switch">
+            <input id="onlyPremium" type="checkbox">
+            <span class="slider"></span>
+          </div>
+          <span>Show Featured Professionals Only</span>
+        </label>
+        <div class="stats-mini">
+          <strong>${visibleCompanies.length}</strong> Active Listings
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="container mt-12">
-    <nav id="jump">${navItems}</nav>
-  </div>
+  <nav class="category-nav-wrapper" id="stickyNav">
+    <div class="container pill-container">
+      ${categoryNames.map(cat => `<a href="#cat-${idSlug(cat)}" class="pill">${escapeHtml(cat)}</a>`).join('')}
+    </div>
+  </nav>
 
   <main class="container">
-    ${directory_intro ? `<div class="directory-intro mb-8 text-gray-700 max-w-4xl mx-auto font-semibold text-center leading-normal"><p>${escapeHtml(directory_intro).replace(/\n\n/g, '</p><p class="mt-4">').replace(/\n/g, '<br>')}</p></div>` : ''}
     ${sections}
 
     <div class="tips-card" id="tipsCard">
@@ -370,24 +377,30 @@ export const onRequestGet = async ({ request, env, params }) => {
         const hasVisible = !!grid && Array.from(grid.querySelectorAll('article')).some(a => !a.classList.contains('hidden'));
         sec.classList.toggle('hidden', !hasVisible);
       });
-      const jumpNav = document.getElementById('jump');
-      if (jumpNav) jumpNav.querySelectorAll('a[href^="#cat-"]').forEach(link=>{
+      const stickyNav = document.getElementById('stickyNav');
+      if (stickyNav) stickyNav.querySelectorAll('a[href^="#cat-"]').forEach(link=>{
         const id = link.getAttribute('href').slice(1);
         const sec = document.getElementById(id);
         link.classList.toggle('hidden', !sec || sec.classList.contains('hidden'));
       });
     }
     q?.addEventListener('input', debounce(applyFilter, 120));
-    cat?.addEventListener('change', applyFilter);
     onlyPremium?.addEventListener('change', applyFilter);
     applyFilter();
     function debounce(fn, ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; }
-    const jump = document.getElementById('jump');
-    if (jump) jump.addEventListener('click', (e)=>{
+    const stickyNav = document.getElementById('stickyNav');
+    if (stickyNav) stickyNav.addEventListener('click', (e)=>{
       const a = e.target.closest('a[href^="#cat-"]');
       if(!a) return;
       e.preventDefault();
       document.getElementById(a.getAttribute('href').slice(1))?.scrollIntoView({ behavior:'smooth', block:'start' });
+    });
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('stickyNav');
+      if (nav) {
+        if (window.pageYOffset > 300) nav.classList.add('scrolled');
+        else nav.classList.remove('scrolled');
+      }
     });
     const applyModal = document.getElementById('applyModal');
     const applyBtn = document.getElementById('applyForListingBtn');
