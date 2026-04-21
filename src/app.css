@@ -462,6 +462,60 @@ section[id^="cat-"] > div[data-category-grid] > article{ max-width: 520px; margi
 /* Keep the “Featured only” label on one line everywhere */
 .featured-only-label{ white-space: nowrap; }
 
+/* ---- Tips card accordion ---- */
+.tips-card{
+  background:#fff;
+  border:1px solid var(--mrf-border);
+  border-radius:var(--card-radius);
+  box-shadow:var(--shadow-soft);
+  max-width:1200px;
+  margin:2.5rem auto 0;
+  overflow:hidden;
+}
+.tips-card-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  padding:1rem 1.5rem;
+  cursor:pointer;
+  user-select:none;
+}
+.tips-card-header h2{
+  display:flex;
+  align-items:center;
+  gap:.625rem;
+  margin:0;
+  padding:0;
+  border:none;
+  background:none;
+  font-size:1.0625rem;
+  font-weight:700;
+  color:var(--mrf-ink);
+  scroll-margin-top:0;
+}
+.tips-card-chevron{
+  width:20px;
+  height:20px;
+  flex-shrink:0;
+  color:var(--mrf-subtle);
+  transition:transform .2s ease;
+}
+.tips-card.expanded .tips-card-chevron{ transform:rotate(180deg); }
+.tips-card-content{
+  display:none;
+  padding:0 1.5rem 1.25rem;
+  color:var(--mrf-ink);
+  border-top:1px solid var(--mrf-border);
+}
+.tips-card.expanded .tips-card-content{ display:block; }
+.tips-card-content ul{
+  margin:1rem 0 0;
+  padding-left:1.25rem;
+  line-height:1.6;
+}
+.tips-card-content li{ margin-bottom:.5rem; }
+
 /* Hide ALL top filters on mobile: search, category dropdown, featured-only checkbox */
 @media (max-width: 1023px){
   .dir-sticky #q,
