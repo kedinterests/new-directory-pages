@@ -146,8 +146,85 @@ export const onRequestGet = async ({ request, env, params }) => {
         <hr class="empty-cta__rule" />
         <p class="empty-cta__copy">No mineral rights professionals currently appear on this page. Submit your details and you'll be the first name mineral owners see when they search ${escapeHtml(display_label)}.</p>
       </div>
-      <div class="empty-cta__form" id="advertiserFormEmbed" aria-label="Advertiser application form">
-        Form embed will load here
+      <div class="empty-cta__form" aria-label="Advertiser application form">
+        <div id="zf_div_RChJcXXgYTZYdZp3lQq3ZB_oH8emU71Sbxki1qpu1Yc"></div>
+        <script type="text/javascript">
+        (function() {
+            try{
+                var f = document.createElement("iframe");
+                var ifrmSrc = 'https://forms.zohopublic.com/kedinterestsllc/form/MRFCountyDirectoryPageListingInquiry/formperma/RChJcXXgYTZYdZp3lQq3ZB_oH8emU71Sbxki1qpu1Yc?zf_rszfm=1';
+                try{
+                    if ( typeof ZFAdvLead != "undefined" && typeof zfutm_zfAdvLead != "undefined" ) {
+                        for( var prmIdx = 0 ; prmIdx < ZFAdvLead.utmPNameArr.length ; prmIdx ++ ) {
+                            var utmPm = ZFAdvLead.utmPNameArr[ prmIdx ];
+                            utmPm = ( ZFAdvLead.isSameDomian && ( ZFAdvLead.utmcustPNameArr.indexOf(utmPm) == -1 ) ) ? "zf_" + utmPm : utmPm;
+                            var utmVal = zfutm_zfAdvLead.zfautm_gC_enc( ZFAdvLead.utmPNameArr[ prmIdx ] );
+                            if ( typeof utmVal !== "undefined" ) {
+                              if ( utmVal != "" ) {
+                                if(ifrmSrc.indexOf('?') > 0){
+                                     ifrmSrc = ifrmSrc+'&'+utmPm+'='+utmVal;
+                                }else{
+                                    ifrmSrc = ifrmSrc+'?'+utmPm+'='+utmVal;
+                                }
+                              }
+                            }
+                        }
+                    }
+                    if ( typeof ZFLead !== "undefined" && typeof zfutm_zfLead !== "undefined" ) {
+                        for( var prmIdx = 0 ; prmIdx < ZFLead.utmPNameArr.length ; prmIdx ++ ) {
+                            var utmPm = ZFLead.utmPNameArr[ prmIdx ];
+                            var utmVal = zfutm_zfLead.zfutm_gC_enc( ZFLead.utmPNameArr[ prmIdx ] );
+                            if ( typeof utmVal !== "undefined" ) {
+                              if ( utmVal != "" ){
+                                if(ifrmSrc.indexOf('?') > 0){
+                                  ifrmSrc = ifrmSrc+'&'+utmPm+'='+utmVal;
+                                }else{
+                                  ifrmSrc = ifrmSrc+'?'+utmPm+'='+utmVal;
+                                }
+                              }
+                            }
+                          }
+                    }
+                }catch(e){}
+                f.src = ifrmSrc;
+                f.style.border="none";
+                f.style.height="1751px";
+                f.style.width="90%";
+                f.style.transition="all 0.5s ease";
+                f.setAttribute("aria-label", 'MRF \\- County Directory Page Listing Inquiry');
+                var d = document.getElementById("zf_div_RChJcXXgYTZYdZp3lQq3ZB_oH8emU71Sbxki1qpu1Yc");
+                d.appendChild(f);
+                window.addEventListener('message', function (){
+                    var evntData = event.data;
+                    if( evntData && evntData.constructor == String ){
+                        var zf_ifrm_data = evntData.split("|");
+                        if ( zf_ifrm_data.length == 2 || zf_ifrm_data.length == 3 ) {
+                            var zf_perma = zf_ifrm_data[0];
+                            var zf_ifrm_ht_nw = ( parseInt(zf_ifrm_data[1], 10) + 15 ) + "px";
+                            var iframe = document.getElementById("zf_div_RChJcXXgYTZYdZp3lQq3ZB_oH8emU71Sbxki1qpu1Yc").getElementsByTagName("iframe")[0];
+                            if ( (iframe.src).indexOf('formperma') > 0 && (iframe.src).indexOf(zf_perma) > 0 ) {
+                                var prevIframeHeight = iframe.style.height;
+                                var zf_tout = false;
+                                if( zf_ifrm_data.length == 3 ) {
+                                    iframe.scrollIntoView();
+                                    zf_tout = true;
+                                }
+                                if ( prevIframeHeight != zf_ifrm_ht_nw ) {
+                                    if( zf_tout ) {
+                                        setTimeout(function(){
+                                            iframe.style.height = zf_ifrm_ht_nw;
+                                        },500);
+                                    } else {
+                                        iframe.style.height = zf_ifrm_ht_nw;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }, false);
+            }catch(e){}
+        })();
+        </script>
       </div>
     </section>
   `;
@@ -190,7 +267,7 @@ export const onRequestGet = async ({ request, env, params }) => {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://static.mineralrightsforum.com" crossorigin>
-  <link rel="stylesheet" href="/styles.css?v=202604211805" media="all">
+  <link rel="stylesheet" href="/styles.css?v=202604211830" media="all">
   <link rel="stylesheet" href="https://static.mineralrightsforum.com/styles.css" media="all" crossorigin="anonymous">
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
