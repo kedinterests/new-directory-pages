@@ -356,7 +356,7 @@ export const onRequestGet = async ({ request, env, params }) => {
       <h1>${escapeHtml(display_label)}</h1>
       <p class="subtitle">${escapeHtml(directory_intro || 'Search the most trusted network of mineral attorneys, buyers, and management specialists.')}</p>
 
-      <div class="search-container">
+      ${visibleCompanies.length === 0 ? '' : `<div class="search-container">
         <input id="q" type="search" placeholder="Who are you looking for today?">
         <button class="btn-search" onclick="applyFilter()">Search Now</button>
       </div>
@@ -372,7 +372,7 @@ export const onRequestGet = async ({ request, env, params }) => {
         <div class="stats-mini">
           <strong>${visibleCompanies.length}</strong> Active Listings
         </div>
-      </div>
+      </div>`}
     </div>
   </section>
 
@@ -385,7 +385,7 @@ export const onRequestGet = async ({ request, env, params }) => {
   <main class="container">
     ${visibleCompanies.length === 0 ? emptyCTA : sections}
 
-    <div class="tips-card" id="tipsCard">
+    ${visibleCompanies.length === 0 ? '' : `<div class="tips-card" id="tipsCard">
       <div class="tips-card-header" id="tipsCardHeader">
         <h2><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink: 0;"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M13.737 21.848a10.002 10.002 0 0 0 6.697-15.221a10 10 0 1 0-6.698 15.221z"/><path stroke-linecap="square" d="M12 12v6m0-11V6"/></g></svg><span>Tips for Choosing a Pro</span></h2>
         <svg class="tips-card-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -412,7 +412,7 @@ export const onRequestGet = async ({ request, env, params }) => {
         <p class="cta-text" style="font-size:1.25rem;font-weight:500;color:#23456D;margin:0 0 1.75rem 0;">Business Owners - would you like to appear on one of our directory pages? We offer paid <a href="${escapeAttr(origin + '/')}">County-specific Directories</a> and a general <a href="https://mineral-services-directory.mineralrightsforum.com">Nationwide Directory</a>. Limitations apply.</p>
         <button id="applyForListingBtn" class="cta-button" style="display:inline-flex;align-items:center;justify-content:center;padding:0.625rem 1.25rem;font-size:0.9375rem;font-weight:500;color:#fff;background:var(--mrf-primary);border:none;border-radius:0.5rem;cursor:pointer;">Apply for Listing</button>
       </div>
-    </div>
+    </div>`}
   </main>
 
   <footer style="background:var(--mrf-primary);color:#f9fafb;padding:2.5rem 0;margin-top:3rem;">
