@@ -176,7 +176,7 @@ export const onRequestGet = async ({ request, env, params }) => {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://static.mineralrightsforum.com" crossorigin>
-  <link rel="stylesheet" href="/styles.css?v=202511080417p" media="all">
+  <link rel="stylesheet" href="/styles.css?v=202604211650" media="all">
   <link rel="stylesheet" href="https://static.mineralrightsforum.com/styles.css" media="all" crossorigin="anonymous">
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
