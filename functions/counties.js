@@ -150,59 +150,12 @@ export const onRequestGet = async ({ request, env }) => {
     'Wyoming': 'WY'
   };
 
-  // State flag image URLs (using Wikimedia Commons with direct PNG links)
-  const stateFlags = {
-    'AL': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Alabama.svg/320px-Flag_of_Alabama.svg.png',
-    'AK': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Flag_of_Alaska.svg/320px-Flag_of_Alaska.svg.png',
-    'AZ': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Flag_of_Arizona.svg/320px-Flag_of_Arizona.svg.png',
-    'AR': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Flag_of_Arkansas.svg/320px-Flag_of_Arkansas.svg.png',
-    'CA': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Flag_of_California.svg/320px-Flag_of_California.svg.png',
-    'CO': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Flag_of_Colorado.svg/320px-Flag_of_Colorado.svg.png',
-    'CT': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Flag_of_Connecticut.svg/320px-Flag_of_Connecticut.svg.png',
-    'DE': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Flag_of_Delaware.svg/320px-Flag_of_Delaware.svg.png',
-    'FL': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Flag_of_Florida.svg/320px-Flag_of_Florida.svg.png',
-    'GA': 'https://upload.wikimedia.org/wikipedia/commons/b/b7/Georgia_state_flag.png',
-    'HI': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Flag_of_Hawaii.svg/320px-Flag_of_Hawaii.svg.png',
-    'ID': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_Idaho.svg/320px-Flag_of_Idaho.svg.png',
-    'IL': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Flag_of_Illinois.svg/320px-Flag_of_Illinois.svg.png',
-    'IN': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Flag_of_Indiana.svg/320px-Flag_of_Indiana.svg.png',
-    'IA': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Flag_of_Iowa.svg/320px-Flag_of_Iowa.svg.png',
-    'KS': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Flag_of_Kansas.svg/320px-Flag_of_Kansas.svg.png',
-    'KY': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Flag_of_Kentucky.svg/320px-Flag_of_Kentucky.svg.png',
-    'LA': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Flag_of_Louisiana.svg/320px-Flag_of_Louisiana.svg.png',
-    'ME': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Flag_of_Maine.svg/320px-Flag_of_Maine.svg.png',
-    'MD': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Flag_of_Maryland.svg/320px-Flag_of_Maryland.svg.png',
-    'MA': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Flag_of_Massachusetts.svg/320px-Flag_of_Massachusetts.svg.png',
-    'MI': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Flag_of_Michigan.svg/320px-Flag_of_Michigan.svg.png',
-    'MN': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Flag_of_Minnesota.svg/320px-Flag_of_Minnesota.svg.png',
-    'MS': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Flag_of_Mississippi.svg/320px-Flag_of_Mississippi.svg.png',
-    'MO': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Flag_of_Missouri.svg/320px-Flag_of_Missouri.svg.png',
-    'MT': 'https://upload.wikimedia.org/wikipedia/commons/c/cb/Montana_state_flag.png',
-    'NE': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Flag_of_Nebraska.svg/320px-Flag_of_Nebraska.svg.png',
-    'NV': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Flag_of_Nevada.svg/320px-Flag_of_Nevada.svg.png',
-    'NH': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Flag_of_New_Hampshire.svg/320px-Flag_of_New_Hampshire.svg.png',
-    'NJ': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Flag_of_New_Jersey.svg/320px-Flag_of_New_Jersey.svg.png',
-    'NM': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Flag_of_New_Mexico.svg/320px-Flag_of_New_Mexico.svg.png',
-    'NY': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Flag_of_New_York.svg/320px-Flag_of_New_York.svg.png',
-    'NC': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Flag_of_North_Carolina.svg/320px-Flag_of_North_Carolina.svg.png',
-    'ND': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Flag_of_North_Dakota.svg/320px-Flag_of_North_Dakota.svg.png',
-    'OH': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Flag_of_Ohio.svg/320px-Flag_of_Ohio.svg.png',
-    'OK': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Flag_of_Oklahoma.svg/320px-Flag_of_Oklahoma.svg.png',
-    'OR': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Flag_of_Oregon.svg/320px-Flag_of_Oregon.svg.png',
-    'PA': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Flag_of_Pennsylvania.svg/320px-Flag_of_Pennsylvania.svg.png',
-    'RI': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Rhode_Island.svg/320px-Flag_of_Rhode_Island.svg.png',
-    'SC': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Flag_of_South_Carolina.svg/320px-Flag_of_South_Carolina.svg.png',
-    'SD': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Flag_of_South_Dakota.svg/320px-Flag_of_South_Dakota.svg.png',
-    'TN': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flag_of_Tennessee.svg/320px-Flag_of_Tennessee.svg.png',
-    'TX': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Flag_of_Texas.svg/320px-Flag_of_Texas.svg.png',
-    'UT': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Flag_of_Utah.svg/320px-Flag_of_Utah.svg.png',
-    'VT': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Flag_of_Vermont.svg/320px-Flag_of_Vermont.svg.png',
-    'VA': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Flag_of_Virginia.svg/320px-Flag_of_Virginia.svg.png',
-    'WA': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Flag_of_Washington.svg/320px-Flag_of_Washington.svg.png',
-    'WV': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Flag_of_West_Virginia.svg/320px-Flag_of_West_Virginia.svg.png',
-    'WI': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Flag_of_Wisconsin.svg/320px-Flag_of_Wisconsin.svg.png',
-    'WY': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_Wyoming.svg/320px-Flag_of_Wyoming.svg.png'
-  };
+  // State flag paths — self-hosted in public/flags/ (SVG for most, PNG for GA + MT)
+  const flagExt = (abbr) => (abbr === 'GA' || abbr === 'MT') ? 'png' : 'svg';
+  const stateFlags = Object.fromEntries(
+    ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY']
+      .map(a => [a, `/flags/${a.toLowerCase()}.${flagExt(a)}`])
+  );
 
   // Build HTML grouped by state
   const pageUrl = new URL(request.url).origin;
@@ -299,7 +252,7 @@ export const onRequestGet = async ({ request, env }) => {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://static.mineralrightsforum.com" crossorigin>
     <!-- Primary CSS - local file (always available, served from public/) -->
-    <link rel="stylesheet" href="/styles.css?v=202604211910" media="all">
+    <link rel="stylesheet" href="/styles.css?v=202604212030" media="all">
     <!-- Secondary CSS - external CDN (optional enhancement, non-blocking) -->
     <link rel="stylesheet" href="https://static.mineralrightsforum.com/styles.css" media="all" crossorigin="anonymous">
     <!-- Google Tag Manager -->
@@ -1112,31 +1065,27 @@ export const onRequestGet = async ({ request, env }) => {
       </div>
     </header>
 
-    <!-- ===== DIRECTORY STICKY BAR (TITLE + FILTERS) ===== -->
-    <div class="dir-sticky">
-      <div class="container py-1">
-        <div class="flex flex-col gap-2 md:flex-row items-center md:items-center md:justify-between">
-          <div>
-            <h1 class="text-xl font-bold whitespace-pre-line">County Index of Mineral Rights Professionals</h1>
-          </div>
-          <div class="flex gap-2 items-center filters-row">
-            <input id="countySearch" class="srch border rounded-lg px-3 py-2" type="search" placeholder="Search counties..." aria-label="Search counties">
-            <div class="expand-collapse-buttons">
-              <button id="expandAll" class="btn-expand-collapse">Expand All</button>
-              <button id="collapseAll" class="btn-expand-collapse">Collapse All</button>
-            </div>
-          </div>
-        </div>
+    <!-- ===== HERO ===== -->
+    <section class="index-hero">
+      <span class="accent-label">Mineral Rights Forum Directory</span>
+      <h1>County Directory Index</h1>
+      <p class="index-hero__subtitle">Find trusted mineral rights professionals listed by state &amp; county — attorneys, landmen, CPAs, and mineral managers.</p>
+      <div class="search-container">
+        <input id="countySearch" type="search" placeholder="Search counties..." aria-label="Search counties">
       </div>
+      <div class="index-hero__tools">
+        <button id="expandAll" class="index-hero__tool-btn">Expand All</button>
+        <button id="collapseAll" class="index-hero__tool-btn">Collapse All</button>
+      </div>
+    </section>
+
+    <!-- ===== STATES GRID ===== -->
+    <p class="mobile-expand-message">Tap a state to expand</p>
+    <div class="states-grid">
+      ${stateSections}
     </div>
 
-    <!-- ===== CONTENT ===== -->
     <main class="container">
-      <p class="index-description">Find trusted mineral rights professionals listed by state & county - includes attorneys, landmen, CPA's, and mineral managers. Expand to see counties.</p>
-      <p class="mobile-expand-message">Click to Expand</p>
-      <div class="states-container">
-        ${stateSections}
-      </div>
       
       <!-- ===== Tips for Choosing a Pro ===== -->
       <div class="tips-card" id="tipsCard">
