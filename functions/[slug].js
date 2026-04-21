@@ -350,7 +350,7 @@ export const onRequestGet = async ({ request, env, params }) => {
     </div>
   </header>
 
-  <section class="directory-hero">
+  ${visibleCompanies.length === 0 ? '' : `<section class="directory-hero">
     <div class="container">
       <span class="accent-label">Mineral Rights Forum Directory</span>
       <h1>${escapeHtml(display_label)}</h1>
@@ -374,7 +374,7 @@ export const onRequestGet = async ({ request, env, params }) => {
         </div>
       </div>
     </div>
-  </section>
+  </section>`}
 
   ${visibleCompanies.length === 0 ? '' : `<nav class="category-nav-wrapper" id="stickyNav">
     <div class="container pill-container">
