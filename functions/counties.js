@@ -252,7 +252,7 @@ export const onRequestGet = async ({ request, env }) => {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://static.mineralrightsforum.com" crossorigin>
     <!-- Primary CSS - local file (always available, served from public/) -->
-    <link rel="stylesheet" href="/styles.css?v=202604212115" media="all">
+    <link rel="stylesheet" href="/styles.css?v=202604212140" media="all">
     <!-- Secondary CSS - external CDN (optional enhancement, non-blocking) -->
     <link rel="stylesheet" href="https://static.mineralrightsforum.com/styles.css" media="all" crossorigin="anonymous">
     <!-- Google Tag Manager -->

@@ -52,10 +52,13 @@ html, body {
 }
 
 /* Ensure main layout containers cannot exceed viewport width */
-.site-wrapper, .page, .content, .container, main, footer, header {
+/* NOTE: main and .container deliberately excluded — overflow: hidden there
+   breaks position:sticky on descendant category subheaders. */
+.site-wrapper, .page, .content, footer, header {
   max-width: 100%;
   overflow-x: hidden;
 }
+main, .container { max-width: 100%; }
 
 /* Allow flex items to wrap instead of forcing a wide row */
 .button-row,

@@ -237,9 +237,8 @@ export const onRequestGet = async ({ request, env, params }) => {
     const adCard = renderAdCard(ad);
     const cards = adCard + companyCards;
     return `
-      <section id="cat-${idSlug(cat)}" class="scroll-mt-[calc(var(--sticky-offset)+16px)]">
-        <h2 class="sticky z-20 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/60 px-2 py-2 text-xl font-semibold border-b"
-            style="top: var(--sticky-bar-height);"
+      <section id="cat-${idSlug(cat)}" class="scroll-mt-0">
+        <h2 class="sticky top-0 z-20 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/75 px-2 py-2 text-xl font-semibold border-b"
             data-category="${escapeHtml(cat)}">${escapeHtml(cat)}</h2>
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 py-4" data-category-grid="${escapeHtml(cat)}">
           ${cards}
@@ -267,7 +266,7 @@ export const onRequestGet = async ({ request, env, params }) => {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://static.mineralrightsforum.com" crossorigin>
-  <link rel="stylesheet" href="/styles.css?v=202604212115" media="all">
+  <link rel="stylesheet" href="/styles.css?v=202604212140" media="all">
   <link rel="stylesheet" href="https://static.mineralrightsforum.com/styles.css" media="all" crossorigin="anonymous">
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -311,7 +310,8 @@ export const onRequestGet = async ({ request, env, params }) => {
     html{ scroll-behavior:smooth; }
     html, body { width: 100%; overflow-x: hidden; max-width: 100vw; }
     body{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;color:#111;line-height:1.5}
-    .site-wrapper, .page, .content, .container, main, footer, header { max-width: 100%; overflow-x: hidden; }
+    .site-wrapper, .page, .content, footer, header { max-width: 100%; overflow-x: hidden; }
+    main, .container { max-width: 100%; }
     * { box-sizing: border-box; }
     img, video, iframe, embed, object { max-width: 100%; height: auto; }
     .container{max-width:1280px;margin:0 auto;padding:1rem}
@@ -352,14 +352,25 @@ export const onRequestGet = async ({ request, env, params }) => {
       <h1>${escapeHtml(display_label)}</h1>
       <p class="subtitle">${escapeHtml(directory_intro || 'Search the most trusted network of mineral attorneys, buyers, and management specialists.')}</p>
 
+      ${visibleCompanies.length === 0 ? '' : `<div class="search-container">
+        <input id="q" type="search" placeholder="Who are you looking for today?">
+        <button class="btn-search" onclick="applyFilter()">Search Now</button>
+      </div>
+
+      <div class="hero-footer">
+        <label class="featured-toggle">
+          <div class="switch">
+            <input id="onlyPremium" type="checkbox">
+            <span class="slider"></span>
+          </div>
+          <span>Show Featured Professionals Only</span>
+        </label>
+        <div class="stats-mini">
+          <strong>${visibleCompanies.length}</strong> Active Listings
+        </div>
+      </div>`}
     </div>
   </section>
-
-  ${visibleCompanies.length === 0 ? '' : `<nav class="category-nav-wrapper" id="stickyNav">
-    <div class="container pill-container">
-      ${categoryNames.map(cat => `<a href="#cat-${idSlug(cat)}" class="pill">${escapeHtml(cat)}</a>`).join('')}
-    </div>
-  </nav>`}
 
   <main class="container">
     ${visibleCompanies.length === 0 ? emptyCTA : sections}
@@ -418,13 +429,38 @@ export const onRequestGet = async ({ request, env, params }) => {
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
+    const q = document.getElementById('q');
+    const onlyPremium = document.getElementById('onlyPremium');
     const returnBtn = document.getElementById('returnBtn');
     function toggleReturnButton() {
       if (returnBtn) returnBtn.style.display = window.matchMedia('(min-width: 768px)').matches ? 'inline-flex' : 'none';
     }
     toggleReturnButton();
     window.addEventListener('resize', toggleReturnButton);
-    const stickyNav = document.getElementById('stickyNav');
+    function debounce(fn, ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; }
+    function normalize(s){ return (s||'').toLowerCase(); }
+    function applyFilter(){
+      const term = normalize(q?.value || '');
+      const premiumOnly = !!onlyPremium?.checked;
+      document.querySelectorAll('article[data-card]').forEach(el=>{
+        const name = (el.getAttribute('data-name')||'');
+        const desc = (el.getAttribute('data-desc')||'');
+        const category = (el.getAttribute('data-category')||'').toLowerCase();
+        const plan = (el.getAttribute('data-plan')||'').toLowerCase();
+        const textOk = !term || name.includes(term) || desc.includes(term) || category.includes(term);
+        const premOk = !premiumOnly || plan === 'premium';
+        el.classList.toggle('hidden', !(textOk && premOk));
+      });
+      document.querySelectorAll('section[id^="cat-"]').forEach(sec=>{
+        const grid = sec.querySelector('[data-category-grid]');
+        const hasVisible = !!grid && Array.from(grid.querySelectorAll('article')).some(a => !a.classList.contains('hidden'));
+        sec.classList.toggle('hidden', !hasVisible);
+      });
+    }
+    window.applyFilter = applyFilter;
+    q?.addEventListener('input', debounce(applyFilter, 120));
+    onlyPremium?.addEventListener('change', applyFilter);
+    applyFilter();
     if (stickyNav) stickyNav.addEventListener('click', (e)=>{
       const a = e.target.closest('a[href^="#cat-"]');
       if(!a) return;
