@@ -138,6 +138,42 @@ export const onRequestGet = async ({ request, env, params }) => {
     return `<a href="${escapeAttr(ad.link)}" target="_blank" rel="noopener" class="card card--ad"><img src="${escapeAttr(ad.image_url)}" alt="Sponsored" loading="lazy" /></a>`;
   }
 
+  const stateAbbrev = (config.state || '').toUpperCase().trim();
+  const areaName = config.division_name || display_label;
+  const emptyCTA = /* html */`
+    <section class="empty-cta" aria-labelledby="empty-cta-heading">
+      <div class="empty-cta__seal" aria-hidden="true">
+        <span class="empty-cta__seal-top">First · Position</span>
+        <span class="empty-cta__seal-num">001</span>
+        <span class="empty-cta__seal-bottom">Unclaimed</span>
+      </div>
+      <div class="empty-cta__eyebrow">
+        <span>Plot Unclaimed</span>
+        <span>First Mover Advantage</span>
+        ${stateAbbrev ? `<span>${escapeHtml(stateAbbrev)}</span>` : ''}
+      </div>
+      <h2 id="empty-cta-heading" class="empty-cta__headline">
+        ${escapeHtml(areaName)} is <em>wide open.</em>
+      </h2>
+      <p class="empty-cta__subhead">
+        No mineral rights professionals have claimed this directory yet. Be the first name landowners, royalty holders, and operators see when they search ${escapeHtml(display_label)} &mdash; and stay locked in that top position until competitors arrive.
+      </p>
+      <hr class="empty-cta__rule" />
+      <ol class="empty-cta__benefits">
+        <li><span><strong>Top of the page, uncontested.</strong> Your listing is the first &mdash; and only &mdash; result for every category here.</span></li>
+        <li><span><strong>Every call, email, and website click</strong> routes to you while this page stays otherwise empty.</span></li>
+        <li><span><strong>Featured position held</strong> for founding advertisers as additional pros join ${escapeHtml(display_label)}.</span></li>
+      </ol>
+      <a href="https://advertising.mrf.com" class="empty-cta__button" data-cta="empty-county-first">
+        <span>Claim First Position</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M13 5l7 7-7 7"/>
+        </svg>
+      </a>
+      <span class="empty-cta__note">Limited founding slots &middot; By application</span>
+    </section>
+  `;
+
   const sections = categoryNames.map(cat => {
     const { premium, free } = groups[cat];
     const all = premium.concat(free);
@@ -176,7 +212,7 @@ export const onRequestGet = async ({ request, env, params }) => {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://static.mineralrightsforum.com" crossorigin>
-  <link rel="stylesheet" href="/styles.css?v=202604211701" media="all">
+  <link rel="stylesheet" href="/styles.css?v=202604211745" media="all">
   <link rel="stylesheet" href="https://static.mineralrightsforum.com/styles.css" media="all" crossorigin="anonymous">
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -285,14 +321,14 @@ export const onRequestGet = async ({ request, env, params }) => {
     </div>
   </section>
 
-  <nav class="category-nav-wrapper" id="stickyNav">
+  ${visibleCompanies.length === 0 ? '' : `<nav class="category-nav-wrapper" id="stickyNav">
     <div class="container pill-container">
       ${categoryNames.map(cat => `<a href="#cat-${idSlug(cat)}" class="pill">${escapeHtml(cat)}</a>`).join('')}
     </div>
-  </nav>
+  </nav>`}
 
   <main class="container">
-    ${sections}
+    ${visibleCompanies.length === 0 ? emptyCTA : sections}
 
     <div class="tips-card" id="tipsCard">
       <div class="tips-card-header" id="tipsCardHeader">
