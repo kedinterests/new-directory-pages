@@ -267,7 +267,7 @@ export const onRequestGet = async ({ request, env, params }) => {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://static.mineralrightsforum.com" crossorigin>
-  <link rel="stylesheet" href="/styles.css?v=202604212030" media="all">
+  <link rel="stylesheet" href="/styles.css?v=202604212115" media="all">
   <link rel="stylesheet" href="https://static.mineralrightsforum.com/styles.css" media="all" crossorigin="anonymous">
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -322,11 +322,7 @@ export const onRequestGet = async ({ request, env, params }) => {
     .card--ad { display: block; border: 1px solid var(--mrf-border); border-radius: 0.5rem; overflow: hidden; }
     .card--ad img { width: 100%; height: auto; display: block; }
     @media (max-width: 767px){
-      .directory-hero { padding: 60px 20px 40px; }
-      .directory-hero h1 { font-size: 2rem; }
-      .search-container { flex-direction: column; }
-      .search-container input, .btn-search { width: 100%; }
-      .hero-footer { flex-direction: column; align-items: flex-start; }
+      .directory-hero { padding: 28px 16px 24px; }
       :root{ --sticky-bar-height: 45px; }
       section h2.sticky{ top: 60px !important; }
     }
@@ -356,23 +352,6 @@ export const onRequestGet = async ({ request, env, params }) => {
       <h1>${escapeHtml(display_label)}</h1>
       <p class="subtitle">${escapeHtml(directory_intro || 'Search the most trusted network of mineral attorneys, buyers, and management specialists.')}</p>
 
-      ${visibleCompanies.length === 0 ? '' : `<div class="search-container">
-        <input id="q" type="search" placeholder="Who are you looking for today?">
-        <button class="btn-search" onclick="applyFilter()">Search Now</button>
-      </div>
-
-      <div class="hero-footer">
-        <label class="featured-toggle">
-          <div class="switch">
-            <input id="onlyPremium" type="checkbox">
-            <span class="slider"></span>
-          </div>
-          <span>Show Featured Professionals Only</span>
-        </label>
-        <div class="stats-mini">
-          <strong>${visibleCompanies.length}</strong> Active Listings
-        </div>
-      </div>`}
     </div>
   </section>
 
@@ -439,46 +418,12 @@ export const onRequestGet = async ({ request, env, params }) => {
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const q = document.getElementById('q');
-    const cat = document.getElementById('cat');
-    const onlyPremium = document.getElementById('onlyPremium');
     const returnBtn = document.getElementById('returnBtn');
     function toggleReturnButton() {
       if (returnBtn) returnBtn.style.display = window.matchMedia('(min-width: 768px)').matches ? 'inline-flex' : 'none';
     }
     toggleReturnButton();
     window.addEventListener('resize', toggleReturnButton);
-    function normalize(s){ return (s||'').toLowerCase(); }
-    function applyFilter(){
-      const term = normalize(q?.value || '');
-      const selectedCat = (cat?.value || '').toLowerCase();
-      const premiumOnly = !!onlyPremium?.checked;
-      document.querySelectorAll('article[data-card]').forEach(el=>{
-        const name = (el.getAttribute('data-name')||'');
-        const desc = (el.getAttribute('data-desc')||'');
-        const category = (el.getAttribute('data-category')||'').toLowerCase();
-        const plan = (el.getAttribute('data-plan')||'').toLowerCase();
-        const textOk = !term || name.includes(term) || desc.includes(term) || category.includes(term);
-        const catOk  = !selectedCat || category === selectedCat;
-        const premOk = !premiumOnly || plan === 'premium';
-        el.classList.toggle('hidden', !(textOk && catOk && premOk));
-      });
-      document.querySelectorAll('section[id^="cat-"]').forEach(sec=>{
-        const grid = sec.querySelector('[data-category-grid]');
-        const hasVisible = !!grid && Array.from(grid.querySelectorAll('article')).some(a => !a.classList.contains('hidden'));
-        sec.classList.toggle('hidden', !hasVisible);
-      });
-      const stickyNav = document.getElementById('stickyNav');
-      if (stickyNav) stickyNav.querySelectorAll('a[href^="#cat-"]').forEach(link=>{
-        const id = link.getAttribute('href').slice(1);
-        const sec = document.getElementById(id);
-        link.classList.toggle('hidden', !sec || sec.classList.contains('hidden'));
-      });
-    }
-    q?.addEventListener('input', debounce(applyFilter, 120));
-    onlyPremium?.addEventListener('change', applyFilter);
-    applyFilter();
-    function debounce(fn, ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; }
     const stickyNav = document.getElementById('stickyNav');
     if (stickyNav) stickyNav.addEventListener('click', (e)=>{
       const a = e.target.closest('a[href^="#cat-"]');

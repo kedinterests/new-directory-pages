@@ -252,7 +252,7 @@ export const onRequestGet = async ({ request, env }) => {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://static.mineralrightsforum.com" crossorigin>
     <!-- Primary CSS - local file (always available, served from public/) -->
-    <link rel="stylesheet" href="/styles.css?v=202604212030" media="all">
+    <link rel="stylesheet" href="/styles.css?v=202604212115" media="all">
     <!-- Secondary CSS - external CDN (optional enhancement, non-blocking) -->
     <link rel="stylesheet" href="https://static.mineralrightsforum.com/styles.css" media="all" crossorigin="anonymous">
     <!-- Google Tag Manager -->
@@ -1130,17 +1130,8 @@ export const onRequestGet = async ({ request, env }) => {
 
     <script>
       document.addEventListener('DOMContentLoaded', () => {
-        // Expand first state on desktop only
-        const isDesktop = window.matchMedia('(min-width: 768px)').matches;
-        if (isDesktop) {
-          const firstStateSection = document.querySelector('.state-section');
-          const firstStateHeader = firstStateSection?.querySelector('.state-header');
-          if (firstStateSection && firstStateHeader) {
-            firstStateSection.classList.remove('collapsed');
-            firstStateHeader.setAttribute('aria-expanded', 'true');
-          }
-        }
-        
+        // All states start collapsed — user clicks to expand
+
         // Show/hide return button based on screen size
         const returnBtn = document.getElementById('returnBtn');
         function toggleReturnButton() {
