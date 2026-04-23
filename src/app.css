@@ -448,10 +448,13 @@ section[id^="cat-"] > div[data-category-grid]{
 /* Keep single/odd cards visually centered */
 section[id^="cat-"] > div[data-category-grid] > article{ max-width: 520px; margin: 0 auto; }
 
-/* When a category has only one card, collapse the grid to one centered column */
+/* When a category has only one card, keep it left-aligned like a normal first-column card (no centering) */
 section[id^="cat-"] > div[data-category-grid]:has(> *:only-child){
-  grid-template-columns: minmax(0, 520px) !important;
-  justify-content: center;
+  justify-content: start !important;
+}
+section[id^="cat-"] > div[data-category-grid]:has(> *:only-child) > *{
+  max-width: none;
+  margin: 0;
 }
 
 /* Center the jump-pill bar on desktop; hide it on mobile */
