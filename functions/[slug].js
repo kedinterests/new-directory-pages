@@ -482,6 +482,22 @@ export const onRequestGet = async ({ request, env, params }) => {
     }
   });
   </script>
+  <dialog id="claimModal" style="border: none; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 10px 40px rgba(0,0,0,0.2); max-width: 90%; width: 100%; max-height: 95vh; padding: 0;">
+    <div style="display: flex; flex-direction: column; height: 100%; max-height: 95vh;">
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid #e6e7ea;">
+        <h2 style="margin: 0; font-size: 1.25rem;">Claim Your Listing</h2>
+        <button onclick="document.getElementById('claimModal').close()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #6b7280;">×</button>
+      </div>
+      <div style="overflow-y: auto; flex: 1; padding: 1rem;">
+        <iframe aria-label='Claim Your Listing' frameborder="0" style="height:600px;width:100%;border:none;" src='https://forms.zohopublic.com/kedinterestsllc/form/ClaimYourListing/formperma/G7tHYAIjid3cMjwP_19QjteyCECBIQYmu-mBBaYUl1s'></iframe>
+      </div>
+    </div>
+  </dialog>
+  <style>
+    dialog#claimModal::backdrop {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  </style>
 </body>
 </html>
 `);
@@ -509,7 +525,7 @@ export const onRequestGet = async ({ request, env, params }) => {
     const hasCall = !!(isPremium && tel);
     const emailBtn = hasEmail ? `<a href="mailto:${escapeAttr(email)}" class="btn btn-outline btn_email w-full justify-center ${!hasCall ? 'col-span-2' : ''}" data-company="${escapeAttr(name)}" data-category="${escapeAttr(cat)}" aria-label="Email ${escapeAttr(name)}">Email us</a>` : '';
     const callBtn = hasCall ? `<a class="btn btn-primary btn_call w-full justify-center ${!hasEmail ? 'col-span-2' : ''}" href="tel:${escapeAttr(tel)}" data-callnow="1" data-company="${escapeAttr(name)}" data-category="${escapeAttr(cat)}" data-tel="${escapeAttr(tel)}" data-display="${escapeAttr(display)}" aria-label="Call ${escapeAttr(name)} now"><span>Call now</span></a>` : '';
-    const claimBtn = !isClaimed ? `<a href="https://google.com" class="btn btn-outline w-full justify-center claim-btn-glow" style="flex-direction: column; gap: 0.25rem;"><div style="font-weight: bold; font-size: 1.1em;">Is this your business?</div><div style="font-style: italic; font-weight: 400;">Claim it free and start getting found</div></a>` : '';
+    const claimBtn = !isClaimed ? `<button class="btn btn-outline w-full justify-center claim-btn-glow" onclick="document.getElementById('claimModal').showModal()" style="flex-direction: column; gap: 0.25rem; background: inherit; border: inherit; color: inherit; font-family: inherit; cursor: pointer;"><div style="font-weight: bold; font-size: 1.1em;">Is this your business?</div><div style="font-style: italic; font-weight: 400;">Claim it free and start getting found</div></button>` : '';
     const ctas = !isClaimed
       ? `<div class="mt-auto">${claimBtn}</div>`
       : isPremium
