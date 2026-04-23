@@ -60,7 +60,7 @@ export const onRequestPost = async ({ request, env }) => {
         const state = String(site.state || '').trim().toLowerCase();
         const utmCampaign = `${divisionName}_county_${state}_specific`;
         const utmAdv = String(row.utm_adv || '').trim();
-        let utmUrl = `${baseUrl}?utm_source=MRF&utm_medium=referral&utm_campaign=${encodeURIComponent(utmCampaign)}`;
+        let utmUrl = `${baseUrl}?utm_source=mrf&utm_medium=referral&utm_campaign=${encodeURIComponent(utmCampaign)}`;
         if (utmAdv) {
           utmUrl += `&utm_adv=${encodeURIComponent(utmAdv)}`;
         }
