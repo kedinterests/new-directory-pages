@@ -352,12 +352,7 @@ export const onRequestGet = async ({ request, env, params }) => {
       <h1>${escapeHtml(display_label)}</h1>
       <p class="subtitle">${escapeHtml(directory_intro || 'Search the most trusted network of mineral attorneys, buyers, and management specialists.')}</p>
 
-      ${visibleCompanies.length === 0 ? '' : `<div class="search-container">
-        <input id="q" type="search" placeholder="Who are you looking for today?">
-        <button class="btn-search" onclick="applyFilter()">Search Now</button>
-      </div>
-
-      <div class="hero-footer">
+      ${visibleCompanies.length === 0 ? '' : `<div class="hero-footer">
         <label class="featured-toggle">
           <div class="switch">
             <input id="onlyPremium" type="checkbox">
