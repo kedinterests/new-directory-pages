@@ -501,6 +501,7 @@ export const onRequestGet = async ({ request, env, params }) => {
     const website = row.website_url || '';
     const email = row.contact_email || '';
     const { tel, display } = normPhone(row.contact_phone || '');
+    const isClaimed = String(row.claimed || '').trim() !== 'false';
     const nameLower = name.toLowerCase();
     const isPlaceholder = (nameLower.includes('your') && nameLower.includes('company') && nameLower.includes('featured')) || nameLower.includes('company featured here');
     const base = 'card flex flex-col gap-3';
@@ -512,7 +513,10 @@ export const onRequestGet = async ({ request, env, params }) => {
     const hasCall = !!(isPremium && tel);
     const emailBtn = hasEmail ? `<a href="mailto:${escapeAttr(email)}" class="btn btn-outline btn_email w-full justify-center ${!hasCall ? 'col-span-2' : ''}" data-company="${escapeAttr(name)}" data-category="${escapeAttr(cat)}" aria-label="Email ${escapeAttr(name)}">Email us</a>` : '';
     const callBtn = hasCall ? `<a class="btn btn-primary btn_call w-full justify-center ${!hasEmail ? 'col-span-2' : ''}" href="tel:${escapeAttr(tel)}" data-callnow="1" data-company="${escapeAttr(name)}" data-category="${escapeAttr(cat)}" data-tel="${escapeAttr(tel)}" data-display="${escapeAttr(display)}" aria-label="Call ${escapeAttr(name)} now"><span>Call now</span></a>` : '';
-    const ctas = isPremium
+    const claimBtn = !isClaimed ? `<a href="https://google.com" class="btn btn-outline w-full justify-center" style="flex-direction: column; gap: 0.25rem;"><div style="font-weight: bold; font-size: 1.1em;">Is this your business?</div><div style="font-style: italic; font-weight: 400;">Claim it free and start getting found</div></a>` : '';
+    const ctas = !isClaimed
+      ? `<div class="mt-auto">${claimBtn}</div>`
+      : isPremium
       ? `<div class="mt-auto flex flex-col gap-2"><div class="grid grid-cols-2 gap-2">${emailBtn}${callBtn}</div><div>${visitBtn || ''}</div></div>`
       : `<div class="mt-auto">${visitBtn || ''}</div>`;
     return `
