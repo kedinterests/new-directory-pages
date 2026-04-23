@@ -122,6 +122,7 @@ img, video, iframe, embed, object {
   color: var(--text-light);
   text-align: center;
   border-bottom: 3px solid var(--accent-gold);
+  margin-bottom: 20px;
 }
 
 .accent-label {
@@ -446,6 +447,12 @@ section[id^="cat-"] > div[data-category-grid]{
 
 /* Keep single/odd cards visually centered */
 section[id^="cat-"] > div[data-category-grid] > article{ max-width: 520px; margin: 0 auto; }
+
+/* When a category has only one card, collapse the grid to one centered column */
+section[id^="cat-"] > div[data-category-grid]:has(> *:only-child){
+  grid-template-columns: minmax(0, 520px) !important;
+  justify-content: center;
+}
 
 /* Center the jump-pill bar on desktop; hide it on mobile */
 #jump{
