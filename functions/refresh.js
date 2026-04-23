@@ -52,6 +52,24 @@ export const onRequestPost = async ({ request, env }) => {
       if (row.visible === false || row.visible === 'false') return false;
       if (row.show === false || row.show === 'false') return false;
       return true;
+    }).map(row => {
+      const withUtm = { ...row };
+      const baseUrl = (row.website_url || '').trim();
+      if (baseUrl) {
+        const divisionName = String(site.division_name || '').trim().toLowerCase().replace(/\s+/g, '_');
+        const state = String(site.state || '').trim().toLowerCase();
+        const utmCampaign = `${divisionName}_county_${state}_specific`;
+        const utmAdv = String(row.utm_adv || '').trim();
+        let utmUrl = `${baseUrl}?utm_source=MRF&utm_medium=referral&utm_campaign=${encodeURIComponent(utmCampaign)}`;
+        if (utmAdv) {
+          utmUrl += `&utm_adv=${encodeURIComponent(utmAdv)}`;
+        }
+        withUtm.website_url = utmUrl;
+        console.log(`Built URL for ${row.name}: ${utmUrl}`);
+      } else {
+        console.log(`No baseUrl for ${row.name}: "${row.website_url}"`);
+      }
+      return withUtm;
     });
 
     const adsForSite = ads.filter(ad => {
