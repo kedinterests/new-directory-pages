@@ -496,8 +496,8 @@ export const onRequestGet = async ({ request, env, params }) => {
     const website = row.website_url || '';
     const email = row.contact_email || '';
     const { tel, display } = normPhone(row.contact_phone || '');
-    const claimedVal = String(row['claimed?'] || '').toLowerCase().trim();
-    const isClaimed = claimedVal !== 'false';
+    const claimed = row['claimed?'];
+    const isClaimed = claimed !== false && String(claimed || '').toLowerCase().trim() !== 'false';
     const nameLower = name.toLowerCase();
     const isPlaceholder = (nameLower.includes('your') && nameLower.includes('company') && nameLower.includes('featured')) || nameLower.includes('company featured here');
     const base = 'card flex flex-col gap-3';
