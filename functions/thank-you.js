@@ -142,7 +142,16 @@ export const onRequestGet = async ({ request }) => {
 
     <p class="subtitle">Questions? Contact us at support@mineralrightsforum.com</p>
 
-    <a href="/" class="cta-button">Return to Directory</a>
+    <button onclick="goBack()" class="cta-button" style="background: #0a192f; color: white; padding: 14px 32px; border-radius: 6px; text-decoration: none; font-weight: 600; margin-top: 30px; transition: background 0.2s ease; border: none; cursor: pointer; font-size: 1rem;">Return to Directory</button>
+    <script>
+      function goBack() {
+        if (document.referrer && document.referrer.includes(window.location.hostname)) {
+          window.history.back();
+        } else {
+          window.location.href = '/';
+        }
+      }
+    </script>
 
     <div class="footer-text">
       <p>Mineral Rights Forum Directory</p>
