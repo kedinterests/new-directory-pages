@@ -262,7 +262,7 @@ export const onRequestGet = async ({ request, env, params }) => {
   <meta property="og:site_name" content="Mineral Rights Forum">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="description" content="${escapeHtml(seo?.description || '')}">
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="${visibleCompanies.length === 0 ? 'noindex, nofollow' : 'index, follow'}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://static.mineralrightsforum.com" crossorigin>
