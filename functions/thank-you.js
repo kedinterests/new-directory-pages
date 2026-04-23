@@ -145,9 +145,10 @@ export const onRequestGet = async ({ request }) => {
     <button onclick="goBack()" class="cta-button" style="background: #0a192f; color: white; padding: 14px 32px; border-radius: 6px; text-decoration: none; font-weight: 600; margin-top: 30px; transition: background 0.2s ease; border: none; cursor: pointer; font-size: 1rem;">Return to Directory</button>
     <script>
       function goBack() {
-        const referrer = document.referrer;
-        if (referrer && referrer.includes(window.location.hostname)) {
-          window.location.href = referrer;
+        const sourceUrl = sessionStorage.getItem('claimSourcePage');
+        if (sourceUrl) {
+          sessionStorage.removeItem('claimSourcePage');
+          window.location.href = sourceUrl;
         } else {
           window.location.href = '/';
         }
