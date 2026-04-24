@@ -30,7 +30,7 @@
       const col = <?!= col ?>;
 
       const selected = new Set();
-      if (currentValue) {
+      if (currentValue && currentValue.trim()) {
         currentValue.split(',').forEach(function(s) {
           const v = s.trim();
           if (v) selected.add(v);
