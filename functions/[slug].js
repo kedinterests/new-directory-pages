@@ -457,6 +457,7 @@ export const onRequestGet = async ({ request, env, params }) => {
     q?.addEventListener('input', debounce(applyFilter, 120));
     onlyPremium?.addEventListener('change', applyFilter);
     applyFilter();
+    const stickyNav = document.getElementById('stickyNav');
     if (stickyNav) stickyNav.addEventListener('click', (e)=>{
       const a = e.target.closest('a[href^="#cat-"]');
       if(!a) return;
