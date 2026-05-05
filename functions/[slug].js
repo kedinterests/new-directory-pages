@@ -326,7 +326,7 @@ export const onRequestGet = async ({ request, env, params }) => {
       .directory-hero { padding: 28px 16px 24px; }
       :root{ --sticky-bar-height: 45px; }
       section h2.sticky{ top: 60px !important; }
-      .cta-blocks-container { grid-template-columns: 1fr 1fr !important; gap: 0.75rem !important; }
+      .cta-blocks-container { grid-template-columns: 1fr !important; }
     }
   </style>
 </head>
