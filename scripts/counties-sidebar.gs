@@ -24,9 +24,9 @@ function showCountiesSidebar() {
   const sheetName = sheet.getName();
   const col = range.getColumn();
   const companiesSheet = ss.getSheetByName('Companies');
-  const COUNTIES_COL = 10; // J
+  const COUNTIES_COL = 11; // K (shifted from J after adding Tagline column)
   if (sheetName !== 'Companies' || col !== COUNTIES_COL) {
-    SpreadsheetApp.getUi().alert('Select a cell in the Companies sheet, counties column (J) first.');
+    SpreadsheetApp.getUi().alert('Select a cell in the Companies sheet, counties column (K) first.');
     return;
   }
   const row = range.getRow();

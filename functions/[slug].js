@@ -511,6 +511,7 @@ export const onRequestGet = async ({ request, env, params }) => {
     const name = row.name || '';
     const desc = row.description_short || '';
     const cat = row.category || '';
+    const tagline = row.tagline || cat;
     const logo = row.logo_url || '';
     const website = row.website_url || '';
     const email = row.contact_email || '';
@@ -545,7 +546,7 @@ export const onRequestGet = async ({ request, env, params }) => {
           ${logoImg}
           <div class="min-w-0">
             <div class="flex items-center gap-2"><h3 class="font-semibold text-base leading-tight">${escapeHtml(name)}</h3></div>
-            <p class="category truncate">${escapeHtml(cat)}</p>
+            <p class="category truncate">${escapeHtml(tagline)}</p>
           </div>
         </div>
         <p class="desc">${escapeHtml(desc)}</p>
