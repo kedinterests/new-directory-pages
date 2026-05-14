@@ -33,6 +33,31 @@ export const onRequestPost = async ({ request, env }) => {
   }
   const ads = Array.isArray(upstream.ads) ? upstream.ads : [];
 
+  // Pre-index companies by county slug and collect nationwide companies — avoids O(sites × companies) scan
+  const byCounty = {};
+  const nationwideCompanies = [];
+
+  for (const row of upstream.companies) {
+    const plan = String(row.plan || '').toLowerCase().trim();
+    if (plan === 'hidden' || plan === 'hide' || plan === 'h') continue;
+    if (row.hidden === true || row.hidden === 'true' || row.hidden === 'yes' || row.hidden === 1) continue;
+    if (String(row.hidden || '').toLowerCase().trim() === 'hidden' || String(row.hidden || '').toLowerCase().trim() === 'hide') continue;
+    if (row.status === 'hidden' || String(row.status || '').toLowerCase().trim() === 'hidden') continue;
+    if (row.visible === false || row.visible === 'false') continue;
+    if (row.show === false || row.show === 'false') continue;
+
+    const nw = row['nationwide?'];
+    if (nw === true || nw === 'TRUE' || nw === 'true' || nw === 'yes' || nw === 'YES') {
+      nationwideCompanies.push(row);
+    } else {
+      const rowCounties = String(row.counties || '').split(',').map(c => c.trim().toLowerCase()).filter(Boolean);
+      for (const c of rowCounties) {
+        if (!byCounty[c]) byCounty[c] = [];
+        byCounty[c].push(row);
+      }
+    }
+  }
+
   const sitesMap = {};
   const payloads = [];
 
@@ -42,40 +67,19 @@ export const onRequestPost = async ({ request, env }) => {
 
     const slugLower = slug.toLowerCase();
     const isNational = (site.division_type || '').toLowerCase() === 'national';
-    const companiesForSite = upstream.companies.filter(row => {
-      if (isNational) {
-        const nw = row['nationwide?'];
-        const isNationwide = nw === true || nw === 'TRUE' || nw === 'true' || nw === 'yes' || nw === 'YES';
-        if (!isNationwide) return false;
-      } else {
-        const rowCounties = String(row.counties || '').split(',').map(c => c.trim().toLowerCase()).filter(Boolean);
-        if (!rowCounties.includes(slugLower)) return false;
-      }
-      const plan = String(row.plan || '').toLowerCase().trim();
-      if (plan === 'hidden' || plan === 'hide' || plan === 'h') return false;
-      if (row.hidden === true || row.hidden === 'true' || row.hidden === 'yes' || row.hidden === 1) return false;
-      if (String(row.hidden || '').toLowerCase().trim() === 'hidden' || String(row.hidden || '').toLowerCase().trim() === 'hide') return false;
-      if (row.status === 'hidden' || String(row.status || '').toLowerCase().trim() === 'hidden') return false;
-      if (row.visible === false || row.visible === 'false') return false;
-      if (row.show === false || row.show === 'false') return false;
-      return true;
-    }).map(row => {
-      const withUtm = { ...row };
+    const rawCompanies = isNational ? nationwideCompanies : (byCounty[slugLower] || []);
+
+    const companiesForSite = rawCompanies.map(row => {
       const baseUrl = (row.website_url || '').trim();
-      if (baseUrl) {
-        const divisionName = String(site.division_name || '').trim().toLowerCase().replace(/\s+/g, '_');
-        const state = String(site.state || '').trim().toLowerCase();
-        const utmCampaign = `${divisionName}_county_${state}_specific`;
-        const utmAdv = String(row.utm_adv || '').trim();
-        let utmUrl = `${baseUrl}?utm_source=mrf&utm_medium=referral&utm_campaign=${encodeURIComponent(utmCampaign)}`;
-        if (utmAdv) {
-          utmUrl += `&utm_adv=${encodeURIComponent(utmAdv)}`;
-        }
-        withUtm.website_url = utmUrl;
-        console.log(`Built URL for ${row.name}: ${utmUrl}`);
-      } else {
-        console.log(`No baseUrl for ${row.name}: "${row.website_url}"`);
-      }
+      if (!baseUrl) return row;
+      const withUtm = { ...row };
+      const divisionName = String(site.division_name || '').trim().toLowerCase().replace(/\s+/g, '_');
+      const state = String(site.state || '').trim().toLowerCase();
+      const utmCampaign = `${divisionName}_county_${state}_specific`;
+      const utmAdv = String(row.utm_adv || '').trim();
+      let utmUrl = `${baseUrl}?utm_source=mrf&utm_medium=referral&utm_campaign=${encodeURIComponent(utmCampaign)}`;
+      if (utmAdv) utmUrl += `&utm_adv=${encodeURIComponent(utmAdv)}`;
+      withUtm.website_url = utmUrl;
       return withUtm;
     });
 
