@@ -2,7 +2,7 @@
 import { json, KV_KEYS, quickHash } from './_lib.js';
 
 function buildDisplayLabel(divisionType, divisionName, state) {
-  if (divisionType === 'area') return divisionName || '';
+  if (divisionType === 'area' || divisionType === 'national') return divisionName || '';
   const word = divisionType === 'parish' ? 'Parish' : 'County';
   return `${divisionName || ''} ${word}, ${state || ''}`.trim();
 }
