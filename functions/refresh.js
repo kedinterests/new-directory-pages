@@ -41,9 +41,16 @@ export const onRequestPost = async ({ request, env }) => {
     if (!slug) continue;
 
     const slugLower = slug.toLowerCase();
+    const isNational = (site.division_type || '').toLowerCase() === 'national';
     const companiesForSite = upstream.companies.filter(row => {
-      const rowCounties = String(row.counties || '').split(',').map(c => c.trim().toLowerCase()).filter(Boolean);
-      if (!rowCounties.includes(slugLower)) return false;
+      if (isNational) {
+        const nw = row['nationwide?'];
+        const isNationwide = nw === true || nw === 'TRUE' || nw === 'true' || nw === 'yes' || nw === 'YES';
+        if (!isNationwide) return false;
+      } else {
+        const rowCounties = String(row.counties || '').split(',').map(c => c.trim().toLowerCase()).filter(Boolean);
+        if (!rowCounties.includes(slugLower)) return false;
+      }
       const plan = String(row.plan || '').toLowerCase().trim();
       if (plan === 'hidden' || plan === 'hide' || plan === 'h') return false;
       if (row.hidden === true || row.hidden === 'true' || row.hidden === 'yes' || row.hidden === 1) return false;

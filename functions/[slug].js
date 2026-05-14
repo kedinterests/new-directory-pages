@@ -396,7 +396,7 @@ export const onRequestGet = async ({ request, env, params }) => {
         <a href="${escapeAttr(origin + '/')}" class="county-directories-btn" style="display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.625rem 1.25rem;font-size:0.9375rem;font-weight:500;color:#fff;background:var(--mrf-primary);border:none;border-radius:0.5rem;text-decoration:none;">Browse County Directories</a>
       </div>
       <div class="cta-block" style="padding:2.5rem 2rem;background:#FFFEF5;border-radius:1rem;text-align:center;">
-        <p class="cta-text" style="font-size:1.25rem;font-weight:500;color:#23456D;margin:0 0 1.75rem 0;">Business Owners - would you like to appear on one of our directory pages? We offer paid <a href="${escapeAttr(origin + '/')}">County-specific Directories</a> and a general <a href="https://mineral-services-directory.mineralrightsforum.com">Nationwide Directory</a>. Limitations apply.</p>
+        <p class="cta-text" style="font-size:1.25rem;font-weight:500;color:#23456D;margin:0 0 1.75rem 0;">Business Owners - would you like to appear on one of our directory pages? We offer paid <a href="${escapeAttr(origin + '/')}">County-specific Directories</a> and a general <a href="${escapeAttr(origin + '/mineral-services-directory')}">Nationwide Directory</a>. Limitations apply.</p>
         <button id="applyForListingBtn" class="cta-button" style="display:inline-flex;align-items:center;justify-content:center;padding:0.625rem 1.25rem;font-size:0.9375rem;font-weight:500;color:#fff;background:var(--mrf-primary);border:none;border-radius:0.5rem;cursor:pointer;">Apply for Listing</button>
       </div>
     </div>`}

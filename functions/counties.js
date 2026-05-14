@@ -1079,6 +1079,18 @@ export const onRequestGet = async ({ request, env }) => {
       </div>
     </section>
 
+    <!-- ===== NATIONWIDE DIRECTORY PROMO ===== -->
+    <div style="max-width:1200px;margin:0 auto 1.5rem;padding:0 1rem;">
+      <a href="${pageUrl}/mineral-services-directory" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.5rem;background:#23456D;color:#fff;border-radius:0.75rem;text-decoration:none;transition:background 0.2s ease;" onmouseover="this.style.background='#1a3454'" onmouseout="this.style.background='#23456D'">
+        <div>
+          <div style="font-size:0.8125rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;opacity:0.8;margin-bottom:0.25rem;">Also Available</div>
+          <div style="font-size:1.125rem;font-weight:700;">Nationwide Mineral Services Directory</div>
+          <div style="font-size:0.9375rem;opacity:0.85;margin-top:0.2rem;">Professionals serving mineral owners across all states</div>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.8"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
     <!-- ===== STATES GRID ===== -->
     <p class="mobile-expand-message">Tap a state to expand</p>
     <div class="states-grid">
@@ -1119,7 +1131,7 @@ export const onRequestGet = async ({ request, env }) => {
       <div class="cta-blocks-container">
         <div class="cta-block">
           <p class="cta-text">
-            Business Owners - would you like to appear on one of our directory pages? We offer paid <a href="https://directory.mineralrightsforum.com">County-specific Directories</a> and a general <a href="https://mineral-services-directory.mineralrightsforum.com">Nationwide Directory</a>. Limitations apply.
+            Business Owners - would you like to appear on one of our directory pages? We offer paid <a href="https://directory.mineralrightsforum.com">County-specific Directories</a> and a general <a href="${pageUrl}/mineral-services-directory">Nationwide Directory</a>. Limitations apply.
           </p>
           <button id="applyForListingBtn" class="cta-button">
             Apply for Listing
