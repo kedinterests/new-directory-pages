@@ -594,147 +594,39 @@ export const onRequestGet = async ({ request, env }) => {
         margin-right: 0em;
       }
       
-      /* Tips Card Styles */
-      .tips-card{
-        border: 1px solid var(--mrf-border);
-        border-radius: 0.5rem;
-        background: #fff;
-        box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 1px 3px rgba(0,0,0,.1);
-        margin: 1.5rem auto;
-        max-width: 1280px;
-        overflow: hidden;
-        transition: box-shadow .18s ease;
-      }
-      .tips-card:hover{
-        box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 10px 30px rgba(15,23,42,.12);
-      }
-      .tips-card-header{
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 1.25rem 1.5rem;
-        cursor: pointer;
-        user-select: none;
-        background: #f8fafc;
-        border-bottom: 1px solid var(--mrf-border);
-        transition: background .18s ease;
-      }
-      .tips-card-header:hover{
-        background: #f1f5f9;
-      }
-      .tips-card-header h2{
-        margin: 0;
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: var(--mrf-primary);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-      .tips-card-chevron{
-        width: 20px;
-        height: 20px;
-        transition: transform 0.3s ease;
-        color: var(--mrf-subtle);
-      }
-      .tips-card.expanded .tips-card-chevron{
-        transform: rotate(180deg);
-      }
-      .tips-card-content{
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease, padding 0.3s ease;
-        padding: 0 1.5rem;
-      }
-      .tips-card.expanded .tips-card-content{
-        max-height: 1000px;
-        padding: 1.5rem;
-      }
-      .tips-card-content ul{
-        margin: 0;
-        padding-left: 1.5rem;
-        list-style-type: disc;
-      }
-      .tips-card-content li{
-        margin-bottom: 0.75rem;
-        line-height: 1.6;
-        color: #374151;
-      }
-      .tips-card-content li:last-child{
-        margin-bottom: 0;
-      }
-      .tips-card-content strong{
-        color: var(--mrf-primary);
-        font-weight: 600;
-      }
-      
-      /* CTA Blocks Container */
-      .cta-blocks-container{
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-        margin: 3rem auto 2rem;
-        max-width: 1200px;
-      }
-      
-      /* CTA Block Styles */
-      .cta-block{
-        padding: 2.5rem 2rem;
-        background: #FFFEF5;
-        border-radius: 1rem;
-        text-align: center;
-        box-shadow: 0 4px 6px rgba(35, 69, 109, 0.08), 0 2px 4px rgba(35, 69, 109, 0.06);
-        border: 1px solid rgba(35, 69, 109, 0.1);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-      }
-      .cta-block:hover{
-        transform: translateY(-2px);
-        box-shadow: 0 8px 12px rgba(35, 69, 109, 0.12), 0 4px 6px rgba(35, 69, 109, 0.08);
-      }
-      .cta-text{
-        font-size: 1.25rem;
-        font-weight: 500;
-        color: #23456D;
-        margin: 0 0 1.75rem 0;
-        line-height: 1.6;
-        flex-grow: 1;
-      }
-      .cta-text a{
-        font-weight: 700;
-        text-decoration: none;
-        color: #23456D;
-      }
-      .cta-text a:hover{
-        font-weight: 700;
-        text-decoration: underline;
-      }
-      .cta-button{
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.625rem 1.25rem;
-        font-size: 0.9375rem;
-        font-weight: 500;
-        color: #ffffff;
-        background: var(--mrf-primary);
-        border: none;
-        border-radius: 0.5rem;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        letter-spacing: 0.01em;
-        margin-top: auto;
-      }
-      .cta-button:hover{
-        background: var(--mrf-primary-700);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 6px rgba(0,0,0,.1);
-      }
-      .cta-button:active{
-        transform: translateY(0);
-      }
+      /* Nationwide promo banner */
+      .natl-promo-wrap{ max-width:1200px; margin:2.5rem auto 1.5rem; padding:0 1rem; }
+      .natl-promo{ display:flex; align-items:center; gap:1.25rem; padding:1.25rem 1.5rem; background:linear-gradient(145deg,#0a192f,#0e2040); border:1px solid rgba(197,160,89,.2); border-radius:14px; text-decoration:none; color:#f8f9fa; transition:border-color .18s ease,transform .18s ease,box-shadow .18s ease; box-shadow:0 1px 2px rgba(0,0,0,.06),0 8px 24px rgba(15,23,42,.06); }
+      .natl-promo:hover{ border-color:rgba(197,160,89,.5); transform:translateY(-1px); box-shadow:0 1px 3px rgba(0,0,0,.08),0 10px 30px rgba(15,23,42,.12); }
+      .natl-promo__icon{ width:44px; height:44px; background:rgba(197,160,89,.1); border:1px solid rgba(197,160,89,.25); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#c5a059; flex-shrink:0; }
+      .natl-promo__text{ flex:1; display:flex; flex-direction:column; gap:.2rem; }
+      .natl-promo__eyebrow{ color:#c5a059; text-transform:uppercase; letter-spacing:.2em; font-size:.7rem; font-weight:600; }
+      .natl-promo__heading{ font-size:1.0625rem; font-weight:700; color:#fff; }
+      .natl-promo__body{ font-size:.875rem; color:rgba(248,249,250,.7); }
+      .natl-promo__arrow{ color:#c5a059; flex-shrink:0; opacity:.8; transition:transform .18s ease; }
+      .natl-promo:hover .natl-promo__arrow{ transform:translateX(4px); }
+
+      /* Tips Card (static grid) */
+      .tips-card{ background:#fff; border:1px solid var(--mrf-border); border-radius:14px; box-shadow:0 1px 2px rgba(0,0,0,.06),0 8px 24px rgba(15,23,42,.06); max-width:1280px; margin:2rem auto 0; padding:2rem 2.5rem; }
+      .tips-card__meta{ margin-bottom:1.5rem; }
+      .tips-card__eyebrow{ color:#c5a059; text-transform:uppercase; letter-spacing:.22em; font-size:.72rem; font-weight:600; display:block; margin-bottom:.5rem; }
+      .tips-card__title{ display:flex; align-items:center; gap:.625rem; font-size:1.125rem; font-weight:700; color:var(--mrf-primary); margin:0; padding:0; border:none; }
+      .tips-card__grid{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:.875rem; }
+      .tips-card__item{ display:flex; flex-direction:column; gap:.3rem; padding:1.1rem 1.25rem; background:#fafbfc; border:1px solid var(--mrf-border); border-radius:10px; }
+      .tips-card__num{ font-size:.65rem; font-weight:700; letter-spacing:.1em; color:#c5a059; }
+      .tips-card__item strong{ color:var(--mrf-primary); font-weight:700; font-size:.875rem; line-height:1.3; }
+      .tips-card__item span{ color:var(--mrf-subtle); line-height:1.5; font-size:.875rem; }
+
+      /* CTA block */
+      .cta-blocks-container{ display:grid; grid-template-columns:1fr; gap:1.5rem; margin:2rem auto 2rem; max-width:1200px; padding:0 1rem; }
+      .cta-block-card{ background:linear-gradient(145deg,#0a192f,#0e2040); border:1px solid rgba(197,160,89,.2); border-radius:14px; padding:2.25rem 2rem; color:#f8f9fa; display:flex; flex-direction:column; gap:.875rem; }
+      .cta-block-card__icon{ width:48px; height:48px; background:rgba(197,160,89,.1); border:1px solid rgba(197,160,89,.25); border-radius:12px; display:flex; align-items:center; justify-content:center; color:#c5a059; flex-shrink:0; }
+      .cta-block-card__eyebrow{ color:#c5a059; text-transform:uppercase; letter-spacing:.22em; font-size:.72rem; font-weight:600; }
+      .cta-block-card__heading{ font-family:'Playfair Display',serif; font-size:1.375rem; font-weight:700; color:#fff; line-height:1.2; margin:0; }
+      .cta-block-card__body{ font-size:.9375rem; color:rgba(248,249,250,.72); line-height:1.6; margin:0; flex:1; }
+      .cta-block-card__body a{ color:#c5a059; text-decoration:underline; text-underline-offset:2px; }
+      .cta-block-card__btn{ display:inline-flex; align-items:center; gap:.5rem; padding:.75rem 1.5rem; background:#c5a059; color:#0a192f; font-weight:700; font-size:.9375rem; border:none; border-radius:.65rem; text-decoration:none; cursor:pointer; transition:background .18s ease,transform .18s ease; width:fit-content; margin-top:.5rem; font-family:inherit; }
+      .cta-block-card__btn:hover{ background:#d4aa33; transform:translateY(-1px); }
       
       .state-count {
         margin-left: 0.5rem;
@@ -962,33 +854,11 @@ export const onRequestGet = async ({ request, env }) => {
           display: block;
         }
         
-        .tips-card{
-          margin: 1rem;
-          border-radius: 0.5rem;
-        }
-        .tips-card-header{
-          padding: 1rem 1.25rem;
-        }
-        .tips-card-header h2{
-          font-size: 1rem;
-        }
-        .tips-card.expanded .tips-card-content{
-          padding: 1rem 1.25rem;
-        }
-        .tips-card-content ul{
-          padding-left: 1.25rem;
-        }
-        
-        .cta-blocks-container{
-          margin: 2rem 1rem 1.5rem;
-          gap: 1.5rem;
-        }
-        .cta-block{
-          padding: 2rem 1.5rem;
-        }
-        .cta-text{
-          font-size: 1.125rem;
-        }
+        .tips-card{ margin:1rem; padding:1.5rem 1.25rem; }
+        .tips-card__grid{ grid-template-columns:1fr; }
+        .natl-promo-wrap{ margin:1.5rem auto 1rem; }
+        .natl-promo{ flex-wrap:nowrap; }
+        .cta-blocks-container{ margin:1.5rem 1rem; }
         
         .states-container {
           margin: 0 auto 2rem;
@@ -1080,14 +950,19 @@ export const onRequestGet = async ({ request, env }) => {
     </section>
 
     <!-- ===== NATIONWIDE DIRECTORY PROMO ===== -->
-    <div style="max-width:1200px;margin:0 auto 1.5rem;padding:0 1rem;">
-      <a href="${pageUrl}/mineral-services-directory" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.5rem;background:#23456D;color:#fff;border-radius:0.75rem;text-decoration:none;transition:background 0.2s ease;" onmouseover="this.style.background='#1a3454'" onmouseout="this.style.background='#23456D'">
-        <div>
-          <div style="font-size:0.8125rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;opacity:0.8;margin-bottom:0.25rem;">Also Available</div>
-          <div style="font-size:1.125rem;font-weight:700;">Nationwide Mineral Services Directory</div>
-          <div style="font-size:0.9375rem;opacity:0.85;margin-top:0.2rem;">Professionals serving mineral owners across all states</div>
+    <div class="natl-promo-wrap">
+      <a href="${pageUrl}/mineral-services-directory" class="natl-promo">
+        <div class="natl-promo__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
         </div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.8"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <div class="natl-promo__text">
+          <span class="natl-promo__eyebrow">Also Available</span>
+          <strong class="natl-promo__heading">Nationwide Mineral Services Directory</strong>
+          <span class="natl-promo__body">Professionals serving mineral owners across all states</span>
+        </div>
+        <div class="natl-promo__arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
       </a>
     </div>
 
@@ -1100,42 +975,34 @@ export const onRequestGet = async ({ request, env }) => {
     <main class="container">
       
       <!-- ===== Tips for Choosing a Pro ===== -->
-      <div class="tips-card" id="tipsCard">
-        <div class="tips-card-header" id="tipsCardHeader">
-          <h2>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink: 0;">
-              <g fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M13.737 21.848a10.002 10.002 0 0 0 6.697-15.221a10 10 0 1 0-6.698 15.221z"/>
-                <path stroke-linecap="square" d="M12 12v6m0-11V6"/>
-              </g>
-            </svg>
-            <span>Tips for Choosing a Pro</span>
+      <div class="tips-card">
+        <div class="tips-card__meta">
+          <span class="tips-card__eyebrow">Due Diligence</span>
+          <h2 class="tips-card__title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--accent-gold)"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Tips for Choosing a Professional
           </h2>
-          <svg class="tips-card-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
         </div>
-        <div class="tips-card-content">
-          <ul>
-            <li><strong>Review credentials & licenses:</strong> Ensure a vendor is properly licensed and/or certified in their field (attorney bar member, certified specialties, landman certifications, etc.)</li>
-            <li><strong>Ask about area experience:</strong> Inquire specifically about experience in the state(s) where your minerals are located. State law is primarily what rules in oil and gas.</li>
-            <li><strong>Request references:</strong> Ask for references from previous clients. Think twice if there is any hesitation on their part.</li>
-            <li><strong>Understand fee structures:</strong> Get clear information upfront about fee structure (hourly, flat fee, etc.), and what services are included.</li>
-            <li><strong>Gather your paperwork:</strong> Don't forget info you may have from relatives also. If at all possible, scan and/or share electronically. Relatives can share costs also.</li>
-            <li><strong>Consider specialization:</strong> Look for pros who specialize in your specific needs (royalty disputes, lease negotiations, title work, etc.). One size does not fit all.</li>
-          </ul>
-        </div>
+        <ul class="tips-card__grid">
+          <li class="tips-card__item"><span class="tips-card__num">01</span><strong>Review credentials &amp; licenses</strong><span>Ensure a vendor is properly licensed and/or certified in their field (attorney bar member, certified specialties, landman certifications, etc.)</span></li>
+          <li class="tips-card__item"><span class="tips-card__num">02</span><strong>Ask about area experience</strong><span>Inquire specifically about experience in the state(s) where your minerals are located. State law is primarily what rules in oil and gas.</span></li>
+          <li class="tips-card__item"><span class="tips-card__num">03</span><strong>Request references</strong><span>Ask for references from previous clients. Think twice if there is any hesitation on their part.</span></li>
+          <li class="tips-card__item"><span class="tips-card__num">04</span><strong>Understand fee structures</strong><span>Get clear information upfront about fee structure (hourly, flat fee, etc.), and what services are included.</span></li>
+          <li class="tips-card__item"><span class="tips-card__num">05</span><strong>Gather your paperwork</strong><span>Don't forget info you may have from relatives also. If at all possible, scan and share electronically. Relatives can share costs too.</span></li>
+          <li class="tips-card__item"><span class="tips-card__num">06</span><strong>Consider specialization</strong><span>Look for pros who specialize in your specific needs (royalty disputes, lease negotiations, title work, etc.). One size does not fit all.</span></li>
+        </ul>
       </div>
       
       <!-- Business Owners CTA Section -->
       <div class="cta-blocks-container">
-        <div class="cta-block">
-          <p class="cta-text">
-            Business Owners - would you like to appear on one of our directory pages? We offer paid <a href="https://directory.mineralrightsforum.com">County-specific Directories</a> and a general <a href="${pageUrl}/mineral-services-directory">Nationwide Directory</a>. Limitations apply.
-          </p>
-          <button id="applyForListingBtn" class="cta-button">
-            Apply for Listing
-          </button>
+        <div class="cta-block-card">
+          <div class="cta-block-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
+          <span class="cta-block-card__eyebrow">Get Listed</span>
+          <h3 class="cta-block-card__heading">Reach Mineral Owners in Your Area</h3>
+          <p class="cta-block-card__body">We offer paid <a href="https://directory.mineralrightsforum.com">county-specific</a> and <a href="${pageUrl}/mineral-services-directory">nationwide</a> directory listings for qualified mineral professionals. Limitations apply.</p>
+          <button id="applyForListingBtn" class="cta-block-card__btn">Apply for Listing</button>
         </div>
       </div>
     </main>
@@ -1265,20 +1132,6 @@ export const onRequestGet = async ({ request, env }) => {
         countySearch.addEventListener('input', debounce((e) => {
           filterCounties(e.target.value);
         }, 200));
-        
-        // --- Tips Card Toggle ---
-        const tipsCard = document.getElementById('tipsCard');
-        const tipsCardHeader = document.getElementById('tipsCardHeader');
-        if (tipsCardHeader && tipsCard) {
-          tipsCardHeader.addEventListener('click', () => {
-            tipsCard.classList.toggle('expanded');
-            localStorage.setItem('tipsCardExpanded', tipsCard.classList.contains('expanded'));
-          });
-          const savedState = localStorage.getItem('tipsCardExpanded');
-          if (savedState === 'true') {
-            tipsCard.classList.add('expanded');
-          }
-        }
         
         // Apply for Listing modal
         const applyModal = document.getElementById('applyModal');
