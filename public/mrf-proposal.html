@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A New Mineral Rights Forum — Design Proposal</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:        #0a192f;
+  --navy-mid:    #0e2040;
+  --gold:        #c5a059;
+  --gold-hover:  #d4b06a;
+  --gold-dim:    rgba(197,160,89,0.1);
+  --gold-border: rgba(197,160,89,0.25);
+  --off-white:   #f8f6f1;
+  --surface:     #ffffff;
+  --border:      #e6e7ea;
+  --ink:         #0b0e14;
+  --muted:       #6b7280;
+  --subtle:      #9ca3af;
+  --serif:       'Playfair Display', Georgia, serif;
+  --sans:        Inter, system-ui, sans-serif;
+  --shadow-sm:   0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(15,23,42,.07);
+  --shadow-md:   0 1px 3px rgba(0,0,0,.06), 0 8px 24px rgba(15,23,42,.10);
+  --r:           14px;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); background: var(--off-white); color: var(--ink); font-size: 16px; line-height: 1.6; }
+
+/* ─── Utilities ────────────────────────────── */
+.container { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
+.container--wide { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: var(--gold-dim);
+  border: 1px solid var(--gold-border);
+  border-radius: 100px;
+  padding: 0.3rem 0.875rem;
+}
+
+/* ─── Hero ─────────────────────────────────── */
+.hero {
+  background: linear-gradient(160deg, var(--navy) 0%, #0c1f3a 55%, #0f2848 100%);
+  border-bottom: 4px solid var(--gold);
+  padding: 80px 1.5rem 72px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(197,160,89,0.4), transparent);
+}
+
+/* Strata logo mark */
+.hero-logo-mark {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  margin: 0 auto 2.5rem;
+  width: fit-content;
+}
+.hero-logo-mark .bar { height: 4px; border-radius: 2px; }
+.hero-logo-mark .bar:nth-child(1) { width: 52px; background: rgba(255,255,255,0.85); }
+.hero-logo-mark .bar:nth-child(2) { width: 40px; background: rgba(255,255,255,0.4); }
+.hero-logo-mark .bar:nth-child(3) { width: 58px; background: var(--gold); height: 5.5px; }
+.hero-logo-mark .bar:nth-child(4) { width: 30px; background: rgba(255,255,255,0.2); }
+
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.25rem;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--gold);
+}
+.hero p {
+  font-size: 1.125rem;
+  color: rgba(255,255,255,0.62);
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.65;
+  font-weight: 300;
+}
+.hero-cta-row {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-gold {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.875rem 1.875rem;
+  background: var(--gold);
+  color: var(--navy);
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 700;
+  border: none; border-radius: 10px;
+  text-decoration: none;
+  transition: background .18s, transform .18s;
+}
+.btn-gold:hover { background: var(--gold-hover); transform: translateY(-1px); }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.875rem 1.875rem;
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.82);
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background .18s;
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.13); }
+
+/* ─── Sections ──────────────────────────────── */
+section { padding: 72px 0; }
+section + section { border-top: 1px solid var(--border); }
+.section-bg-white { background: var(--surface); }
+.section-bg-off  { background: var(--off-white); }
+.section-bg-dark { background: var(--navy); }
+
+.section-head { margin-bottom: 3rem; }
+.section-head .eyebrow { margin-bottom: 1rem; }
+.section-head h2 {
+  font-family: var(--serif);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.15;
+  margin-bottom: 0.875rem;
+}
+.section-head h2.on-dark { color: #fff; }
+.section-head p { font-size: 1.0625rem; color: var(--muted); max-width: 600px; line-height: 1.65; }
+.section-head p.on-dark { color: rgba(255,255,255,0.58); }
+
+/* ─── Cards ─────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+.card-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.card-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+@media (max-width: 720px) { .card-grid-2, .card-grid-3 { grid-template-columns: 1fr; } }
+
+.card-icon {
+  width: 44px; height: 44px;
+  background: var(--gold-dim);
+  border: 1px solid var(--gold-border);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold);
+  margin-bottom: 1.125rem;
+}
+.card h3 {
+  font-family: var(--serif);
+  font-size: 1.1875rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 0.625rem;
+  line-height: 1.25;
+}
+.card p { font-size: 0.9375rem; color: var(--muted); line-height: 1.65; }
+
+/* ─── Timeline ──────────────────────────────── */
+.timeline { display: flex; flex-direction: column; gap: 0; position: relative; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 28px; top: 28px; bottom: 28px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--gold) 0%, rgba(197,160,89,0.2) 100%);
+}
+.timeline-step {
+  display: flex;
+  gap: 1.75rem;
+  padding-bottom: 2.5rem;
+  position: relative;
+}
+.timeline-step:last-child { padding-bottom: 0; }
+.timeline-node {
+  width: 58px; height: 58px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+.timeline-node--active {
+  background: var(--gold);
+  color: var(--navy);
+  box-shadow: 0 0 0 4px rgba(197,160,89,0.18);
+}
+.timeline-node--mid {
+  background: var(--navy);
+  color: var(--gold);
+  border: 2px solid var(--gold);
+}
+.timeline-node--end {
+  background: linear-gradient(135deg, var(--navy), #0e2040);
+  color: var(--gold);
+  border: 2px solid rgba(197,160,89,0.4);
+}
+.timeline-body { padding-top: 0.875rem; flex: 1; }
+.timeline-phase {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.375rem;
+}
+.timeline-body h3 {
+  font-family: var(--serif);
+  font-size: 1.3125rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 0.625rem;
+  line-height: 1.25;
+}
+.timeline-body p { font-size: 0.9375rem; color: var(--muted); line-height: 1.65; max-width: 580px; }
+.timeline-tag {
+  display: inline-block;
+  margin-top: 0.875rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--navy);
+  background: rgba(10,25,47,0.06);
+  border-radius: 6px;
+  padding: 0.3rem 0.75rem;
+}
+.timeline-tag.gold { background: var(--gold-dim); color: #7a5c1e; border: 1px solid var(--gold-border); }
+
+/* ─── Stays-same list ───────────────────────── */
+.stays-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+@media (max-width: 600px) { .stays-grid { grid-template-columns: 1fr; } }
+.stays-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1rem 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.stays-check {
+  width: 28px; height: 28px;
+  background: rgba(22,163,74,0.1);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  color: #16a34a;
+}
+.stays-item span { font-size: 0.9375rem; font-weight: 500; color: var(--ink); }
+
+/* ─── Asset link cards ─────────────────────── */
+.asset-link {
+  display: flex;
+  align-items: stretch;
+  text-decoration: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow .2s, transform .2s;
+}
+.asset-link:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.asset-link__stripe {
+  width: 6px;
+  background: linear-gradient(180deg, var(--gold), rgba(197,160,89,0.4));
+  flex-shrink: 0;
+}
+.asset-link__body {
+  padding: 1.75rem 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.asset-link__eyebrow { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
+.asset-link__title { font-family: var(--serif); font-size: 1.1875rem; font-weight: 700; color: var(--navy); line-height: 1.2; }
+.asset-link__desc { font-size: 0.9rem; color: var(--muted); line-height: 1.55; }
+.asset-link__cta {
+  display: inline-flex; align-items: center; gap: 0.375rem;
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+.asset-link__arrow { padding: 1.75rem 1.25rem; display: flex; align-items: center; color: var(--gold); opacity: 0.6; flex-shrink: 0; transition: opacity .2s, transform .2s; }
+.asset-link:hover .asset-link__arrow { opacity: 1; transform: translateX(3px); }
+
+/* ─── Quote / callout ───────────────────────── */
+.callout {
+  background: linear-gradient(145deg, var(--navy), #0e2040);
+  border: 1px solid var(--gold-border);
+  border-radius: var(--r);
+  padding: 2.5rem;
+  position: relative;
+}
+.callout::before {
+  content: '"';
+  font-family: var(--serif);
+  font-size: 6rem;
+  line-height: 1;
+  color: var(--gold);
+  opacity: 0.18;
+  position: absolute;
+  top: 0.5rem;
+  left: 1.25rem;
+  pointer-events: none;
+}
+.callout p {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.88);
+  line-height: 1.65;
+  position: relative;
+}
+.callout cite {
+  display: block;
+  margin-top: 1rem;
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  position: relative;
+}
+
+/* ─── Discourse explanation ─────────────────── */
+.tech-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+@media (max-width: 720px) { .tech-row { grid-template-columns: 1fr; } }
+.tech-card {
+  border-radius: var(--r);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+.tech-card--yes { background: rgba(22,163,74,0.06); border: 1px solid rgba(22,163,74,0.2); }
+.tech-card--css { background: rgba(37,99,235,0.06); border: 1px solid rgba(37,99,235,0.2); }
+.tech-card--no  { background: rgba(220,38,38,0.05); border: 1px solid rgba(220,38,38,0.15); }
+.tech-card__head { display: flex; align-items: center; gap: 0.625rem; font-size: 0.875rem; font-weight: 700; }
+.tech-card--yes .tech-card__head { color: #166534; }
+.tech-card--css .tech-card__head { color: #1d4ed8; }
+.tech-card--no  .tech-card__head { color: #991b1b; }
+.tech-list { list-style: none; display: flex; flex-direction: column; gap: 0.375rem; }
+.tech-list li { font-size: 0.875rem; color: var(--muted); padding-left: 1rem; position: relative; line-height: 1.5; }
+.tech-list li::before { content: '–'; position: absolute; left: 0; color: var(--subtle); }
+
+/* ─── Cost estimate ─────────────────────────── */
+.effort-table { width: 100%; border-collapse: collapse; }
+.effort-table th {
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--subtle);
+  padding: 0.625rem 1rem;
+  border-bottom: 2px solid var(--border);
+}
+.effort-table td { padding: 0.8125rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.9375rem; vertical-align: middle; }
+.effort-table tr:last-child td { border-bottom: none; }
+.effort-table tr:hover td { background: #fafafa; }
+.effort-dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* ─── Final CTA ─────────────────────────────── */
+.final-cta {
+  background: linear-gradient(160deg, var(--navy), #0e2040);
+  border-top: 4px solid var(--gold);
+  padding: 80px 1.5rem;
+  text-align: center;
+}
+.final-cta h2 {
+  font-family: var(--serif);
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1rem;
+  line-height: 1.15;
+}
+.final-cta p { font-size: 1.0625rem; color: rgba(255,255,255,0.55); max-width: 520px; margin: 0 auto 2.25rem; line-height: 1.65; }
+
+/* ─── Nav ───────────────────────────────────── */
+.top-nav {
+  background: var(--navy);
+  padding: 0.875rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--gold-border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.top-nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.top-nav-mark { display: flex; flex-direction: column; gap: 3px; }
+.top-nav-mark .b { height: 3px; border-radius: 1.5px; }
+.top-nav-mark .b:nth-child(1) { width: 28px; background: rgba(255,255,255,0.8); }
+.top-nav-mark .b:nth-child(2) { width: 22px; background: rgba(255,255,255,0.35); }
+.top-nav-mark .b:nth-child(3) { width: 32px; background: var(--gold); height: 3.5px; }
+.top-nav-mark .b:nth-child(4) { width: 18px; background: rgba(255,255,255,0.18); }
+.top-nav-name { font-family: var(--serif); font-size: 0.9375rem; font-weight: 700; color: #fff; }
+.top-nav-links { display: flex; gap: 0.25rem; }
+.top-nav-links a { font-size: 0.8125rem; font-weight: 500; color: rgba(255,255,255,0.6); text-decoration: none; padding: 0.4rem 0.75rem; border-radius: 6px; transition: color .15s, background .15s; white-space: nowrap; }
+.top-nav-links a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+.top-nav-links a.active { color: var(--gold); }
+
+@media (max-width: 640px) {
+  .top-nav-links { display: none; }
+  .hero { padding: 56px 1.25rem 52px; }
+  section { padding: 52px 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── Sticky nav ──────────────────────────── -->
+<nav class="top-nav">
+  <div class="top-nav-logo">
+    <div class="top-nav-mark">
+      <div class="b"></div><div class="b"></div><div class="b"></div><div class="b"></div>
+    </div>
+    <span class="top-nav-name">Mineral Rights Forum</span>
+  </div>
+  <div class="top-nav-links">
+    <a href="#opportunity">The Opportunity</a>
+    <a href="#transition">Transition Plan</a>
+    <a href="#unchanged">What Stays</a>
+    <a href="#discourse">How It Works</a>
+    <a href="#assets">Design Assets</a>
+  </div>
+</nav>
+
+<!-- ─── Hero ────────────────────────────────── -->
+<div class="hero">
+  <div class="hero-logo-mark">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+  </div>
+  <div class="container">
+    <div class="eyebrow" style="margin-bottom:1.5rem;">Design Proposal — Confidential</div>
+    <h1>A new face for<br><em>Mineral Rights Forum</em></h1>
+    <p>The same trusted community. The same 47,000 members and 185,000 posts. A design that finally matches the quality of what you've built — and a transition plan that carries every single member along without disruption.</p>
+    <div class="hero-cta-row">
+      <a href="#transition" class="btn-gold">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        See the zero-risk plan
+      </a>
+      <a href="#assets" class="btn-ghost">
+        View the mockups →
+      </a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ─── The Opportunity ─────────────────────── -->
+<section class="section-bg-white" id="opportunity">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">The Opportunity</span>
+      <h2>MRF has outgrown its design</h2>
+      <p>Mineral Rights Forum is the most authoritative community for mineral owners in the country. The design hasn't kept pace with the reputation.</p>
+    </div>
+
+    <div class="card-grid-3" style="margin-bottom:2rem;">
+      <div class="card">
+        <div class="card-icon">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3>First impressions matter</h3>
+        <p>A new mineral rights owner lands on MRF from Google. Within three seconds they judge whether this is a trustworthy source or an outdated one. A modern design answers that question before they read a word.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3>Brand alignment</h3>
+        <p>The MRF county directories — already live — have a polished, professional identity: dark navy, gold accents, Playfair Display. The forum should feel like it belongs to the same family, not a different product entirely.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Professionals are watching</h3>
+        <p>Attorneys, landmen, and mineral buyers use MRF to reach clients. A site that looks credible and professional is one they'll recommend confidently. Perception is part of the product.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p>The content, the expertise, the community — that's already world-class. This is about making the presentation worthy of what's already there.</p>
+      <cite>— The design brief in one sentence</cite>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── Transition Plan ──────────────────────── -->
+<section class="section-bg-off" id="transition">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Zero-Risk Transition</span>
+      <h2>Nobody gets left behind</h2>
+      <p>The biggest risk with any redesign is alienating users who are comfortable with what they know. This plan eliminates that risk completely with a three-phase approach that keeps every member in control of their own experience.</p>
+    </div>
+
+    <!-- Reassurance callout -->
+    <div style="background:rgba(22,163,74,0.06);border:1px solid rgba(22,163,74,0.2);border-radius:var(--r);padding:1.25rem 1.5rem;margin-bottom:2.5rem;display:flex;align-items:flex-start;gap:1rem;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" style="flex-shrink:0;margin-top:2px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <p style="font-size:0.9375rem;color:#166534;line-height:1.6;"><strong>Discourse is built for this.</strong> Simultaneous themes, user theme-switching, and preview modes are all supported, documented features of the Discourse platform — not hacks, not workarounds. Hundreds of large Discourse communities have done this exact rollout.</p>
+    </div>
+
+    <div class="timeline">
+
+      <div class="timeline-step">
+        <div class="timeline-node timeline-node--active">1</div>
+        <div class="timeline-body">
+          <div class="timeline-phase">Phase 1 — Months 1–3</div>
+          <h3>Opt-in: "Try the new design"</h3>
+          <p>The current design stays exactly as it is. A small, tasteful banner appears at the top of the forum: <em>"The new Mineral Rights Forum is here — try it now."</em> Members who click are taken to the new design. Members who ignore it see nothing different. The new design runs alongside the old one; Discourse handles both simultaneously at zero performance cost.</p>
+          <p style="margin-top:0.75rem;">Members who try it and don't like it can switch back in one click. Their preference is saved to their account. No pressure, no commitment.</p>
+          <span class="timeline-tag gold">No member is ever forced to change</span>
+        </div>
+      </div>
+
+      <div class="timeline-step">
+        <div class="timeline-node timeline-node--mid">2</div>
+        <div class="timeline-body">
+          <div class="timeline-phase">Phase 2 — Months 4–6</div>
+          <h3>Soft switch: New design becomes default</h3>
+          <p>After 3 months of opt-in data — you'll be able to see exactly how many members chose the new design, how their session times and post rates compare, and whether there's any negative signal — the new design becomes the default for all visitors and new sign-ups.</p>
+          <p style="margin-top:0.75rem;">Members who have been using the old design keep it automatically. A quiet "Back to classic view" link in the footer gives anyone else the option to revert. The old design is still fully live.</p>
+          <span class="timeline-tag">You control the timing — no fixed deadline</span>
+        </div>
+      </div>
+
+      <div class="timeline-step">
+        <div class="timeline-node timeline-node--end">3</div>
+        <div class="timeline-body">
+          <div class="timeline-phase">Phase 3 — Month 7+</div>
+          <h3>Migration complete: One design, one brand</h3>
+          <p>By this point, usage data will tell you what percentage of members are still on the old design. In practice, across communities that have done this rollout, that number drops below 5% within 4–6 months. When you and Kenny are comfortable, the old design is retired.</p>
+          <p style="margin-top:0.75rem;">There's no pressure on timing. If the data shows members need more time, Phase 2 extends. If adoption is fast, Phase 3 can come sooner. The data leads.</p>
+          <span class="timeline-tag gold">You decide when — the data backs the decision</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Key safety point -->
+    <div style="margin-top:3rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.75rem 2rem;">
+      <h3 style="font-family:var(--serif);font-size:1.1875rem;font-weight:700;color:var(--navy);margin-bottom:1rem;">At every phase, you can pause or reverse</h3>
+      <p style="font-size:0.9375rem;color:var(--muted);line-height:1.65;max-width:680px;">If at any point in Phase 1 you see members complaining, engagement dropping, or any other negative signal — you remove the banner and the new design is simply gone. Zero members were ever forced onto it. There is no "breaking point" in this rollout. It is entirely reversible at every step until Phase 3.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── What stays the same ──────────────────── -->
+<section class="section-bg-white" id="unchanged">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">What Stays the Same</span>
+      <h2>Everything your members rely on</h2>
+      <p>A visual refresh changes exactly one thing: what the site looks like. Everything else is untouched.</p>
+    </div>
+
+    <div class="stays-grid">
+      <div class="stays-item">
+        <div class="stays-check"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span>Every post, thread, and reply — all 185,000+</span>
+      </div>
+      <div class="stays-item">
+        <div class="stays-check"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span>All 47,000 member accounts and histories</span>
+      </div>
+      <div class="stays-item">
+        <div class="stays-check"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span>Every URL — no redirects, no SEO disruption</span>
+      </div>
+      <div class="stays-item">
+        <div class="stays-check"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span>All categories, subcategories, and tags</span>
+      </div>
+      <div class="stays-item">
+        <div class="stays-check"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span>Trust levels, badges, and member rankings</span>
+      </div>
+      <div class="stays-item">
+        <div class="stays-check"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span>All private messages and notifications</span>
+      </div>
+      <div class="stays-item">
+        <div class="stays-check"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span>Google search rankings and indexed content</span>
+      </div>
+      <div class="stays-item">
+        <div class="stays-check"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span>All integrations, plugins, and admin settings</span>
+      </div>
+      <div class="stays-item">
+        <div class="stays-check"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span>Advertiser placements and sponsored content</span>
+      </div>
+      <div class="stays-item">
+        <div class="stays-check"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span>The community itself — nothing about how the forum works changes</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── How Discourse handles this ──────────── -->
+<section class="section-bg-off" id="discourse">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Under the Hood</span>
+      <h2>What Discourse supports natively</h2>
+      <p>This isn't a gamble on untested technology. Discourse's theme system is mature, documented, and used by thousands of communities for exactly this kind of rollout.</p>
+    </div>
+
+    <div class="tech-row" style="margin-bottom:1.5rem;">
+      <div class="tech-card tech-card--yes">
+        <div class="tech-card__head">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Built-in — color scheme editor
+        </div>
+        <ul class="tech-list">
+          <li>Navy header background</li>
+          <li>Gold for links, buttons, highlights</li>
+          <li>Full light/dark mode support</li>
+          <li>Takes 5 minutes in Discourse admin</li>
+        </ul>
+      </div>
+      <div class="tech-card tech-card--css">
+        <div class="tech-card__head">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Custom CSS — light work
+        </div>
+        <ul class="tech-list">
+          <li>Playfair Display + Inter fonts (Google Fonts import)</li>
+          <li>Gold border on header</li>
+          <li>Topic list hover states and tag pill styling</li>
+          <li>Active nav pill gold underline</li>
+        </ul>
+      </div>
+      <div class="tech-card tech-card--yes" style="border-color:rgba(197,160,89,0.3);background:rgba(197,160,89,0.05);">
+        <div class="tech-card__head" style="color:#7a5c1e;">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Theme components — HTML/CSS
+        </div>
+        <ul class="tech-list">
+          <li>Hero banner below the header</li>
+          <li>"Try the new design" opt-in banner</li>
+          <li>Directory promo card in sidebar</li>
+          <li>Custom footer with brand treatment</li>
+        </ul>
+      </div>
+      <div class="tech-card tech-card--no">
+        <div class="tech-card__head">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Not possible — Discourse limits
+        </div>
+        <ul class="tech-list">
+          <li>Restructuring the topic list columns</li>
+          <li>Changing the fundamental page layout</li>
+          <li>Running two separate Discourse instances</li>
+          <li>Any change to post content or data</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Effort table -->
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);background:#fafbfc;">
+        <p style="font-size:0.8125rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.1em;">Realistic implementation scope</p>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="effort-table" style="padding:0;">
+          <thead>
+            <tr>
+              <th style="padding-left:1.5rem;">Element</th>
+              <th>Effort</th>
+              <th>How</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding-left:1.5rem;font-weight:600;">Color scheme (navy + gold)</td><td><span style="color:#16a34a;font-weight:600;">5 min</span></td><td style="color:var(--muted);">Discourse admin → Color Scheme</td></tr>
+            <tr><td style="padding-left:1.5rem;font-weight:600;">Fonts (Playfair + Inter)</td><td><span style="color:#16a34a;font-weight:600;">5 lines CSS</span></td><td style="color:var(--muted);">Theme stylesheet</td></tr>
+            <tr><td style="padding-left:1.5rem;font-weight:600;">Header border + icon colors</td><td><span style="color:#16a34a;font-weight:600;">~10 lines CSS</span></td><td style="color:var(--muted);">Theme stylesheet</td></tr>
+            <tr><td style="padding-left:1.5rem;font-weight:600;">Topic list + tag styling</td><td><span style="color:#2563eb;font-weight:600;">~40 lines CSS</span></td><td style="color:var(--muted);">Theme stylesheet</td></tr>
+            <tr><td style="padding-left:1.5rem;font-weight:600;">Hero banner component</td><td><span style="color:#2563eb;font-weight:600;">~60 lines HTML/CSS</span></td><td style="color:var(--muted);">after_header template</td></tr>
+            <tr><td style="padding-left:1.5rem;font-weight:600;">Opt-in banner + theme switcher</td><td><span style="color:#2563eb;font-weight:600;">~50 lines HTML/JS</span></td><td style="color:var(--muted);">Theme component</td></tr>
+            <tr><td style="padding-left:1.5rem;font-weight:600;">Custom footer</td><td><span style="color:#2563eb;font-weight:600;">~80 lines HTML/CSS</span></td><td style="color:var(--muted);">footer template</td></tr>
+            <tr><td style="padding-left:1.5rem;font-weight:600;color:var(--gold);">Logo (Strata or chosen option)</td><td><span style="color:var(--gold);font-weight:600;">Export SVG, upload</span></td><td style="color:var(--muted);">Site Settings → Logo</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="padding:1rem 1.5rem;background:#fafbfc;border-top:1px solid var(--border);">
+        <p style="font-size:0.8125rem;color:var(--muted);">Total custom code: approximately <strong>250–300 lines</strong> across 4–5 theme components. Entirely within Discourse's documented customization system.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── Design Assets ────────────────────────── -->
+<section class="section-bg-white" id="assets">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Design Assets</span>
+      <h2>The work is already done</h2>
+      <p>Both the logo explorations and the full homepage mockup are complete and ready to review. These were built specifically using MRF's design language — the same colors and fonts already live on the directory pages.</p>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+      <a href="/logo-mockups.html" class="asset-link" target="_blank">
+        <div class="asset-link__stripe"></div>
+        <div class="asset-link__body">
+          <span class="asset-link__eyebrow">Asset 1 of 2</span>
+          <span class="asset-link__title">Logo Concepts — 6 Directions</span>
+          <span class="asset-link__desc">Six fully designed logo options, each shown on both dark navy and light backgrounds and at multiple sizes. Includes "The Strata" (geological layers with gold mineral line), "The Gem" (faceted diamond), "The Seal" (MRF monogram), "The Horizon" (surface + deposit mark), "Pure Wordmark" (typography only), and "The Crest" (shield with strata fill). All use #c5a059 gold and Playfair Display — the same tokens already live on MRF's directory pages.</span>
+          <span class="asset-link__cta">Open logo concepts →</span>
+        </div>
+        <div class="asset-link__arrow">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <a href="/mrf-redesign-mockup.html" class="asset-link" target="_blank">
+        <div class="asset-link__stripe"></div>
+        <div class="asset-link__body">
+          <span class="asset-link__eyebrow">Asset 2 of 2</span>
+          <span class="asset-link__title">Full Homepage Mockup + Style Guide</span>
+          <span class="asset-link__desc">A pixel-accurate mockup of the MRF homepage as it would look with the new design applied to the Discourse Default Theme. Includes the full header (Strata logo, nav, login/signup), a custom hero banner with community stats, the sticky category navigation strip, a realistic topic list with category dots and tags, the sidebar (directory promo, categories, stats, tags), and a dark navy footer. Below the mockup, a complete style guide covers every design token: color swatches with Hex values, typography specimens at each scale, button variants, badges, category cards, form elements, member components, and the exact Discourse CSS variable mappings.</span>
+          <span class="asset-link__cta">Open homepage mockup →</span>
+        </div>
+        <div class="asset-link__arrow">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── The ask ──────────────────────────────── -->
+<section class="section-bg-off">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">The Ask</span>
+      <h2>One decision, at your own pace</h2>
+      <p>This doesn't require a big commitment up front. The Phase 1 opt-in banner is the smallest possible step — it shows the new design to members who want to try it, and does nothing to anyone else.</p>
+    </div>
+    <div class="card-grid-2">
+      <div class="card" style="border-left: 4px solid var(--gold);">
+        <h3>What we're asking for now</h3>
+        <p>A conversation. Review the mockup, pick a logo direction (or give feedback on directions), and decide whether you want to move forward to Phase 1. Phase 1 is fully reversible on the same day if you change your mind.</p>
+      </div>
+      <div class="card" style="border-left: 4px solid rgba(10,25,47,0.2);">
+        <h3>What we're not asking for</h3>
+        <p>No commitment to a full rollout. No deadline. No disruption to the current site. No risk to existing members, content, SEO, or advertiser relationships. The old design stays live throughout.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── Final CTA ────────────────────────────── -->
+<div class="final-cta">
+  <div class="container">
+    <div class="hero-logo-mark" style="margin:0 auto 2rem;">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+    <h2>Mineral Rights Forum has earned a design that reflects its reputation.</h2>
+    <p>19 years of community, expertise, and trust — presented in a way that communicates that from the first second a visitor arrives.</p>
+    <div class="hero-cta-row">
+      <a href="/logo-mockups.html" class="btn-gold" target="_blank">View logo concepts</a>
+      <a href="/mrf-redesign-mockup.html" class="btn-ghost" target="_blank">View homepage mockup</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
