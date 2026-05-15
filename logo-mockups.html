@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MRF Logo Concepts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #0a192f;
+  --navy-mid: #0e2040;
+  --gold: #c5a059;
+  --gold-light: #d4b06a;
+  --gold-dim: rgba(197,160,89,0.18);
+  --gold-border: rgba(197,160,89,0.3);
+  --white: #ffffff;
+  --off-white: #f8f6f1;
+  --ink: #0b0e14;
+  --muted: #6b7280;
+  --border: #e6e7ea;
+}
+
+body {
+  font-family: Inter, system-ui, sans-serif;
+  background: #f0ede8;
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+/* ─── Page header ─────────────────────────────── */
+.page-header {
+  background: var(--navy);
+  border-bottom: 3px solid var(--gold);
+  padding: 3.5rem 2rem 3rem;
+  text-align: center;
+}
+.page-header__eyebrow {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.75rem;
+}
+.page-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 0.625rem;
+}
+.page-header p {
+  font-size: 0.9375rem;
+  color: rgba(255,255,255,0.55);
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* ─── Layout ──────────────────────────────────── */
+.concepts {
+  max-width: 1120px;
+  margin: 3.5rem auto 4rem;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+/* ─── Concept card ────────────────────────────── */
+.concept {
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 12px 32px rgba(15,23,42,.09);
+}
+
+.concept-meta {
+  padding: 1.25rem 1.75rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.concept-meta h2 {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+.concept-meta .tag {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.concept-previews {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.preview {
+  padding: 4rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+}
+.preview--dark  { background: var(--navy); }
+.preview--light { background: var(--off-white); border-left: 1px solid var(--border); }
+
+.preview-labels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--border);
+}
+.preview-labels span {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #b0b7c3;
+  padding: 0.625rem 1.75rem;
+  background: #fafbfc;
+}
+.preview-labels span:last-child { text-align: right; border-left: 1px solid var(--border); }
+
+/* ─── Notes strip ─────────────────────────────── */
+.concept-notes {
+  padding: 1.25rem 1.75rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  background: #fafbfc;
+}
+.note-pill {
+  font-size: 0.78rem;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+.note-pill::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex-shrink: 0;
+}
+
+/* ════════════════════════════════════════════════
+   LOGO A — "The Strata"
+   ════════════════════════════════════════════════ */
+.logo-a {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  user-select: none;
+}
+.logo-a__mark {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.logo-a__bar {
+  height: 4px;
+  border-radius: 2px;
+}
+.logo-a__text {
+  display: flex;
+  flex-direction: column;
+}
+.logo-a__name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+}
+.logo-a__sub {
+  font-family: Inter, sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 0.2rem;
+  color: var(--gold);
+}
+
+/* dark variant */
+.dark .logo-a__bar:nth-child(1) { width: 40px; background: rgba(255,255,255,0.9); }
+.dark .logo-a__bar:nth-child(2) { width: 32px; background: rgba(255,255,255,0.45); }
+.dark .logo-a__bar:nth-child(3) { width: 44px; background: var(--gold); height: 5px; }
+.dark .logo-a__bar:nth-child(4) { width: 26px; background: rgba(255,255,255,0.25); }
+.dark .logo-a__name { color: #fff; }
+
+/* light variant */
+.light .logo-a__bar:nth-child(1) { width: 40px; background: var(--navy); }
+.light .logo-a__bar:nth-child(2) { width: 32px; background: rgba(10,25,47,0.35); }
+.light .logo-a__bar:nth-child(3) { width: 44px; background: var(--gold); height: 5px; }
+.light .logo-a__bar:nth-child(4) { width: 26px; background: rgba(10,25,47,0.18); }
+.light .logo-a__name { color: var(--navy); }
+
+/* ════════════════════════════════════════════════
+   LOGO B — "The Gem"
+   ════════════════════════════════════════════════ */
+.logo-b {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  user-select: none;
+}
+.logo-b__wordmark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+.logo-b__top {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.logo-b__rule {
+  width: 36px;
+  height: 2px;
+  background: var(--gold);
+}
+.logo-b__bottom {
+  font-family: Inter, sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.dark .logo-b__top  { color: #fff; }
+.light .logo-b__top { color: var(--navy); }
+
+/* ════════════════════════════════════════════════
+   LOGO C — "The Seal"
+   ════════════════════════════════════════════════ */
+.logo-c {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.125rem;
+  user-select: none;
+}
+.logo-c__wordmark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+.logo-c__name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+}
+.logo-c__sub {
+  font-family: Inter, sans-serif;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.dark .logo-c__name  { color: #fff; }
+.light .logo-c__name { color: var(--navy); }
+
+/* ─── Size reference row ──────────────────────── */
+.size-row {
+  padding: 1.5rem 1.75rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  background: #fff;
+}
+.size-row__label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #b0b7c3;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .concept-previews { grid-template-columns: 1fr; }
+  .preview--light { border-left: none; border-top: 1px solid var(--border); }
+  .preview-labels { grid-template-columns: 1fr; }
+  .preview-labels span:last-child { text-align: left; border-left: none; border-top: 1px solid var(--border); }
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <span class="page-header__eyebrow">Brand Exploration</span>
+  <h1>Mineral Rights Forum</h1>
+  <p>Three logo directions, each drawn from the directory design language — dark navy, gold, Playfair Display.</p>
+</div>
+
+<div class="concepts">
+
+  <!-- ══════════════════════════════════════
+       CONCEPT A — "The Strata"
+  ══════════════════════════════════════ -->
+  <div class="concept">
+    <div class="concept-meta">
+      <h2>Concept A &mdash; "The Strata"</h2>
+      <span class="tag">Horizontal mark · geological layers · wordmark lockup</span>
+    </div>
+
+    <div class="concept-previews">
+      <!-- Dark -->
+      <div class="preview preview--dark dark">
+        <div class="logo-a">
+          <div class="logo-a__mark">
+            <div class="logo-a__bar"></div>
+            <div class="logo-a__bar"></div>
+            <div class="logo-a__bar"></div>
+            <div class="logo-a__bar"></div>
+          </div>
+          <div class="logo-a__text">
+            <span class="logo-a__name">Mineral Rights</span>
+            <span class="logo-a__sub">Forum</span>
+          </div>
+        </div>
+      </div>
+      <!-- Light -->
+      <div class="preview preview--light light">
+        <div class="logo-a">
+          <div class="logo-a__mark">
+            <div class="logo-a__bar"></div>
+            <div class="logo-a__bar"></div>
+            <div class="logo-a__bar"></div>
+            <div class="logo-a__bar"></div>
+          </div>
+          <div class="logo-a__text">
+            <span class="logo-a__name">Mineral Rights</span>
+            <span class="logo-a__sub">Forum</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-labels">
+      <span>On dark</span>
+      <span>On light</span>
+    </div>
+
+    <!-- Size scale -->
+    <div class="size-row">
+      <span class="size-row__label">Scale</span>
+      <div class="logo-a light" style="transform:scale(0.55);transform-origin:left center;">
+        <div class="logo-a__mark">
+          <div class="logo-a__bar"></div>
+          <div class="logo-a__bar"></div>
+          <div class="logo-a__bar"></div>
+          <div class="logo-a__bar"></div>
+        </div>
+        <div class="logo-a__text">
+          <span class="logo-a__name">Mineral Rights</span>
+          <span class="logo-a__sub">Forum</span>
+        </div>
+      </div>
+      <div class="logo-a light" style="transform:scale(0.75);transform-origin:left center;">
+        <div class="logo-a__mark">
+          <div class="logo-a__bar"></div>
+          <div class="logo-a__bar"></div>
+          <div class="logo-a__bar"></div>
+          <div class="logo-a__bar"></div>
+        </div>
+        <div class="logo-a__text">
+          <span class="logo-a__name">Mineral Rights</span>
+          <span class="logo-a__sub">Forum</span>
+        </div>
+      </div>
+      <div class="logo-a light">
+        <div class="logo-a__mark">
+          <div class="logo-a__bar"></div>
+          <div class="logo-a__bar"></div>
+          <div class="logo-a__bar"></div>
+          <div class="logo-a__bar"></div>
+        </div>
+        <div class="logo-a__text">
+          <span class="logo-a__name">Mineral Rights</span>
+          <span class="logo-a__sub">Forum</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="concept-notes">
+      <span class="note-pill">Most distinctive — unique to mineral/geology</span>
+      <span class="note-pill">Works well in the header next to nav</span>
+      <span class="note-pill">Gold bar = the mineral layer in the earth cross-section</span>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════
+       CONCEPT B — "The Gem"
+  ══════════════════════════════════════ -->
+  <div class="concept">
+    <div class="concept-meta">
+      <h2>Concept B &mdash; "The Gem"</h2>
+      <span class="tag">Faceted diamond mark · stacked wordmark · centered lockup</span>
+    </div>
+
+    <div class="concept-previews">
+      <!-- Dark -->
+      <div class="preview preview--dark dark">
+        <div class="logo-b">
+          <svg width="56" height="64" viewBox="0 0 56 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Outer diamond -->
+            <polygon points="28,2 54,22 28,62 2,22" stroke="#c5a059" stroke-width="2.5" fill="rgba(197,160,89,0.07)"/>
+            <!-- Crown top facets -->
+            <polyline points="2,22 14,12 28,2 42,12 54,22" stroke="#c5a059" stroke-width="1.2" fill="none" stroke-opacity="0.55"/>
+            <!-- Girdle line -->
+            <line x1="2" y1="22" x2="54" y2="22" stroke="#c5a059" stroke-width="1.5" stroke-opacity="0.7"/>
+            <!-- Pavilion facets -->
+            <line x1="2"  y1="22" x2="28" y2="62" stroke="#c5a059" stroke-width="0.8" stroke-opacity="0.25"/>
+            <line x1="54" y1="22" x2="28" y2="62" stroke="#c5a059" stroke-width="0.8" stroke-opacity="0.25"/>
+            <line x1="14" y1="12" x2="28" y2="62" stroke="#c5a059" stroke-width="0.8" stroke-opacity="0.2"/>
+            <line x1="42" y1="12" x2="28" y2="62" stroke="#c5a059" stroke-width="0.8" stroke-opacity="0.2"/>
+            <!-- Center culet -->
+            <circle cx="28" cy="22" r="2" fill="#c5a059" fill-opacity="0.5"/>
+          </svg>
+          <div class="logo-b__wordmark">
+            <span class="logo-b__top">Mineral Rights</span>
+            <div class="logo-b__rule"></div>
+            <span class="logo-b__bottom">Forum</span>
+          </div>
+        </div>
+      </div>
+      <!-- Light -->
+      <div class="preview preview--light light">
+        <div class="logo-b">
+          <svg width="56" height="64" viewBox="0 0 56 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="28,2 54,22 28,62 2,22" stroke="#c5a059" stroke-width="2.5" fill="rgba(197,160,89,0.07)"/>
+            <polyline points="2,22 14,12 28,2 42,12 54,22" stroke="#c5a059" stroke-width="1.2" fill="none" stroke-opacity="0.55"/>
+            <line x1="2" y1="22" x2="54" y2="22" stroke="#c5a059" stroke-width="1.5" stroke-opacity="0.7"/>
+            <line x1="2"  y1="22" x2="28" y2="62" stroke="#0a192f" stroke-width="0.8" stroke-opacity="0.2"/>
+            <line x1="54" y1="22" x2="28" y2="62" stroke="#0a192f" stroke-width="0.8" stroke-opacity="0.2"/>
+            <line x1="14" y1="12" x2="28" y2="62" stroke="#0a192f" stroke-width="0.8" stroke-opacity="0.12"/>
+            <line x1="42" y1="12" x2="28" y2="62" stroke="#0a192f" stroke-width="0.8" stroke-opacity="0.12"/>
+            <circle cx="28" cy="22" r="2" fill="#c5a059" fill-opacity="0.5"/>
+          </svg>
+          <div class="logo-b__wordmark">
+            <span class="logo-b__top">Mineral Rights</span>
+            <div class="logo-b__rule"></div>
+            <span class="logo-b__bottom">Forum</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-labels">
+      <span>On dark</span>
+      <span>On light</span>
+    </div>
+
+    <!-- Size scale -->
+    <div class="size-row">
+      <span class="size-row__label">Scale</span>
+      <div class="logo-b light" style="transform:scale(0.5);transform-origin:left center;margin-right:-40px;">
+        <svg width="56" height="64" viewBox="0 0 56 64" fill="none"><polygon points="28,2 54,22 28,62 2,22" stroke="#c5a059" stroke-width="2.5" fill="rgba(197,160,89,0.07)"/><line x1="2" y1="22" x2="54" y2="22" stroke="#c5a059" stroke-width="1.5" stroke-opacity="0.7"/></svg>
+        <div class="logo-b__wordmark"><span class="logo-b__top">Mineral Rights</span><div class="logo-b__rule"></div><span class="logo-b__bottom">Forum</span></div>
+      </div>
+      <div class="logo-b light" style="transform:scale(0.7);transform-origin:left center;margin-right:-16px;">
+        <svg width="56" height="64" viewBox="0 0 56 64" fill="none"><polygon points="28,2 54,22 28,62 2,22" stroke="#c5a059" stroke-width="2.5" fill="rgba(197,160,89,0.07)"/><line x1="2" y1="22" x2="54" y2="22" stroke="#c5a059" stroke-width="1.5" stroke-opacity="0.7"/></svg>
+        <div class="logo-b__wordmark"><span class="logo-b__top">Mineral Rights</span><div class="logo-b__rule"></div><span class="logo-b__bottom">Forum</span></div>
+      </div>
+      <div class="logo-b light">
+        <svg width="56" height="64" viewBox="0 0 56 64" fill="none"><polygon points="28,2 54,22 28,62 2,22" stroke="#c5a059" stroke-width="2.5" fill="rgba(197,160,89,0.07)"/><polyline points="2,22 14,12 28,2 42,12 54,22" stroke="#c5a059" stroke-width="1.2" fill="none" stroke-opacity="0.55"/><line x1="2" y1="22" x2="54" y2="22" stroke="#c5a059" stroke-width="1.5" stroke-opacity="0.7"/><circle cx="28" cy="22" r="2" fill="#c5a059" fill-opacity="0.5"/></svg>
+        <div class="logo-b__wordmark"><span class="logo-b__top">Mineral Rights</span><div class="logo-b__rule"></div><span class="logo-b__bottom">Forum</span></div>
+      </div>
+    </div>
+
+    <div class="concept-notes">
+      <span class="note-pill">Most literal — immediately reads "minerals"</span>
+      <span class="note-pill">Centered lockup suits hero banners &amp; favicons</span>
+      <span class="note-pill">Facet lines add depth without complexity</span>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════
+       CONCEPT C — "The Seal"
+  ══════════════════════════════════════ -->
+  <div class="concept">
+    <div class="concept-meta">
+      <h2>Concept C &mdash; "The Seal"</h2>
+      <span class="tag">Circular monogram · institutional · horizontal &amp; stacked lockups</span>
+    </div>
+
+    <div class="concept-previews">
+      <!-- Dark -->
+      <div class="preview preview--dark dark" style="gap:3.5rem;flex-wrap:wrap;">
+        <!-- Stacked -->
+        <div class="logo-c">
+          <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Outer ring -->
+            <circle cx="36" cy="36" r="34" stroke="#c5a059" stroke-width="1.5" fill="rgba(197,160,89,0.06)"/>
+            <!-- Inner thin ring -->
+            <circle cx="36" cy="36" r="28" stroke="#c5a059" stroke-width="0.75" stroke-opacity="0.35" fill="none"/>
+            <!-- MRF monogram -->
+            <text x="36" y="42" font-family="Playfair Display, serif" font-size="18" font-weight="700" fill="#c5a059" text-anchor="middle" letter-spacing="3">MRF</text>
+          </svg>
+          <div class="logo-c__wordmark">
+            <span class="logo-c__name">Mineral Rights</span>
+            <span class="logo-c__sub">Forum</span>
+          </div>
+        </div>
+        <!-- Horizontal -->
+        <div style="display:flex;align-items:center;gap:1rem;">
+          <svg width="48" height="48" viewBox="0 0 72 72" fill="none">
+            <circle cx="36" cy="36" r="34" stroke="#c5a059" stroke-width="1.5" fill="rgba(197,160,89,0.06)"/>
+            <circle cx="36" cy="36" r="28" stroke="#c5a059" stroke-width="0.75" stroke-opacity="0.35" fill="none"/>
+            <text x="36" y="42" font-family="Playfair Display, serif" font-size="18" font-weight="700" fill="#c5a059" text-anchor="middle" letter-spacing="3">MRF</text>
+          </svg>
+          <div class="logo-c__wordmark" style="align-items:flex-start;">
+            <span class="logo-c__name" style="color:#fff;">Mineral Rights</span>
+            <span class="logo-c__sub">Forum</span>
+          </div>
+        </div>
+      </div>
+      <!-- Light -->
+      <div class="preview preview--light light" style="gap:3.5rem;flex-wrap:wrap;">
+        <!-- Stacked -->
+        <div class="logo-c">
+          <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+            <circle cx="36" cy="36" r="34" stroke="#c5a059" stroke-width="1.5" fill="rgba(197,160,89,0.06)"/>
+            <circle cx="36" cy="36" r="28" stroke="#c5a059" stroke-width="0.75" stroke-opacity="0.35" fill="none"/>
+            <text x="36" y="42" font-family="Playfair Display, serif" font-size="18" font-weight="700" fill="#c5a059" text-anchor="middle" letter-spacing="3">MRF</text>
+          </svg>
+          <div class="logo-c__wordmark">
+            <span class="logo-c__name">Mineral Rights</span>
+            <span class="logo-c__sub">Forum</span>
+          </div>
+        </div>
+        <!-- Horizontal -->
+        <div style="display:flex;align-items:center;gap:1rem;">
+          <svg width="48" height="48" viewBox="0 0 72 72" fill="none">
+            <circle cx="36" cy="36" r="34" stroke="#c5a059" stroke-width="1.5" fill="rgba(197,160,89,0.06)"/>
+            <circle cx="36" cy="36" r="28" stroke="#c5a059" stroke-width="0.75" stroke-opacity="0.35" fill="none"/>
+            <text x="36" y="42" font-family="Playfair Display, serif" font-size="18" font-weight="700" fill="#c5a059" text-anchor="middle" letter-spacing="3">MRF</text>
+          </svg>
+          <div class="logo-c__wordmark" style="align-items:flex-start;">
+            <span class="logo-c__name" style="color:var(--navy);">Mineral Rights</span>
+            <span class="logo-c__sub">Forum</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-labels">
+      <span>On dark — stacked + horizontal</span>
+      <span>On light — stacked + horizontal</span>
+    </div>
+
+    <div class="concept-notes">
+      <span class="note-pill">Most versatile — works stacked or horizontal</span>
+      <span class="note-pill">Seal mark stands alone as favicon or avatar</span>
+      <span class="note-pill">Institutional / trust-forward tone</span>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════
+       CONCEPT D — "The Horizon"
+  ══════════════════════════════════════ -->
+  <div class="concept">
+    <div class="concept-meta">
+      <h2>Concept D &mdash; "The Horizon"</h2>
+      <span class="tag">Abstract mark · surface + underground · minimal</span>
+    </div>
+    <div class="concept-previews">
+      <div class="preview preview--dark dark">
+        <div style="display:flex;align-items:center;gap:1.125rem;">
+          <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="27" cy="27" r="25.5" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+            <!-- Horizon line -->
+            <line x1="1.5" y1="27" x2="52.5" y2="27" stroke="#c5a059" stroke-width="2"/>
+            <!-- Above ground: sky/surface — faint -->
+            <path d="M4 27 A23 23 0 0 1 50 27" fill="rgba(255,255,255,0.05)"/>
+            <!-- Below ground: mineral deposit dot -->
+            <circle cx="27" cy="38" r="4.5" fill="#c5a059" fill-opacity="0.9"/>
+            <!-- Deposit halo -->
+            <circle cx="27" cy="38" r="8" stroke="#c5a059" stroke-width="1" stroke-opacity="0.25" fill="none"/>
+          </svg>
+          <div style="display:flex;flex-direction:column;">
+            <span style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:#fff;line-height:1.15;">Mineral Rights</span>
+            <span style="font-family:Inter,sans-serif;font-size:0.6875rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#c5a059;margin-top:0.2rem;">Forum</span>
+          </div>
+        </div>
+      </div>
+      <div class="preview preview--light light">
+        <div style="display:flex;align-items:center;gap:1.125rem;">
+          <svg width="54" height="54" viewBox="0 0 54 54" fill="none">
+            <circle cx="27" cy="27" r="25.5" stroke="rgba(10,25,47,0.2)" stroke-width="1.5"/>
+            <line x1="1.5" y1="27" x2="52.5" y2="27" stroke="#c5a059" stroke-width="2"/>
+            <path d="M4 27 A23 23 0 0 1 50 27" fill="rgba(10,25,47,0.04)"/>
+            <circle cx="27" cy="38" r="4.5" fill="#c5a059" fill-opacity="0.9"/>
+            <circle cx="27" cy="38" r="8" stroke="#c5a059" stroke-width="1" stroke-opacity="0.25" fill="none"/>
+          </svg>
+          <div style="display:flex;flex-direction:column;">
+            <span style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:#0a192f;line-height:1.15;">Mineral Rights</span>
+            <span style="font-family:Inter,sans-serif;font-size:0.6875rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#c5a059;margin-top:0.2rem;">Forum</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="preview-labels"><span>On dark</span><span>On light</span></div>
+    <div class="concept-notes">
+      <span class="note-pill">Gold dot = mineral deposit below the surface</span>
+      <span class="note-pill">Gold horizon line ties into the directory brand</span>
+      <span class="note-pill">Works at very small sizes — dot reads as favicon</span>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════
+       CONCEPT E — "Pure Wordmark"
+  ══════════════════════════════════════ -->
+  <div class="concept">
+    <div class="concept-meta">
+      <h2>Concept E &mdash; "Pure Wordmark"</h2>
+      <span class="tag">No icon · all-type · editorial · two weights</span>
+    </div>
+    <div class="concept-previews">
+      <div class="preview preview--dark dark" style="gap:3rem;flex-direction:column;">
+        <!-- Version 1: stacked with rule -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0;">
+          <span style="font-family:'Playfair Display',serif;font-size:1.875rem;font-weight:700;color:#fff;letter-spacing:-0.01em;line-height:1.1;">Mineral Rights</span>
+          <div style="width:100%;height:2px;background:linear-gradient(90deg,transparent,#c5a059,transparent);margin:0.5rem 0;"></div>
+          <span style="font-family:Inter,sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:0.35em;text-transform:uppercase;color:#c5a059;">Forum</span>
+        </div>
+        <!-- Version 2: inline italic + weight contrast -->
+        <div style="display:flex;align-items:baseline;gap:0.5rem;">
+          <span style="font-family:'Playfair Display',serif;font-size:1.375rem;font-style:italic;font-weight:400;color:rgba(255,255,255,0.7);">Mineral Rights</span>
+          <span style="font-family:'Playfair Display',serif;font-size:1.375rem;font-weight:700;color:#c5a059;">Forum</span>
+        </div>
+      </div>
+      <div class="preview preview--light light" style="gap:3rem;flex-direction:column;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0;">
+          <span style="font-family:'Playfair Display',serif;font-size:1.875rem;font-weight:700;color:#0a192f;letter-spacing:-0.01em;line-height:1.1;">Mineral Rights</span>
+          <div style="width:100%;height:2px;background:linear-gradient(90deg,transparent,#c5a059,transparent);margin:0.5rem 0;"></div>
+          <span style="font-family:Inter,sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:0.35em;text-transform:uppercase;color:#c5a059;">Forum</span>
+        </div>
+        <div style="display:flex;align-items:baseline;gap:0.5rem;">
+          <span style="font-family:'Playfair Display',serif;font-size:1.375rem;font-style:italic;font-weight:400;color:rgba(10,25,47,0.55);">Mineral Rights</span>
+          <span style="font-family:'Playfair Display',serif;font-size:1.375rem;font-weight:700;color:#c5a059;">Forum</span>
+        </div>
+      </div>
+    </div>
+    <div class="preview-labels"><span>On dark — two variants</span><span>On light — two variants</span></div>
+    <div class="concept-notes">
+      <span class="note-pill">No mark required — the type IS the brand</span>
+      <span class="note-pill">Top: centered/formal · Bottom: editorial/inline</span>
+      <span class="note-pill">Pairs well with any Discourse header size</span>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════
+       CONCEPT F — "The Crest"
+  ══════════════════════════════════════ -->
+  <div class="concept">
+    <div class="concept-meta">
+      <h2>Concept F &mdash; "The Crest"</h2>
+      <span class="tag">Shield form · strata fill · authoritative</span>
+    </div>
+    <div class="concept-previews">
+      <div class="preview preview--dark dark" style="gap:3rem;flex-wrap:wrap;align-items:center;justify-content:center;">
+        <!-- Stacked -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0.875rem;">
+          <svg width="54" height="62" viewBox="0 0 54 62" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Shield path -->
+            <path d="M27 2 L52 12 L52 34 C52 48 27 60 27 60 C27 60 2 48 2 34 L2 12 Z" stroke="#c5a059" stroke-width="1.75" fill="rgba(197,160,89,0.07)"/>
+            <!-- Strata lines inside shield -->
+            <clipPath id="shield-clip">
+              <path d="M27 2 L52 12 L52 34 C52 48 27 60 27 60 C27 60 2 48 2 34 L2 12 Z"/>
+            </clipPath>
+            <g clip-path="url(#shield-clip)">
+              <rect x="2" y="18" width="50" height="4.5" fill="rgba(255,255,255,0.12)"/>
+              <rect x="2" y="26" width="50" height="5.5" fill="#c5a059" fill-opacity="0.7"/>
+              <rect x="2" y="35" width="50" height="4" fill="rgba(255,255,255,0.07)"/>
+              <rect x="2" y="43" width="50" height="3" fill="rgba(255,255,255,0.04)"/>
+            </g>
+            <!-- MRF text -->
+            <text x="27" y="31" font-family="Playfair Display, serif" font-size="10" font-weight="700" fill="#fff" text-anchor="middle" letter-spacing="2">MRF</text>
+          </svg>
+          <div style="display:flex;flex-direction:column;align-items:center;">
+            <span style="font-family:'Playfair Display',serif;font-size:1.125rem;font-weight:700;color:#fff;letter-spacing:0.01em;">Mineral Rights</span>
+            <span style="font-family:Inter,sans-serif;font-size:0.625rem;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:#c5a059;margin-top:0.2rem;">Forum</span>
+          </div>
+        </div>
+        <!-- Horizontal -->
+        <div style="display:flex;align-items:center;gap:1rem;">
+          <svg width="40" height="46" viewBox="0 0 54 62" fill="none">
+            <path d="M27 2 L52 12 L52 34 C52 48 27 60 27 60 C27 60 2 48 2 34 L2 12 Z" stroke="#c5a059" stroke-width="1.75" fill="rgba(197,160,89,0.07)"/>
+            <clipPath id="shield-clip2"><path d="M27 2 L52 12 L52 34 C52 48 27 60 27 60 C27 60 2 48 2 34 L2 12 Z"/></clipPath>
+            <g clip-path="url(#shield-clip2)">
+              <rect x="2" y="18" width="50" height="4.5" fill="rgba(255,255,255,0.12)"/>
+              <rect x="2" y="26" width="50" height="5.5" fill="#c5a059" fill-opacity="0.7"/>
+              <rect x="2" y="35" width="50" height="4" fill="rgba(255,255,255,0.07)"/>
+            </g>
+            <text x="27" y="31" font-family="Playfair Display, serif" font-size="10" font-weight="700" fill="#fff" text-anchor="middle" letter-spacing="2">MRF</text>
+          </svg>
+          <div style="display:flex;flex-direction:column;">
+            <span style="font-family:'Playfair Display',serif;font-size:1.125rem;font-weight:700;color:#fff;">Mineral Rights</span>
+            <span style="font-family:Inter,sans-serif;font-size:0.625rem;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:#c5a059;">Forum</span>
+          </div>
+        </div>
+      </div>
+      <div class="preview preview--light light" style="gap:3rem;flex-wrap:wrap;align-items:center;justify-content:center;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0.875rem;">
+          <svg width="54" height="62" viewBox="0 0 54 62" fill="none">
+            <path d="M27 2 L52 12 L52 34 C52 48 27 60 27 60 C27 60 2 48 2 34 L2 12 Z" stroke="#c5a059" stroke-width="1.75" fill="rgba(197,160,89,0.06)"/>
+            <clipPath id="shield-clip3"><path d="M27 2 L52 12 L52 34 C52 48 27 60 27 60 C27 60 2 48 2 34 L2 12 Z"/></clipPath>
+            <g clip-path="url(#shield-clip3)">
+              <rect x="2" y="18" width="50" height="4.5" fill="rgba(10,25,47,0.08)"/>
+              <rect x="2" y="26" width="50" height="5.5" fill="#c5a059" fill-opacity="0.5"/>
+              <rect x="2" y="35" width="50" height="4" fill="rgba(10,25,47,0.04)"/>
+            </g>
+            <text x="27" y="31" font-family="Playfair Display, serif" font-size="10" font-weight="700" fill="#0a192f" text-anchor="middle" letter-spacing="2">MRF</text>
+          </svg>
+          <div style="display:flex;flex-direction:column;align-items:center;">
+            <span style="font-family:'Playfair Display',serif;font-size:1.125rem;font-weight:700;color:#0a192f;">Mineral Rights</span>
+            <span style="font-family:Inter,sans-serif;font-size:0.625rem;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:#c5a059;margin-top:0.2rem;">Forum</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:1rem;">
+          <svg width="40" height="46" viewBox="0 0 54 62" fill="none">
+            <path d="M27 2 L52 12 L52 34 C52 48 27 60 27 60 C27 60 2 48 2 34 L2 12 Z" stroke="#c5a059" stroke-width="1.75" fill="rgba(197,160,89,0.06)"/>
+            <clipPath id="shield-clip4"><path d="M27 2 L52 12 L52 34 C52 48 27 60 27 60 C27 60 2 48 2 34 L2 12 Z"/></clipPath>
+            <g clip-path="url(#shield-clip4)">
+              <rect x="2" y="26" width="50" height="5.5" fill="#c5a059" fill-opacity="0.5"/>
+            </g>
+            <text x="27" y="31" font-family="Playfair Display, serif" font-size="10" font-weight="700" fill="#0a192f" text-anchor="middle" letter-spacing="2">MRF</text>
+          </svg>
+          <div style="display:flex;flex-direction:column;">
+            <span style="font-family:'Playfair Display',serif;font-size:1.125rem;font-weight:700;color:#0a192f;">Mineral Rights</span>
+            <span style="font-family:Inter,sans-serif;font-size:0.625rem;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:#c5a059;">Forum</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="preview-labels"><span>On dark — stacked + horizontal</span><span>On light — stacked + horizontal</span></div>
+    <div class="concept-notes">
+      <span class="note-pill">Shield = trust, protection, authority</span>
+      <span class="note-pill">Strata fill inside crest links to directory system</span>
+      <span class="note-pill">Most traditional / institutional feel of the set</span>
+    </div>
+  </div>
+
+</div><!-- /concepts -->
+
+<!-- ─── Color + type reference ──────────────── -->
+<div style="max-width:1120px;margin:0 auto 4rem;padding:0 1.5rem;">
+  <div style="background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06),0 12px 32px rgba(15,23,42,.09);">
+    <div style="padding:1.25rem 1.75rem;border-bottom:1px solid var(--border);">
+      <h2 style="font-size:0.9375rem;font-weight:700;color:var(--navy);">Design tokens used</h2>
+    </div>
+    <div style="padding:2rem 1.75rem;display:flex;gap:3rem;flex-wrap:wrap;align-items:flex-start;">
+      <!-- Colors -->
+      <div>
+        <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#b0b7c3;margin-bottom:1rem;">Colors</div>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+          <div style="display:flex;align-items:center;gap:0.875rem;">
+            <div style="width:36px;height:36px;border-radius:8px;background:#0a192f;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);"></div>
+            <div><div style="font-size:0.875rem;font-weight:600;color:var(--navy);">Navy</div><div style="font-size:0.75rem;color:var(--muted);">#0a192f</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.875rem;">
+            <div style="width:36px;height:36px;border-radius:8px;background:#c5a059;"></div>
+            <div><div style="font-size:0.875rem;font-weight:600;color:var(--navy);">Gold</div><div style="font-size:0.75rem;color:var(--muted);">#c5a059</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.875rem;">
+            <div style="width:36px;height:36px;border-radius:8px;background:#f8f6f1;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);"></div>
+            <div><div style="font-size:0.875rem;font-weight:600;color:var(--navy);">Off-white</div><div style="font-size:0.75rem;color:var(--muted);">#f8f6f1</div></div>
+          </div>
+        </div>
+      </div>
+      <!-- Type -->
+      <div>
+        <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#b0b7c3;margin-bottom:1rem;">Typography</div>
+        <div style="display:flex;flex-direction:column;gap:0.875rem;">
+          <div>
+            <div style="font-family:'Playfair Display',serif;font-size:1.375rem;font-weight:700;color:var(--navy);">Mineral Rights</div>
+            <div style="font-size:0.75rem;color:var(--muted);">Playfair Display 700 — headings &amp; logo name</div>
+          </div>
+          <div>
+            <div style="font-family:Inter,sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;color:#c5a059;">FORUM</div>
+            <div style="font-size:0.75rem;color:var(--muted);">Inter 600, tracked — descriptor / sub-label</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

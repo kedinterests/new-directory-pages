@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MRF Redesign — Homepage Mockup + Style Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Brand */
+  --navy:       #0a192f;
+  --navy-mid:   #0e2040;
+  --navy-light: #1a3054;
+  --gold:       #c5a059;
+  --gold-hover: #d4b06a;
+  --gold-dim:   rgba(197,160,89,0.12);
+  --gold-border:rgba(197,160,89,0.28);
+  /* Neutrals */
+  --off-white:  #f8f6f1;
+  --surface:    #ffffff;
+  --border:     #e6e7ea;
+  --border-mid: #d1d5db;
+  --ink:        #0b0e14;
+  --muted:      #6b7280;
+  --subtle:     #9ca3af;
+  /* Semantic */
+  --success:    #16a34a;
+  --danger:     #dc2626;
+  --info:       #2563eb;
+  /* Type */
+  --serif:      'Playfair Display', Georgia, serif;
+  --sans:       Inter, system-ui, -apple-system, sans-serif;
+  /* Shadows */
+  --shadow-sm:  0 1px 2px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.08);
+  --shadow-md:  0 1px 3px rgba(0,0,0,.06), 0 8px 24px rgba(15,23,42,.09);
+  --shadow-lg:  0 1px 3px rgba(0,0,0,.06), 0 16px 48px rgba(15,23,42,.14);
+  --header-h:   64px;
+  --card-r:     12px;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); background: var(--off-white); color: var(--ink); font-size: 15px; line-height: 1.5; }
+
+/* ─── Section labels (mockup scaffolding) ── */
+.section-flag {
+  background: #6366f1;
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.75rem;
+  display: inline-block;
+  position: absolute;
+  top: 0; left: 0;
+  z-index: 100;
+  border-bottom-right-radius: 6px;
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════════
+   DISCOURSE HEADER
+══════════════════════════════════════════════ */
+.d-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--header-h);
+  background: var(--navy);
+  border-bottom: 3px solid var(--gold);
+  box-shadow: 0 2px 16px rgba(0,0,0,.3);
+  display: flex;
+  align-items: center;
+}
+.d-header-inner {
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+/* Logo — Strata A */
+.site-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.logo-mark {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.logo-bar { height: 3.5px; border-radius: 2px; }
+.logo-bar:nth-child(1) { width: 36px; background: rgba(255,255,255,0.88); }
+.logo-bar:nth-child(2) { width: 28px; background: rgba(255,255,255,0.4); }
+.logo-bar:nth-child(3) { width: 40px; background: var(--gold); height: 4.5px; }
+.logo-bar:nth-child(4) { width: 22px; background: rgba(255,255,255,0.22); }
+.logo-text { display: flex; flex-direction: column; }
+.logo-name {
+  font-family: var(--serif);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: 0.005em;
+}
+.logo-sub {
+  font-family: var(--sans);
+  font-size: 0.5625rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-top: 2px;
+}
+
+/* Header nav */
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.header-nav a, .header-nav button {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.75);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: color 0.15s, background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  white-space: nowrap;
+}
+.header-nav a:hover, .header-nav button:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.08);
+}
+.header-nav .btn-login {
+  color: rgba(255,255,255,0.8);
+  border: 1px solid rgba(255,255,255,0.2);
+  margin-left: 0.25rem;
+}
+.header-nav .btn-signup {
+  background: var(--gold);
+  color: var(--navy);
+  font-weight: 700;
+  border-radius: 7px;
+  padding: 0.5rem 1rem;
+  margin-left: 0.25rem;
+}
+.header-nav .btn-signup:hover { background: var(--gold-hover); color: var(--navy); }
+.header-icon-btn {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.65);
+  background: none; border: none; cursor: pointer;
+  border-radius: 8px;
+  transition: color .15s, background .15s;
+}
+.header-icon-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
+/* ══════════════════════════════════════════════
+   HERO BANNER (custom Discourse component)
+══════════════════════════════════════════════ */
+.site-hero {
+  background: linear-gradient(165deg, var(--navy) 0%, #0c1f3a 60%, #0f2848 100%);
+  border-bottom: 1px solid rgba(197,160,89,0.2);
+  padding: 56px 1.5rem 52px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+/* Decorative strata lines */
+.site-hero::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  bottom: -1px;
+  height: 4px;
+  background: linear-gradient(90deg, transparent 0%, var(--gold) 30%, var(--gold) 70%, transparent 100%);
+  opacity: 0.6;
+}
+.site-hero__eyebrow {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(197,160,89,0.1);
+  border: 1px solid rgba(197,160,89,0.25);
+  border-radius: 100px;
+  padding: 0.3rem 0.875rem;
+  margin-bottom: 1.25rem;
+}
+.site-hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-bottom: 1rem;
+}
+.site-hero p {
+  font-size: 1.0625rem;
+  color: rgba(255,255,255,0.6);
+  max-width: 560px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+  font-weight: 300;
+}
+.hero-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 2.25rem;
+  flex-wrap: wrap;
+}
+.hero-stat {
+  padding: 0 1.5rem;
+  border-right: 1px solid rgba(255,255,255,0.12);
+  text-align: center;
+}
+.hero-stat:last-child { border-right: none; }
+.hero-stat__n {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gold);
+  display: block;
+  line-height: 1.1;
+}
+.hero-stat__l {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.5);
+  display: block;
+  margin-top: 2px;
+  letter-spacing: 0.04em;
+}
+.hero-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-hero-primary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.8125rem 1.75rem;
+  background: var(--gold);
+  color: var(--navy);
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  border: none; border-radius: 9px;
+  cursor: pointer; text-decoration: none;
+  transition: background .18s, transform .18s;
+}
+.btn-hero-primary:hover { background: var(--gold-hover); transform: translateY(-1px); }
+.btn-hero-secondary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.8125rem 1.75rem;
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.85);
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 9px;
+  cursor: pointer; text-decoration: none;
+  transition: background .18s, border-color .18s;
+}
+.btn-hero-secondary:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.28); }
+
+/* ══════════════════════════════════════════════
+   CATEGORY STRIP (Discourse nav + custom)
+══════════════════════════════════════════════ */
+.category-strip {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem;
+  position: sticky;
+  top: var(--header-h);
+  z-index: 40;
+}
+.category-strip-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: 52px;
+}
+.nav-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+  height: 100%;
+}
+.nav-pill {
+  display: flex; align-items: center;
+  height: 100%;
+  padding: 0 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+}
+.nav-pill:hover { color: var(--ink); border-color: var(--border-mid); }
+.nav-pill.active {
+  color: var(--navy);
+  font-weight: 700;
+  border-bottom-color: var(--gold);
+}
+.btn-new-topic {
+  display: inline-flex; align-items: center; gap: 0.375rem;
+  padding: 0.5625rem 1rem;
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 0.875rem;
+  font-weight: 700;
+  border: none; border-radius: 7px;
+  cursor: pointer; text-decoration: none;
+  transition: background .18s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.btn-new-topic:hover { background: var(--gold-hover); }
+
+/* ══════════════════════════════════════════════
+   MAIN LAYOUT
+══════════════════════════════════════════════ */
+.page-body {
+  max-width: 1280px;
+  margin: 1.75rem auto;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 288px;
+  gap: 1.75rem;
+  align-items: start;
+}
+
+/* ── Topic list ─────────────────────────────── */
+.topic-list-wrap { display: flex; flex-direction: column; gap: 0; }
+.topic-list-header {
+  display: grid;
+  grid-template-columns: 1fr 60px 60px 80px;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--subtle);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+.topic-list-header span:not(:first-child) { text-align: center; }
+
+.topic-row {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 1fr 60px 60px 80px;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.875rem 1rem;
+  transition: background .15s;
+}
+.topic-row:first-of-type { border-top-left-radius: var(--card-r); border-top-right-radius: var(--card-r); border-top: 1px solid var(--border); }
+.topic-row:last-of-type { border-bottom-left-radius: var(--card-r); border-bottom-right-radius: var(--card-r); }
+.topic-row:hover { background: #fafafa; }
+.topic-row.pinned { background: rgba(197,160,89,0.04); }
+.topic-row.pinned:hover { background: rgba(197,160,89,0.08); }
+
+.topic-main { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
+.topic-category-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.topic-meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.topic-cat-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.topic-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.35;
+  text-decoration: none;
+  display: block;
+}
+.topic-title:hover { color: var(--navy); }
+.topic-tags { display: flex; gap: 0.375rem; flex-wrap: wrap; }
+.topic-tag {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--muted);
+  background: #f1f3f5;
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+  text-decoration: none;
+}
+.topic-tag:hover { background: var(--gold-dim); color: var(--navy); }
+
+.topic-stat {
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+.topic-activity {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--subtle);
+}
+.badge-new {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: var(--gold-dim);
+  border: 1px solid var(--gold-border);
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+  vertical-align: middle;
+  margin-left: 0.375rem;
+}
+.badge-pinned {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--navy);
+  background: rgba(10,25,47,0.07);
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+}
+.avatar-stack { display: flex; }
+.avatar-stack img, .avatar-mini {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid #fff;
+  margin-left: -6px;
+  font-size: 0.625rem;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.avatar-stack:first-child, .avatar-stack .avatar-mini:first-child { margin-left: 0; }
+
+/* ── Sidebar ────────────────────────────────── */
+.sidebar { display: flex; flex-direction: column; gap: 1.25rem; }
+
+.sidebar-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--card-r);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.sidebar-card__head {
+  padding: 0.875rem 1.125rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.sidebar-card__title {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.sidebar-card__more {
+  font-size: 0.75rem;
+  color: var(--gold);
+  text-decoration: none;
+  font-weight: 600;
+}
+.sidebar-cat-list { list-style: none; }
+.sidebar-cat-item {
+  display: flex; align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 1.125rem;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--ink);
+  transition: background .15s;
+}
+.sidebar-cat-item:last-child { border-bottom: none; }
+.sidebar-cat-item:hover { background: #fafafa; }
+.sidebar-cat-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.sidebar-cat-name { font-size: 0.875rem; font-weight: 500; flex: 1; }
+.sidebar-cat-count {
+  font-size: 0.75rem;
+  color: var(--subtle);
+  background: #f3f4f6;
+  border-radius: 20px;
+  padding: 0.1rem 0.5rem;
+  font-weight: 600;
+}
+
+.sidebar-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.sidebar-stat {
+  padding: 0.875rem 1.125rem;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+.sidebar-stat:nth-child(2n) { border-right: none; }
+.sidebar-stat:nth-child(3), .sidebar-stat:nth-child(4) { border-bottom: none; }
+.sidebar-stat__n {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--navy);
+  display: block;
+  line-height: 1.1;
+}
+.sidebar-stat__l { font-size: 0.6875rem; color: var(--muted); margin-top: 2px; display: block; }
+
+.directory-promo {
+  background: linear-gradient(145deg, var(--navy), #0e2040);
+  border: 1px solid var(--gold-border);
+  border-radius: var(--card-r);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.directory-promo__eyebrow { color: var(--gold); font-size: 0.625rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; }
+.directory-promo__heading { font-family: var(--serif); font-size: 1rem; font-weight: 700; color: #fff; line-height: 1.25; }
+.directory-promo__body { font-size: 0.8125rem; color: rgba(255,255,255,0.6); line-height: 1.5; }
+.directory-promo__btn {
+  display: inline-flex; align-items: center; gap: 0.375rem;
+  padding: 0.5625rem 1rem;
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  border: none; border-radius: 7px;
+  text-decoration: none;
+  transition: background .18s;
+  width: fit-content;
+}
+.directory-promo__btn:hover { background: var(--gold-hover); }
+
+/* ── Footer ─────────────────────────────────── */
+.site-footer {
+  background: var(--navy);
+  border-top: 3px solid var(--gold);
+  padding: 3rem 1.5rem 2rem;
+  margin-top: 3rem;
+}
+.footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 2.5rem;
+}
+.footer-brand { display: flex; flex-direction: column; gap: 1rem; }
+.footer-tagline { font-size: 0.875rem; color: rgba(255,255,255,0.5); line-height: 1.6; max-width: 240px; }
+.footer-col h4 {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.875rem;
+}
+.footer-col a {
+  display: block;
+  font-size: 0.875rem;
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+  margin-bottom: 0.5rem;
+  transition: color .15s;
+}
+.footer-col a:hover { color: #fff; }
+.footer-bottom {
+  max-width: 1280px;
+  margin: 2rem auto 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+  color: rgba(255,255,255,0.3);
+}
+
+/* ══════════════════════════════════════════════
+   STYLE GUIDE SECTION
+══════════════════════════════════════════════ */
+.sg-page {
+  background: #f0ede8;
+  padding: 5rem 1.5rem;
+}
+.sg-inner { max-width: 1120px; margin: 0 auto; }
+.sg-section-head {
+  margin-bottom: 3rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 3px solid var(--gold);
+}
+.sg-section-head h2 {
+  font-family: var(--serif);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 700;
+  color: var(--navy);
+}
+.sg-section-head p { font-size: 1rem; color: var(--muted); margin-top: 0.5rem; }
+
+.sg-block { margin-bottom: 3.5rem; }
+.sg-block h3 {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--subtle);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.sg-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--card-r);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Colors */
+.color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; }
+.color-swatch {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.color-swatch__block { height: 72px; }
+.color-swatch__info {
+  background: var(--surface);
+  padding: 0.625rem 0.75rem;
+  border-top: 1px solid var(--border);
+}
+.color-swatch__name { font-size: 0.8125rem; font-weight: 700; color: var(--ink); }
+.color-swatch__hex { font-size: 0.75rem; color: var(--muted); font-family: monospace; }
+.color-swatch__role { font-size: 0.6875rem; color: var(--subtle); margin-top: 1px; }
+
+/* Typography */
+.type-specimens { display: flex; flex-direction: column; gap: 1.5rem; }
+.type-spec { display: grid; grid-template-columns: 200px 1fr; gap: 1.5rem; align-items: baseline; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+.type-spec:last-child { border-bottom: none; padding-bottom: 0; }
+.type-spec__meta { display: flex; flex-direction: column; gap: 0.2rem; }
+.type-spec__label { font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+.type-spec__detail { font-size: 0.6875rem; color: var(--subtle); font-family: monospace; }
+
+/* Buttons */
+.btn-row { display: flex; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all .18s;
+  line-height: 1;
+}
+.btn-primary { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+.btn-primary:hover { background: var(--gold-hover); border-color: var(--gold-hover); transform: translateY(-1px); }
+.btn-secondary { background: var(--navy); color: #fff; border-color: var(--navy); }
+.btn-secondary:hover { background: var(--navy-light); }
+.btn-outline { background: transparent; color: var(--navy); border-color: var(--navy); }
+.btn-outline:hover { background: var(--navy); color: #fff; }
+.btn-ghost { background: transparent; color: var(--muted); border-color: var(--border-mid); }
+.btn-ghost:hover { border-color: var(--navy); color: var(--navy); background: rgba(10,25,47,0.04); }
+.btn-danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+.btn-sm { padding: 0.4375rem 0.875rem; font-size: 0.8125rem; border-radius: 6px; }
+.btn-lg { padding: 0.875rem 1.75rem; font-size: 1.0625rem; border-radius: 10px; }
+
+/* Form elements */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.form-group { display: flex; flex-direction: column; gap: 0.375rem; }
+.form-label { font-size: 0.8125rem; font-weight: 600; color: var(--ink); }
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1.5px solid var(--border-mid);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+  line-height: 1.4;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(197,160,89,0.15);
+}
+.form-input::placeholder { color: var(--subtle); }
+.form-textarea { resize: vertical; min-height: 100px; }
+
+/* Tags / badges */
+.badge-row { display: flex; align-items: center; flex-wrap: wrap; gap: 0.625rem; }
+.badge {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 100px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.badge-gold { background: var(--gold-dim); color: var(--navy); border: 1px solid var(--gold-border); }
+.badge-navy { background: rgba(10,25,47,0.08); color: var(--navy); }
+.badge-success { background: rgba(22,163,74,0.1); color: #166534; }
+.badge-danger  { background: rgba(220,38,38,0.1); color: #991b1b; }
+.badge-neutral { background: #f3f4f6; color: var(--muted); }
+.tag-pill {
+  display: inline-block;
+  padding: 0.25rem 0.625rem;
+  background: #f1f3f5;
+  color: var(--muted);
+  border-radius: 5px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+.tag-pill:hover { background: var(--gold-dim); color: var(--navy); }
+
+/* Category card */
+.cat-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+.cat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--card-r);
+  padding: 1.25rem;
+  text-decoration: none;
+  color: var(--ink);
+  transition: box-shadow .18s, transform .18s;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.cat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.cat-card__name { font-size: 0.9375rem; font-weight: 700; color: var(--navy); }
+.cat-card__desc { font-size: 0.8125rem; color: var(--muted); line-height: 1.5; }
+.cat-card__meta { display: flex; gap: 1rem; margin-top: 0.25rem; }
+.cat-card__stat { font-size: 0.75rem; color: var(--subtle); }
+.cat-card__stat strong { color: var(--ink); font-weight: 600; }
+
+/* Discourse-specific component previews */
+.topic-preview {
+  border: 1px solid var(--border);
+  border-radius: var(--card-r);
+  overflow: hidden;
+}
+.user-card-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.user-card-row:last-child { border-bottom: none; }
+.avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.user-name { font-size: 0.9375rem; font-weight: 600; color: var(--ink); }
+.user-role { font-size: 0.75rem; color: var(--muted); }
+.trust-badge {
+  margin-left: auto;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--navy);
+  background: rgba(10,25,47,0.07);
+  border-radius: 5px;
+  padding: 0.2rem 0.5rem;
+}
+
+/* CSS Variables reference */
+.var-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.75rem; }
+.var-item {
+  background: #fafbfc;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.625rem 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.var-dot { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; }
+.var-name { font-family: monospace; font-size: 0.8125rem; color: var(--navy); font-weight: 600; }
+.var-val { font-family: monospace; font-size: 0.75rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     MOCKUP LABEL
+══════════════════════════════════════════════ -->
+<div style="background:#6366f1;color:#fff;text-align:center;padding:0.5rem 1rem;font-size:0.8125rem;font-weight:600;letter-spacing:0.06em;position:relative;z-index:200;">
+  MOCKUP — MineralRightsForum.com Redesign · Discourse Default Theme · Logo Option A (Strata) · Not a live site
+</div>
+
+<!-- ══════════════════════════════════════════════
+     DISCOURSE HEADER
+══════════════════════════════════════════════ -->
+<header class="d-header" style="position:relative;">
+  <div class="d-header-inner">
+    <!-- Logo -->
+    <a href="#" class="site-logo">
+      <div class="logo-mark">
+        <div class="logo-bar"></div>
+        <div class="logo-bar"></div>
+        <div class="logo-bar"></div>
+        <div class="logo-bar"></div>
+      </div>
+      <div class="logo-text">
+        <span class="logo-name">Mineral Rights Forum</span>
+        <span class="logo-sub">Est. 2006 · The Premier Community</span>
+      </div>
+    </a>
+    <!-- Nav -->
+    <nav class="header-nav" style="display:flex;align-items:center;">
+      <a href="#">Forums</a>
+      <a href="#">Minerals 101</a>
+      <a href="#">Find a Pro</a>
+      <!-- Icons -->
+      <button class="header-icon-btn" title="Search" style="margin-left:0.25rem;">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+      <button class="header-icon-btn" title="Notifications">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </button>
+      <button class="header-icon-btn" title="Menu">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <a href="#" class="btn-login" style="font-size:0.875rem;font-weight:500;color:rgba(255,255,255,0.8);padding:0.5rem 0.875rem;border:1px solid rgba(255,255,255,0.2);border-radius:7px;text-decoration:none;margin-left:0.5rem;display:inline-flex;align-items:center;transition:all .15s;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='transparent'">Log In</a>
+      <a href="#" class="btn-signup" style="font-size:0.875rem;font-weight:700;color:#0a192f;background:#c5a059;padding:0.5rem 1rem;border-radius:7px;text-decoration:none;margin-left:0.375rem;display:inline-flex;align-items:center;transition:background .15s;" onmouseover="this.style.background='#d4b06a'" onmouseout="this.style.background='#c5a059'">Sign Up</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════
+     HERO BANNER (custom Discourse after_header)
+══════════════════════════════════════════════ -->
+<section class="site-hero">
+  <span class="site-hero__eyebrow">For U.S. Mineral Rights Owners &amp; Professionals</span>
+  <h1>The Premier Community<br>for Mineral Rights</h1>
+  <p>Ask questions, share expertise, and connect with attorneys, mineral buyers, landmen, and royalty managers across every oil &amp; gas basin in the country.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat__n">47,000+</span>
+      <span class="hero-stat__l">Members</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat__n">185,000+</span>
+      <span class="hero-stat__l">Posts</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat__n">Est. 2006</span>
+      <span class="hero-stat__l">Trusted Since</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat__n">30+ States</span>
+      <span class="hero-stat__l">Active Counties</span>
+    </div>
+  </div>
+  <div class="hero-actions">
+    <a href="#" class="btn-hero-primary">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Browse Discussions
+    </a>
+    <a href="#" class="btn-hero-secondary">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Find a Professional
+    </a>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     CATEGORY NAVIGATION STRIP
+══════════════════════════════════════════════ -->
+<div class="category-strip">
+  <div class="category-strip-inner">
+    <nav class="nav-pills">
+      <a href="#" class="nav-pill active">Latest</a>
+      <a href="#" class="nav-pill">New <span class="badge-new">12</span></a>
+      <a href="#" class="nav-pill">Top</a>
+      <a href="#" class="nav-pill">Categories</a>
+      <a href="#" class="nav-pill">Tags</a>
+    </nav>
+    <a href="#" class="btn-new-topic">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      New Topic
+    </a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MAIN CONTENT
+══════════════════════════════════════════════ -->
+<div class="page-body">
+
+  <!-- Topic List -->
+  <div class="topic-list-wrap">
+    <div class="topic-list-header">
+      <span>Topic</span>
+      <span>Replies</span>
+      <span>Views</span>
+      <span>Activity</span>
+    </div>
+
+    <!-- Pinned topic -->
+    <div class="topic-row pinned">
+      <div class="topic-main">
+        <div class="topic-meta">
+          <span class="topic-category-dot" style="background:#c5a059;"></span>
+          <span class="topic-cat-label">Announcements</span>
+          <span class="badge-pinned">
+            <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            Pinned
+          </span>
+        </div>
+        <a class="topic-title" href="#">Welcome to Mineral Rights Forum — Start Here</a>
+        <div class="topic-tags">
+          <span class="topic-tag">getting-started</span>
+          <span class="topic-tag">rules</span>
+        </div>
+      </div>
+      <div class="topic-stat">—</div>
+      <div class="topic-stat">48.2k</div>
+      <div class="topic-activity">2y</div>
+    </div>
+
+    <div class="topic-row">
+      <div class="topic-main">
+        <div class="topic-meta">
+          <span class="topic-category-dot" style="background:#d97706;"></span>
+          <span class="topic-cat-label">Texas Mineral Rights</span>
+        </div>
+        <a class="topic-title" href="#">Permian Basin royalty offers — are 3x multiples still realistic in 2025?</a>
+        <div class="topic-tags">
+          <span class="topic-tag">permian-basin</span>
+          <span class="topic-tag">royalty-selling</span>
+          <span class="topic-tag">valuation</span>
+        </div>
+      </div>
+      <div class="topic-stat">47</div>
+      <div class="topic-stat">3.1k</div>
+      <div class="topic-activity">4h</div>
+    </div>
+
+    <div class="topic-row">
+      <div class="topic-main">
+        <div class="topic-meta">
+          <span class="topic-category-dot" style="background:#16a34a;"></span>
+          <span class="topic-cat-label">Oklahoma Mineral Rights</span>
+          <span class="badge-new">New</span>
+        </div>
+        <a class="topic-title" href="#">Anyone have experience with Continental Resources division orders in Kingfisher County?</a>
+        <div class="topic-tags">
+          <span class="topic-tag">oklahoma</span>
+          <span class="topic-tag">division-order</span>
+          <span class="topic-tag">kingfisher</span>
+        </div>
+      </div>
+      <div class="topic-stat">8</div>
+      <div class="topic-stat">412</div>
+      <div class="topic-activity">1h</div>
+    </div>
+
+    <div class="topic-row">
+      <div class="topic-main">
+        <div class="topic-meta">
+          <span class="topic-category-dot" style="background:#2563eb;"></span>
+          <span class="topic-cat-label">Mineral Buyers</span>
+        </div>
+        <a class="topic-title" href="#">Inherited minerals in Weld County, Colorado — what's the process to verify ownership?</a>
+        <div class="topic-tags">
+          <span class="topic-tag">inheritance</span>
+          <span class="topic-tag">colorado</span>
+          <span class="topic-tag">title-research</span>
+        </div>
+      </div>
+      <div class="topic-stat">22</div>
+      <div class="topic-stat">1.8k</div>
+      <div class="topic-activity">6h</div>
+    </div>
+
+    <div class="topic-row">
+      <div class="topic-main">
+        <div class="topic-meta">
+          <span class="topic-category-dot" style="background:#7c3aed;"></span>
+          <span class="topic-cat-label">Legal &amp; Attorneys</span>
+        </div>
+        <a class="topic-title" href="#">Force pooling notice received — do I have to respond? Louisiana</a>
+        <div class="topic-tags">
+          <span class="topic-tag">louisiana</span>
+          <span class="topic-tag">force-pooling</span>
+          <span class="topic-tag">legal</span>
+        </div>
+      </div>
+      <div class="topic-stat">31</div>
+      <div class="topic-stat">2.4k</div>
+      <div class="topic-activity">12h</div>
+    </div>
+
+    <div class="topic-row">
+      <div class="topic-main">
+        <div class="topic-meta">
+          <span class="topic-category-dot" style="background:#0891b2;"></span>
+          <span class="topic-cat-label">Royalty Management</span>
+          <span class="badge-new">New</span>
+        </div>
+        <a class="topic-title" href="#">Why is my Halliburton royalty check 30% lower this quarter despite production being up?</a>
+        <div class="topic-tags">
+          <span class="topic-tag">royalty-check</span>
+          <span class="topic-tag">underpayment</span>
+          <span class="topic-tag">audit</span>
+        </div>
+      </div>
+      <div class="topic-stat">14</div>
+      <div class="topic-stat">876</div>
+      <div class="topic-activity">3h</div>
+    </div>
+
+    <div class="topic-row">
+      <div class="topic-main">
+        <div class="topic-meta">
+          <span class="topic-category-dot" style="background:#d97706;"></span>
+          <span class="topic-cat-label">Texas Mineral Rights</span>
+        </div>
+        <a class="topic-title" href="#">First-time mineral owner in Midland — lease bonus offer came in, is $750/acre fair?</a>
+        <div class="topic-tags">
+          <span class="topic-tag">texas</span>
+          <span class="topic-tag">lease-bonus</span>
+          <span class="topic-tag">midland</span>
+          <span class="topic-tag">beginner</span>
+        </div>
+      </div>
+      <div class="topic-stat">29</div>
+      <div class="topic-stat">2.1k</div>
+      <div class="topic-activity">1d</div>
+    </div>
+
+    <div class="topic-row">
+      <div class="topic-main">
+        <div class="topic-meta">
+          <span class="topic-category-dot" style="background:#be123c;"></span>
+          <span class="topic-cat-label">Mineral Management</span>
+        </div>
+        <a class="topic-title" href="#">Setting up an LLC for mineral rights — tax &amp; estate planning perspective</a>
+        <div class="topic-tags">
+          <span class="topic-tag">llc</span>
+          <span class="topic-tag">estate-planning</span>
+          <span class="topic-tag">tax</span>
+        </div>
+      </div>
+      <div class="topic-stat">53</div>
+      <div class="topic-stat">6.7k</div>
+      <div class="topic-activity">2d</div>
+    </div>
+
+    <div class="topic-row">
+      <div class="topic-main">
+        <div class="topic-meta">
+          <span class="topic-category-dot" style="background:#16a34a;"></span>
+          <span class="topic-cat-label">Oklahoma Mineral Rights</span>
+        </div>
+        <a class="topic-title" href="#">SCOOP/STACK play update — what are operators saying at OTC this year?</a>
+        <div class="topic-tags">
+          <span class="topic-tag">oklahoma</span>
+          <span class="topic-tag">scoop-stack</span>
+          <span class="topic-tag">industry-news</span>
+        </div>
+      </div>
+      <div class="topic-stat">18</div>
+      <div class="topic-stat">1.2k</div>
+      <div class="topic-activity">3d</div>
+    </div>
+
+  </div><!-- /topic list -->
+
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+
+    <!-- Directory promo -->
+    <div class="directory-promo">
+      <span class="directory-promo__eyebrow">New Resource</span>
+      <p class="directory-promo__heading">Find Mineral Professionals Near You</p>
+      <p class="directory-promo__body">Browse our county-specific directories to find vetted attorneys, mineral buyers &amp; managers in your area.</p>
+      <a href="#" class="directory-promo__btn">Browse the Directory →</a>
+    </div>
+
+    <!-- Categories -->
+    <div class="sidebar-card">
+      <div class="sidebar-card__head">
+        <span class="sidebar-card__title">Categories</span>
+        <a href="#" class="sidebar-card__more">All →</a>
+      </div>
+      <ul class="sidebar-cat-list">
+        <li><a href="#" class="sidebar-cat-item"><span class="sidebar-cat-dot" style="background:#d97706;"></span><span class="sidebar-cat-name">Texas Mineral Rights</span><span class="sidebar-cat-count">18.2k</span></a></li>
+        <li><a href="#" class="sidebar-cat-item"><span class="sidebar-cat-dot" style="background:#16a34a;"></span><span class="sidebar-cat-name">Oklahoma Mineral Rights</span><span class="sidebar-cat-count">12.4k</span></a></li>
+        <li><a href="#" class="sidebar-cat-item"><span class="sidebar-cat-dot" style="background:#2563eb;"></span><span class="sidebar-cat-name">Colorado &amp; Rockies</span><span class="sidebar-cat-count">8.1k</span></a></li>
+        <li><a href="#" class="sidebar-cat-item"><span class="sidebar-cat-dot" style="background:#7c3aed;"></span><span class="sidebar-cat-name">Legal &amp; Attorneys</span><span class="sidebar-cat-count">5.6k</span></a></li>
+        <li><a href="#" class="sidebar-cat-item"><span class="sidebar-cat-dot" style="background:#0891b2;"></span><span class="sidebar-cat-name">Royalty Management</span><span class="sidebar-cat-count">4.9k</span></a></li>
+        <li><a href="#" class="sidebar-cat-item"><span class="sidebar-cat-dot" style="background:#be123c;"></span><span class="sidebar-cat-name">Mineral Management</span><span class="sidebar-cat-count">3.8k</span></a></li>
+      </ul>
+    </div>
+
+    <!-- Stats -->
+    <div class="sidebar-card">
+      <div class="sidebar-card__head">
+        <span class="sidebar-card__title">Community</span>
+      </div>
+      <div class="sidebar-stats">
+        <div class="sidebar-stat"><span class="sidebar-stat__n">47k</span><span class="sidebar-stat__l">Members</span></div>
+        <div class="sidebar-stat"><span class="sidebar-stat__n">185k</span><span class="sidebar-stat__l">Posts</span></div>
+        <div class="sidebar-stat"><span class="sidebar-stat__n">2,840</span><span class="sidebar-stat__l">Online Today</span></div>
+        <div class="sidebar-stat"><span class="sidebar-stat__n">19yr</span><span class="sidebar-stat__l">Est. 2006</span></div>
+      </div>
+    </div>
+
+    <!-- Top Tags -->
+    <div class="sidebar-card">
+      <div class="sidebar-card__head">
+        <span class="sidebar-card__title">Popular Tags</span>
+      </div>
+      <div style="padding:1rem 1.125rem;display:flex;flex-wrap:wrap;gap:0.5rem;">
+        <a href="#" class="tag-pill">texas</a>
+        <a href="#" class="tag-pill">royalty-selling</a>
+        <a href="#" class="tag-pill">oklahoma</a>
+        <a href="#" class="tag-pill">lease-bonus</a>
+        <a href="#" class="tag-pill">permian</a>
+        <a href="#" class="tag-pill">title-research</a>
+        <a href="#" class="tag-pill">inheritance</a>
+        <a href="#" class="tag-pill">division-order</a>
+        <a href="#" class="tag-pill">valuation</a>
+        <a href="#" class="tag-pill">legal</a>
+        <a href="#" class="tag-pill">colorado</a>
+        <a href="#" class="tag-pill">estate-planning</a>
+      </div>
+    </div>
+
+  </aside>
+</div><!-- /page-body -->
+
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="#" class="site-logo" style="text-decoration:none;">
+        <div class="logo-mark">
+          <div class="logo-bar"></div>
+          <div class="logo-bar"></div>
+          <div class="logo-bar"></div>
+          <div class="logo-bar"></div>
+        </div>
+        <div class="logo-text">
+          <span class="logo-name">Mineral Rights Forum</span>
+          <span class="logo-sub">Est. 2006</span>
+        </div>
+      </a>
+      <p class="footer-tagline">The premier discussion community for U.S. oil and gas mineral &amp; royalty owners since 2006.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Community</h4>
+      <a href="#">Latest Topics</a>
+      <a href="#">Top Posts</a>
+      <a href="#">New Members</a>
+      <a href="#">Leaderboard</a>
+    </div>
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <a href="#">Minerals 101 Guide</a>
+      <a href="#">County Directory</a>
+      <a href="#">Glossary</a>
+      <a href="#">State Resources</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About</a>
+      <a href="#">Advertise</a>
+      <a href="#">Guidelines</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Mineral Rights Forum. All rights reserved.</span>
+    <span>Powered by Discourse</span>
+  </div>
+</footer>
+
+
+<!-- ══════════════════════════════════════════════
+     STYLE GUIDE
+══════════════════════════════════════════════ -->
+<div class="sg-page" id="style-guide">
+  <div class="sg-inner">
+
+    <div class="sg-section-head">
+      <h2>Style Guide</h2>
+      <p>Design tokens, components, and patterns for the Mineral Rights Forum brand and Discourse theme.</p>
+    </div>
+
+    <!-- ─── Colors ──────────────────────────── -->
+    <div class="sg-block">
+      <h3>Color Palette</h3>
+      <div class="sg-card">
+        <div style="margin-bottom:1.5rem;">
+          <p style="font-size:0.8125rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.875rem;">Brand</p>
+          <div class="color-grid">
+            <div class="color-swatch"><div class="color-swatch__block" style="background:#0a192f;"></div><div class="color-swatch__info"><div class="color-swatch__name">Navy</div><div class="color-swatch__hex">#0a192f</div><div class="color-swatch__role">Primary background, text</div></div></div>
+            <div class="color-swatch"><div class="color-swatch__block" style="background:#0e2040;"></div><div class="color-swatch__info"><div class="color-swatch__name">Navy Mid</div><div class="color-swatch__hex">#0e2040</div><div class="color-swatch__role">Cards, gradients</div></div></div>
+            <div class="color-swatch"><div class="color-swatch__block" style="background:#1a3054;"></div><div class="color-swatch__info"><div class="color-swatch__name">Navy Light</div><div class="color-swatch__hex">#1a3054</div><div class="color-swatch__role">Hover states</div></div></div>
+            <div class="color-swatch"><div class="color-swatch__block" style="background:#c5a059;"></div><div class="color-swatch__info"><div class="color-swatch__name">Gold</div><div class="color-swatch__hex">#c5a059</div><div class="color-swatch__role">Accent, CTAs, links</div></div></div>
+            <div class="color-swatch"><div class="color-swatch__block" style="background:#d4b06a;"></div><div class="color-swatch__info"><div class="color-swatch__name">Gold Hover</div><div class="color-swatch__hex">#d4b06a</div><div class="color-swatch__role">Interactive hover</div></div></div>
+          </div>
+        </div>
+        <div style="margin-bottom:1.5rem;">
+          <p style="font-size:0.8125rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.875rem;">Neutrals</p>
+          <div class="color-grid">
+            <div class="color-swatch"><div class="color-swatch__block" style="background:#f8f6f1;border:1px solid #e6e7ea;"></div><div class="color-swatch__info"><div class="color-swatch__name">Off-white</div><div class="color-swatch__hex">#f8f6f1</div><div class="color-swatch__role">Page background</div></div></div>
+            <div class="color-swatch"><div class="color-swatch__block" style="background:#ffffff;border:1px solid #e6e7ea;"></div><div class="color-swatch__info"><div class="color-swatch__name">White</div><div class="color-swatch__hex">#ffffff</div><div class="color-swatch__role">Cards, surfaces</div></div></div>
+            <div class="color-swatch"><div class="color-swatch__block" style="background:#e6e7ea;"></div><div class="color-swatch__info"><div class="color-swatch__name">Border</div><div class="color-swatch__hex">#e6e7ea</div><div class="color-swatch__role">Dividers, outlines</div></div></div>
+            <div class="color-swatch"><div class="color-swatch__block" style="background:#6b7280;"></div><div class="color-swatch__info"><div class="color-swatch__name">Muted</div><div class="color-swatch__hex">#6b7280</div><div class="color-swatch__role">Secondary text</div></div></div>
+            <div class="color-swatch"><div class="color-swatch__block" style="background:#0b0e14;"></div><div class="color-swatch__info"><div class="color-swatch__name">Ink</div><div class="color-swatch__hex">#0b0e14</div><div class="color-swatch__role">Body text</div></div></div>
+          </div>
+        </div>
+        <div>
+          <p style="font-size:0.8125rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.875rem;">Semantic</p>
+          <div class="color-grid">
+            <div class="color-swatch"><div class="color-swatch__block" style="background:#16a34a;"></div><div class="color-swatch__info"><div class="color-swatch__name">Success</div><div class="color-swatch__hex">#16a34a</div><div class="color-swatch__role">Confirmations</div></div></div>
+            <div class="color-swatch"><div class="color-swatch__block" style="background:#dc2626;"></div><div class="color-swatch__info"><div class="color-swatch__name">Danger</div><div class="color-swatch__hex">#dc2626</div><div class="color-swatch__role">Errors, warnings</div></div></div>
+            <div class="color-swatch"><div class="color-swatch__block" style="background:#2563eb;"></div><div class="color-swatch__info"><div class="color-swatch__name">Info</div><div class="color-swatch__hex">#2563eb</div><div class="color-swatch__role">Notices, links</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Typography ───────────────────────── -->
+    <div class="sg-block">
+      <h3>Typography</h3>
+      <div class="sg-card">
+        <div class="type-specimens">
+          <div class="type-spec">
+            <div class="type-spec__meta">
+              <span class="type-spec__label">Display</span>
+              <span class="type-spec__detail">Playfair Display 700</span>
+              <span class="type-spec__detail">clamp(2rem,4vw,3.25rem)</span>
+              <span class="type-spec__detail">Hero headings</span>
+            </div>
+            <span style="font-family:'Playfair Display',serif;font-size:clamp(1.875rem,4vw,3rem);font-weight:700;color:var(--navy);line-height:1.1;">Mineral Rights<br>Community</span>
+          </div>
+          <div class="type-spec">
+            <div class="type-spec__meta">
+              <span class="type-spec__label">H1 — Page</span>
+              <span class="type-spec__detail">Playfair Display 700</span>
+              <span class="type-spec__detail">2rem / line-height 1.15</span>
+              <span class="type-spec__detail">Page titles</span>
+            </div>
+            <span style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--navy);line-height:1.15;">Texas Mineral Rights Discussion</span>
+          </div>
+          <div class="type-spec">
+            <div class="type-spec__meta">
+              <span class="type-spec__label">H2 — Section</span>
+              <span class="type-spec__detail">Playfair Display 700</span>
+              <span class="type-spec__detail">1.5rem / line-height 1.2</span>
+              <span class="type-spec__detail">Section headings</span>
+            </div>
+            <span style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--navy);">Latest Discussions</span>
+          </div>
+          <div class="type-spec">
+            <div class="type-spec__meta">
+              <span class="type-spec__label">Topic Title</span>
+              <span class="type-spec__detail">Inter 600</span>
+              <span class="type-spec__detail">0.9375rem / line-height 1.35</span>
+              <span class="type-spec__detail">Forum topic rows</span>
+            </div>
+            <span style="font-size:0.9375rem;font-weight:600;color:var(--ink);line-height:1.35;">Permian Basin royalty offers — are 3x multiples still realistic in 2025?</span>
+          </div>
+          <div class="type-spec">
+            <div class="type-spec__meta">
+              <span class="type-spec__label">Body</span>
+              <span class="type-spec__detail">Inter 400</span>
+              <span class="type-spec__detail">1rem / line-height 1.65</span>
+              <span class="type-spec__detail">Post content</span>
+            </div>
+            <p style="font-size:1rem;font-weight:400;color:var(--ink);line-height:1.65;max-width:600px;">I received a lease offer last week from an independent operator. The bonus is $600/acre for a 3-year primary term with a 1/8 royalty. Given current Permian activity, I was expecting more. Anyone have recent comparables from Midland or Ector County?</p>
+          </div>
+          <div class="type-spec">
+            <div class="type-spec__meta">
+              <span class="type-spec__label">Small / Meta</span>
+              <span class="type-spec__detail">Inter 500</span>
+              <span class="type-spec__detail">0.8125rem / muted color</span>
+              <span class="type-spec__detail">Timestamps, labels</span>
+            </div>
+            <span style="font-size:0.8125rem;font-weight:500;color:var(--muted);">Last reply 4 hours ago · 47 replies · 3.1k views</span>
+          </div>
+          <div class="type-spec">
+            <div class="type-spec__meta">
+              <span class="type-spec__label">Eyebrow</span>
+              <span class="type-spec__detail">Inter 600, uppercase</span>
+              <span class="type-spec__detail">0.6875rem / tracked 0.22em</span>
+              <span class="type-spec__detail">Section labels</span>
+            </div>
+            <span style="font-size:0.6875rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);">Texas Mineral Rights</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Buttons ──────────────────────────── -->
+    <div class="sg-block">
+      <h3>Buttons</h3>
+      <div class="sg-card" style="display:flex;flex-direction:column;gap:1.5rem;">
+        <div>
+          <p style="font-size:0.75rem;color:var(--muted);margin-bottom:0.75rem;font-weight:600;">Variants</p>
+          <div class="btn-row">
+            <a href="#" class="btn btn-primary">Gold Primary</a>
+            <a href="#" class="btn btn-secondary">Navy Secondary</a>
+            <a href="#" class="btn btn-outline">Outline</a>
+            <a href="#" class="btn btn-ghost">Ghost</a>
+            <a href="#" class="btn btn-danger">Danger</a>
+          </div>
+        </div>
+        <div>
+          <p style="font-size:0.75rem;color:var(--muted);margin-bottom:0.75rem;font-weight:600;">Sizes</p>
+          <div class="btn-row" style="align-items:center;">
+            <a href="#" class="btn btn-primary btn-sm">Small</a>
+            <a href="#" class="btn btn-primary">Default</a>
+            <a href="#" class="btn btn-primary btn-lg">Large</a>
+          </div>
+        </div>
+        <div>
+          <p style="font-size:0.75rem;color:var(--muted);margin-bottom:0.75rem;font-weight:600;">With icon</p>
+          <div class="btn-row">
+            <a href="#" class="btn btn-primary">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              New Topic
+            </a>
+            <a href="#" class="btn btn-secondary">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              Search
+            </a>
+            <a href="#" class="btn btn-outline">
+              Browse Directory
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Badges & Tags ────────────────────── -->
+    <div class="sg-block">
+      <h3>Badges &amp; Tags</h3>
+      <div class="sg-card" style="display:flex;flex-direction:column;gap:1.25rem;">
+        <div>
+          <p style="font-size:0.75rem;color:var(--muted);margin-bottom:0.75rem;font-weight:600;">Status badges</p>
+          <div class="badge-row">
+            <span class="badge badge-gold">Featured</span>
+            <span class="badge badge-navy">Pinned</span>
+            <span class="badge badge-success">Solved</span>
+            <span class="badge badge-danger">Closed</span>
+            <span class="badge badge-neutral">Archived</span>
+          </div>
+        </div>
+        <div>
+          <p style="font-size:0.75rem;color:var(--muted);margin-bottom:0.75rem;font-weight:600;">Topic tags</p>
+          <div class="badge-row">
+            <a href="#" class="tag-pill">texas</a>
+            <a href="#" class="tag-pill">royalty-selling</a>
+            <a href="#" class="tag-pill">permian-basin</a>
+            <a href="#" class="tag-pill">title-research</a>
+            <a href="#" class="tag-pill">legal</a>
+            <a href="#" class="tag-pill">inheritance</a>
+            <a href="#" class="tag-pill">lease-bonus</a>
+            <a href="#" class="tag-pill">division-order</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Category Cards ───────────────────── -->
+    <div class="sg-block">
+      <h3>Category Cards</h3>
+      <div class="cat-card-grid">
+        <a href="#" class="cat-card" style="border-left-color:#d97706;">
+          <div class="cat-card__name">Texas Mineral Rights</div>
+          <div class="cat-card__desc">Discussions about leasing, royalties, and mineral ownership across Texas basins.</div>
+          <div class="cat-card__meta">
+            <span class="cat-card__stat"><strong>18.2k</strong> topics</span>
+            <span class="cat-card__stat"><strong>94k</strong> posts</span>
+          </div>
+        </a>
+        <a href="#" class="cat-card" style="border-left-color:#16a34a;">
+          <div class="cat-card__name">Oklahoma Mineral Rights</div>
+          <div class="cat-card__desc">SCOOP/STACK, Anadarko, and all Oklahoma oil and gas mineral topics.</div>
+          <div class="cat-card__meta">
+            <span class="cat-card__stat"><strong>12.4k</strong> topics</span>
+            <span class="cat-card__stat"><strong>61k</strong> posts</span>
+          </div>
+        </a>
+        <a href="#" class="cat-card" style="border-left-color:#7c3aed;">
+          <div class="cat-card__name">Legal &amp; Attorneys</div>
+          <div class="cat-card__desc">Questions and discussions related to mineral law, title, and legal proceedings.</div>
+          <div class="cat-card__meta">
+            <span class="cat-card__stat"><strong>5.6k</strong> topics</span>
+            <span class="cat-card__stat"><strong>28k</strong> posts</span>
+          </div>
+        </a>
+        <a href="#" class="cat-card" style="border-left-color:#c5a059;">
+          <div class="cat-card__name">Mineral Buyers</div>
+          <div class="cat-card__desc">Evaluating offers, understanding mineral valuations, and finding reputable buyers.</div>
+          <div class="cat-card__meta">
+            <span class="cat-card__stat"><strong>7.1k</strong> topics</span>
+            <span class="cat-card__stat"><strong>36k</strong> posts</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── Form Elements ────────────────────── -->
+    <div class="sg-block">
+      <h3>Form Elements</h3>
+      <div class="sg-card">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Topic Title</label>
+            <input class="form-input" type="text" placeholder="Describe your topic clearly…" value="Permian Basin royalty rate question">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-select">
+              <option>Texas Mineral Rights</option>
+              <option>Oklahoma Mineral Rights</option>
+              <option>Legal &amp; Attorneys</option>
+            </select>
+          </div>
+          <div class="form-group" style="grid-column:1/-1;">
+            <label class="form-label">Your Post</label>
+            <textarea class="form-textarea" placeholder="Share your question or topic in detail…">I received a lease offer last week from…</textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tags</label>
+            <input class="form-input" type="text" placeholder="texas, royalty, permian-basin…">
+          </div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+            <button class="btn btn-primary" style="width:100%;">Post Topic</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── User / Member Components ─────────── -->
+    <div class="sg-block">
+      <h3>Member Components</h3>
+      <div class="sg-card">
+        <div class="topic-preview">
+          <div class="user-card-row">
+            <div class="avatar" style="background:#0a192f;">WK</div>
+            <div><div class="user-name">WillKirby</div><div class="user-role">Member since 2012 · 4,382 posts</div></div>
+            <span class="trust-badge">Regular</span>
+          </div>
+          <div class="user-card-row">
+            <div class="avatar" style="background:#c5a059;color:#0a192f;">TM</div>
+            <div><div class="user-name">TexasMineralOwner</div><div class="user-role">Member since 2018 · 892 posts</div></div>
+            <span class="trust-badge">Member</span>
+          </div>
+          <div class="user-card-row">
+            <div class="avatar" style="background:#16a34a;">OL</div>
+            <div><div class="user-name">OKLandman</div><div class="user-role">Member since 2009 · 12,041 posts</div></div>
+            <span class="trust-badge" style="background:rgba(197,160,89,0.12);color:#7a5c1e;border:1px solid rgba(197,160,89,0.3);">Leader</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Discourse CSS Variables ─────────── -->
+    <div class="sg-block">
+      <h3>Discourse Theme CSS Variables</h3>
+      <div class="sg-card">
+        <p style="font-size:0.875rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.6;">These variables map directly to Discourse's built-in color scheme system. Set them in the Discourse admin Color Scheme editor or override via custom CSS in the theme.</p>
+        <div class="var-grid">
+          <div class="var-item"><div class="var-dot" style="background:#0a192f;border:1px solid #e6e7ea;"></div><div><div class="var-name">--primary</div><div class="var-val">#0a192f — text, borders</div></div></div>
+          <div class="var-item"><div class="var-dot" style="background:#ffffff;border:1px solid #e6e7ea;"></div><div><div class="var-name">--secondary</div><div class="var-val">#ffffff — backgrounds</div></div></div>
+          <div class="var-item"><div class="var-dot" style="background:#c5a059;"></div><div><div class="var-name">--tertiary</div><div class="var-val">#c5a059 — links, highlights</div></div></div>
+          <div class="var-item"><div class="var-dot" style="background:#0a192f;"></div><div><div class="var-name">--header_background</div><div class="var-val">#0a192f</div></div></div>
+          <div class="var-item"><div class="var-dot" style="background:#ffffff;border:1px solid #e6e7ea;"></div><div><div class="var-name">--header_primary</div><div class="var-val">#ffffff — header text</div></div></div>
+          <div class="var-item"><div class="var-dot" style="background:#c5a059;"></div><div><div class="var-name">--highlight</div><div class="var-val">#c5a059 — post highlights</div></div></div>
+          <div class="var-item"><div class="var-dot" style="background:#dc2626;"></div><div><div class="var-name">--danger</div><div class="var-val">#dc2626</div></div></div>
+          <div class="var-item"><div class="var-dot" style="background:#16a34a;"></div><div><div class="var-name">--success</div><div class="var-val">#16a34a</div></div></div>
+        </div>
+        <div style="margin-top:1.5rem;padding:1.25rem;background:#fafbfc;border:1px solid var(--border);border-radius:8px;">
+          <p style="font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.875rem;">Custom theme CSS snippet</p>
+          <pre style="font-family:monospace;font-size:0.8125rem;color:var(--ink);line-height:1.7;overflow-x:auto;">:root {
+  --font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  --header-font-family: 'Playfair Display', Georgia, serif;
+}
+/* Discourse color scheme overrides */
+.d-header { border-bottom: 3px solid #c5a059; }
+.btn-primary { background: #c5a059; color: #0a192f; }
+.btn-primary:hover { background: #d4b06a; }
+nav.nav-pills .active { color: #0a192f; border-bottom: 2px solid #c5a059; }
+a { color: #0a192f; }
+a:hover { color: #c5a059; }</pre>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /sg-inner -->
+</div><!-- /style guide -->
+
+</body>
+</html>
