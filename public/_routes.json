@@ -1,5 +1,5 @@
 {
   "version": 1,
   "include": ["/*"],
-  "exclude": ["/styles.css", "/llms.txt", "/*.html"]
+  "exclude": ["/styles.css", "/llms.txt", "/*.html", "/mrf-proposal", "/logo-mockups", "/mrf-redesign-mockup"]
 }
