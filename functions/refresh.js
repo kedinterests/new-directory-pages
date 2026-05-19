@@ -89,7 +89,8 @@ export const onRequestPost = async ({ request, env }) => {
     const isNationalSite = (site.division_type || '').toLowerCase() === 'national';
     const adsForSite = ads.filter(ad => {
       const adCounties = String(ad.counties || '').split(',').map(c => c.trim().toLowerCase()).filter(Boolean);
-      const adNationwide = ad.nationwide === true || String(ad.nationwide || '').toUpperCase() === 'TRUE';
+      const nwVal = ad['nationwide?'] !== undefined ? ad['nationwide?'] : ad.nationwide;
+      const adNationwide = nwVal === true || String(nwVal || '').toUpperCase() === 'TRUE';
       if (!adCounties.length && !adNationwide) return true;
       if (adNationwide && isNationalSite) return true;
       if (adCounties.length && adCounties.includes(slugLower)) return true;
