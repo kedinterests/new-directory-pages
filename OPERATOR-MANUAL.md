@@ -107,7 +107,7 @@ Advertisers appear as a card at the top of a category section. Go to the **Ads**
 |---|---|
 | **active** | `TRUE` to show the ad, `FALSE` to pause it |
 | **category** | Which category section to show the ad in (must match exactly) |
-| **ad_unit** | Google Ad Manager ad unit path (e.g. `/12345678/mrf-directory-attorneys`). Renders a 300x250 GAM ad card. Takes priority over image_url if both are set. |
+| **ad_unit** | The ad unit path from Google Ad Manager — just the path, not the full tag code. When GAM gives you a tag, the path is in the comment at the top (e.g. `<!-- /12345678/mrf-directory-attorneys -->`). Paste only that path into this column. The system generates all the surrounding code automatically. Renders a 300x250 card. Takes priority over image_url if both are set. |
 | **image_url** | Direct URL to a 600x400 image. Used as a fallback if no ad_unit is set. |
 | **link** | The URL the image links to when clicked. Only used with image_url. |
 | **priority** | A number. Higher numbers appear first if multiple ads are in the same category. |
