@@ -297,7 +297,6 @@ export const onRequestGet = async ({ request, env, params }) => {
   <script>
     window.googletag = window.googletag || {cmd: []};
     googletag.cmd.push(function() {
-      googletag.pubads().enableSingleRequest();
       googletag.enableServices();
     });
   </script>
