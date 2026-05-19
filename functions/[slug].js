@@ -144,7 +144,7 @@ export const onRequestGet = async ({ request, env, params }) => {
     const unitPath = ad && String(ad.ad_unit || '').trim();
     if (unitPath) {
       const divId = `gpt-${idSlug(ad.category || 'ad')}`;
-      return `<div id="${escapeAttr(divId)}" class="card card--ad card--gam"><script>googletag.cmd.push(function(){googletag.defineSlot('${escapeAttr(unitPath)}',[300,250],'${escapeAttr(divId)}').addService(googletag.pubads());googletag.pubads().enableSingleRequest();googletag.enableServices();googletag.display('${escapeAttr(divId)}');});<\/script></div>`;
+      return `<div id="${escapeAttr(divId)}" class="card--gam"><script>googletag.cmd.push(function(){googletag.defineSlot('${escapeAttr(unitPath)}',[300,250],'${escapeAttr(divId)}').addService(googletag.pubads());googletag.pubads().enableSingleRequest();googletag.enableServices();googletag.display('${escapeAttr(divId)}');});<\/script></div>`;
     }
     if (!ad || !ad.link || !ad.image_url) return '';
     return `<a href="${escapeAttr(ad.link)}" target="_blank" rel="noopener" class="card card--ad"><img src="${escapeAttr(ad.image_url)}" alt="Sponsored" loading="lazy" /></a>`;
@@ -336,8 +336,7 @@ export const onRequestGet = async ({ request, env, params }) => {
     .header-back-btn:hover{ background: #1a3454; transform: translateY(-1px); box-shadow: 0 2px 4px rgba(35, 69, 109, 0.2); }
     .card--ad { display: block; border: 1px solid var(--mrf-border); border-radius: 0.5rem; overflow: hidden; }
     .card--ad img { width: 100%; height: auto; display: block; }
-    .card--gam { height: 250px; padding: 0 !important; display: flex; align-items: center; justify-content: center; background: #f9fafb; overflow: hidden; }
-    .card--gam > * { flex-shrink: 0; }
+    .card--gam { width: 100%; height: 250px; display: block; border: 1px solid var(--mrf-border); border-radius: 0.5rem; overflow: hidden; background: #f9fafb; }
     @media (max-width: 767px){
       .directory-hero { padding: 28px 16px 24px; }
       :root{ --sticky-bar-height: 45px; }
