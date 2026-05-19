@@ -112,7 +112,7 @@ Advertisers appear as a card at the top of a category section. Go to the **Ads**
 | **link** | The URL the image links to when clicked. Only used with image_url. |
 | **priority** | A number. Higher numbers appear first if multiple ads are in the same category. |
 | **counties** | Which county pages to show this ad on. Use the county picker (Directory → Select counties) from a cell in this column. Leave blank to show on all pages. |
-| **nationwide** | `TRUE` to show this ad on the nationwide directory. Leave blank to use county targeting only. |
+| **nationwide?** | `TRUE` to show this ad on the nationwide directory. Leave blank to use county targeting only. |
 
 Trigger a refresh when done.
 
