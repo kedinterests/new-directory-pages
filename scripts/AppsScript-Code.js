@@ -201,6 +201,16 @@ function doGet(e) {
       }
     }
 
+    const categoriesSheet = ss.getSheetByName('Categories');
+    const categories = [];
+    if (categoriesSheet) {
+      const catData = categoriesSheet.getDataRange().getValues();
+      for (let i = 1; i < catData.length; i++) {
+        const val = String(catData[i][0] || '').trim();
+        if (val) categories.push(val);
+      }
+    }
+
     const updated_at = new Date().toISOString();
     const etag = Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, JSON.stringify({ companies, sites, ads }))
       .map(b => ('0' + (b & 0xFF).toString(16)).slice(-2)).join('');
@@ -210,6 +220,7 @@ function doGet(e) {
       companies,
       sites,
       ads,
+      categories,
       updated_at,
       etag,
     });

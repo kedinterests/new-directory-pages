@@ -32,6 +32,9 @@ export const onRequestPost = async ({ request, env }) => {
     return json({ ok: false, error: 'Invalid upstream response' }, { status: 502 });
   }
   const ads = Array.isArray(upstream.ads) ? upstream.ads : [];
+  const sheetCategoryOrder = Array.isArray(upstream.categories) && upstream.categories.length > 0
+    ? upstream.categories
+    : null;
 
   // Pre-index companies by county slug and collect nationwide companies — avoids O(sites × companies) scan
   const byCounty = {};
@@ -100,6 +103,7 @@ export const onRequestPost = async ({ request, env }) => {
       directory_intro: (site.directory_intro || '').replace(/\{display_name\}/g, displayLabel),
       seo: { title: site.seo_title, description: site.seo_description },
       category_order: site.category_order || 'alpha',
+      categoryOrder: sheetCategoryOrder || null,
       theme: site.theme || 'default',
     };
 

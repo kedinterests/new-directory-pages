@@ -42,19 +42,26 @@ export const onRequestGet = async ({ request, env, params }) => {
 
   const { groups, categoryOrder } = groupCompanies(visibleCompanies);
 
-  // Resolve category order from config
-  const categoryOrderConfig = (config.category_order || 'alpha').trim().toLowerCase();
+  // Resolve category order — prefer categoryOrder array from KV (set via Categories sheet),
+  // fall back to category_order string from sites.json config
   let categoryNames;
-  if (categoryOrderConfig === 'alpha') {
-    categoryNames = Object.keys(groups).sort((a, b) => alpha(a, b));
-  } else if (categoryOrderConfig && categoryOrderConfig !== '') {
-    const customOrder = categoryOrderConfig.split(',').map(c => c.trim()).filter(Boolean);
-    const existing = new Set(Object.keys(groups));
-    categoryNames = customOrder.filter(c => existing.has(c));
+  const existing = new Set(Object.keys(groups));
+  if (Array.isArray(config.categoryOrder) && config.categoryOrder.length > 0) {
+    categoryNames = config.categoryOrder.filter(c => existing.has(c));
     const remainder = Object.keys(groups).filter(c => !categoryNames.includes(c)).sort((a, b) => alpha(a, b));
     categoryNames = categoryNames.concat(remainder);
   } else {
-    categoryNames = categoryOrder.length > 0 ? categoryOrder : Object.keys(groups);
+    const categoryOrderConfig = (config.category_order || 'alpha').trim().toLowerCase();
+    if (categoryOrderConfig === 'alpha') {
+      categoryNames = Object.keys(groups).sort((a, b) => alpha(a, b));
+    } else if (categoryOrderConfig && categoryOrderConfig !== '') {
+      const customOrder = categoryOrderConfig.split(',').map(c => c.trim()).filter(Boolean);
+      categoryNames = customOrder.filter(c => existing.has(c));
+      const remainder = Object.keys(groups).filter(c => !categoryNames.includes(c)).sort((a, b) => alpha(a, b));
+      categoryNames = categoryNames.concat(remainder);
+    } else {
+      categoryNames = categoryOrder.length > 0 ? categoryOrder : Object.keys(groups);
+    }
   }
 
   const { display_label, seo, page_title, return_url, directory_intro } = config;
