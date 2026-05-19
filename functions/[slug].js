@@ -333,7 +333,8 @@ export const onRequestGet = async ({ request, env, params }) => {
     .site-wrapper, .page, .content, footer, header { max-width: 100%; overflow-x: hidden; }
     main, .container { max-width: 100%; }
     * { box-sizing: border-box; }
-    img, video, iframe, embed, object { max-width: 100%; height: auto; }
+    img, video, embed, object { max-width: 100%; height: auto; }
+    iframe { max-width: 100%; }
     .container{max-width:1280px;margin:0 auto;padding:1rem}
     .shadow-soft{box-shadow:0 1px 2px rgba(0,0,0,.05),0 1px 3px rgba(0,0,0,.1)}
     .hidden{display:none !important}
