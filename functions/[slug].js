@@ -144,7 +144,7 @@ export const onRequestGet = async ({ request, env, params }) => {
     const unitPath = ad && String(ad.ad_unit || '').trim();
     if (unitPath) {
       const divId = `gpt-${idSlug(ad.category || 'ad')}`;
-      return `<div id="${escapeAttr(divId)}" class="card--gam"><script>googletag.cmd.push(function(){googletag.defineSlot('${escapeAttr(unitPath)}',[300,250],'${escapeAttr(divId)}').addService(googletag.pubads());googletag.pubads().enableSingleRequest();googletag.enableServices();googletag.display('${escapeAttr(divId)}');});<\/script></div>`;
+      return `<div id="${escapeAttr(divId)}" class="card--gam"><script>googletag.cmd.push(function(){googletag.defineSlot('${escapeAttr(unitPath)}',[300,250],'${escapeAttr(divId)}').addService(googletag.pubads());googletag.display('${escapeAttr(divId)}');});<\/script></div>`;
     }
     if (!ad || !ad.link || !ad.image_url) return '';
     return `<a href="${escapeAttr(ad.link)}" target="_blank" rel="noopener" class="card card--ad"><img src="${escapeAttr(ad.image_url)}" alt="Sponsored" loading="lazy" /></a>`;
@@ -294,7 +294,13 @@ export const onRequestGet = async ({ request, env, params }) => {
     gtag('config', 'G-JH90NMTGP0');
   </script>
   <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
-  <script>window.googletag = window.googletag || {cmd: []};</script>
+  <script>
+    window.googletag = window.googletag || {cmd: []};
+    googletag.cmd.push(function() {
+      googletag.pubads().enableSingleRequest();
+      googletag.enableServices();
+    });
+  </script>
   <script>
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
