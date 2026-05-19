@@ -336,7 +336,7 @@ export const onRequestGet = async ({ request, env, params }) => {
     .header-back-btn:hover{ background: #1a3454; transform: translateY(-1px); box-shadow: 0 2px 4px rgba(35, 69, 109, 0.2); }
     .card--ad { display: block; border: 1px solid var(--mrf-border); border-radius: 0.5rem; overflow: hidden; }
     .card--ad img { width: 100%; height: auto; display: block; }
-    .card--gam { height: 250px; display: flex; align-items: center; justify-content: center; background: #f9fafb; overflow: hidden; }
+    .card--gam { height: 250px; padding: 0 !important; display: flex; align-items: center; justify-content: center; background: #f9fafb; overflow: hidden; }
     .card--gam > * { flex-shrink: 0; }
     @media (max-width: 767px){
       .directory-hero { padding: 28px 16px 24px; }
