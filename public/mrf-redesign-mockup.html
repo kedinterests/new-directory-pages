@@ -15,10 +15,10 @@
   --navy:       #0a192f;
   --navy-mid:   #0e2040;
   --navy-light: #1a3054;
-  --gold:       #c5a059;
-  --gold-hover: #d4b06a;
-  --gold-dim:   rgba(197,160,89,0.12);
-  --gold-border:rgba(197,160,89,0.28);
+  --gold:       #D4A520;
+  --gold-hover: #E0B535;
+  --gold-dim:   rgba(212,165,32,0.12);
+  --gold-border:rgba(212,165,32,0.28);
   /* Neutrals */
   --off-white:  #f8f6f1;
   --surface:    #ffffff;
@@ -38,12 +38,12 @@
   --shadow-sm:  0 1px 2px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.08);
   --shadow-md:  0 1px 3px rgba(0,0,0,.06), 0 8px 24px rgba(15,23,42,.09);
   --shadow-lg:  0 1px 3px rgba(0,0,0,.06), 0 16px 48px rgba(15,23,42,.14);
-  --header-h:   64px;
+  --header-h:   80px;
   --card-r:     12px;
 }
 
 html { scroll-behavior: smooth; }
-body { font-family: var(--sans); background: var(--off-white); color: var(--ink); font-size: 15px; line-height: 1.5; }
+body { font-family: var(--sans); background: var(--off-white); color: var(--ink); font-size: 16px; line-height: 1.5; }
 
 /* ─── Section labels (mockup scaffolding) ── */
 .section-flag {
@@ -70,9 +70,9 @@ body { font-family: var(--sans); background: var(--off-white); color: var(--ink)
   top: 0;
   z-index: 50;
   height: var(--header-h);
-  background: var(--navy);
+  background: #ffffff;
   border-bottom: 3px solid var(--gold);
-  box-shadow: 0 2px 16px rgba(0,0,0,.3);
+  box-shadow: 0 1px 4px rgba(0,0,0,.06), 0 2px 12px rgba(0,0,0,.07);
   display: flex;
   align-items: center;
 }
@@ -105,6 +105,15 @@ body { font-family: var(--sans); background: var(--off-white); color: var(--ink)
 .logo-bar:nth-child(2) { width: 28px; background: rgba(255,255,255,0.4); }
 .logo-bar:nth-child(3) { width: 40px; background: var(--gold); height: 4.5px; }
 .logo-bar:nth-child(4) { width: 22px; background: rgba(255,255,255,0.22); }
+/* Header logo — larger mark, dark bars on white background */
+.d-header .logo-mark { gap: 5px; }
+.d-header .logo-bar { height: 4.5px; }
+.d-header .logo-bar:nth-child(1) { width: 46px; background: rgba(10,25,47,0.82); }
+.d-header .logo-bar:nth-child(2) { width: 36px; background: rgba(10,25,47,0.36); }
+.d-header .logo-bar:nth-child(3) { width: 52px; background: var(--gold); height: 6px; }
+.d-header .logo-bar:nth-child(4) { width: 28px; background: rgba(10,25,47,0.18); }
+.d-header .logo-name { color: var(--navy); font-size: 1.25rem; }
+.d-header .logo-sub { font-size: 0.6875rem; }
 .logo-text { display: flex; flex-direction: column; }
 .logo-name {
   font-family: var(--serif);
@@ -132,9 +141,9 @@ body { font-family: var(--sans); background: var(--off-white); color: var(--ink)
 }
 .header-nav a, .header-nav button {
   font-family: var(--sans);
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 500;
-  color: rgba(255,255,255,0.75);
+  color: rgba(10,25,47,0.65);
   background: none;
   border: none;
   cursor: pointer;
@@ -148,12 +157,12 @@ body { font-family: var(--sans); background: var(--off-white); color: var(--ink)
   white-space: nowrap;
 }
 .header-nav a:hover, .header-nav button:hover {
-  color: #fff;
-  background: rgba(255,255,255,0.08);
+  color: var(--navy);
+  background: rgba(10,25,47,0.06);
 }
 .header-nav .btn-login {
-  color: rgba(255,255,255,0.8);
-  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(10,25,47,0.7);
+  border: 1px solid rgba(10,25,47,0.2);
   margin-left: 0.25rem;
 }
 .header-nav .btn-signup {
@@ -168,12 +177,12 @@ body { font-family: var(--sans); background: var(--off-white); color: var(--ink)
 .header-icon-btn {
   width: 36px; height: 36px;
   display: flex; align-items: center; justify-content: center;
-  color: rgba(255,255,255,0.65);
+  color: rgba(10,25,47,0.5);
   background: none; border: none; cursor: pointer;
   border-radius: 8px;
   transition: color .15s, background .15s;
 }
-.header-icon-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+.header-icon-btn:hover { color: var(--navy); background: rgba(10,25,47,0.06); }
 
 /* ══════════════════════════════════════════════
    HERO BANNER (custom Discourse component)
@@ -835,6 +844,24 @@ body { font-family: var(--sans); background: var(--off-white); color: var(--ink)
 .var-dot { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; }
 .var-name { font-family: monospace; font-size: 0.8125rem; color: var(--navy); font-weight: 600; }
 .var-val { font-family: monospace; font-size: 0.75rem; color: var(--muted); }
+
+@media (max-width: 768px) {
+  .page-body {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .topic-list-header,
+  .topic-row {
+    grid-template-columns: 1fr 52px 68px;
+  }
+  .topic-list-header span:last-child,
+  .topic-row > .topic-activity { display: none; }
+  .footer-inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .footer-brand { grid-column: 1 / -1; }
+}
 </style>
 </head>
 <body>
@@ -879,8 +906,8 @@ body { font-family: var(--sans); background: var(--off-white); color: var(--ink)
       <button class="header-icon-btn" title="Menu">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
-      <a href="#" class="btn-login" style="font-size:0.875rem;font-weight:500;color:rgba(255,255,255,0.8);padding:0.5rem 0.875rem;border:1px solid rgba(255,255,255,0.2);border-radius:7px;text-decoration:none;margin-left:0.5rem;display:inline-flex;align-items:center;transition:all .15s;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='transparent'">Log In</a>
-      <a href="#" class="btn-signup" style="font-size:0.875rem;font-weight:700;color:#0a192f;background:#c5a059;padding:0.5rem 1rem;border-radius:7px;text-decoration:none;margin-left:0.375rem;display:inline-flex;align-items:center;transition:background .15s;" onmouseover="this.style.background='#d4b06a'" onmouseout="this.style.background='#c5a059'">Sign Up</a>
+      <a href="#" class="btn-login" style="font-size:0.9375rem;font-weight:500;color:rgba(10,25,47,0.7);padding:0.5rem 0.875rem;border:1px solid rgba(10,25,47,0.2);border-radius:7px;text-decoration:none;margin-left:0.5rem;display:inline-flex;align-items:center;transition:all .15s;" onmouseover="this.style.background='rgba(10,25,47,0.06)'" onmouseout="this.style.background='transparent'">Log In</a>
+      <a href="#" class="btn-signup" style="font-size:0.9375rem;font-weight:700;color:#0a192f;background:#D4A520;padding:0.5rem 1rem;border-radius:7px;text-decoration:none;margin-left:0.375rem;display:inline-flex;align-items:center;transition:background .15s;" onmouseover="this.style.background='#E0B535'" onmouseout="this.style.background='#D4A520'">Sign Up</a>
     </nav>
   </div>
 </header>
@@ -1263,8 +1290,8 @@ body { font-family: var(--sans); background: var(--off-white); color: var(--ink)
             <div class="color-swatch"><div class="color-swatch__block" style="background:#0a192f;"></div><div class="color-swatch__info"><div class="color-swatch__name">Navy</div><div class="color-swatch__hex">#0a192f</div><div class="color-swatch__role">Primary background, text</div></div></div>
             <div class="color-swatch"><div class="color-swatch__block" style="background:#0e2040;"></div><div class="color-swatch__info"><div class="color-swatch__name">Navy Mid</div><div class="color-swatch__hex">#0e2040</div><div class="color-swatch__role">Cards, gradients</div></div></div>
             <div class="color-swatch"><div class="color-swatch__block" style="background:#1a3054;"></div><div class="color-swatch__info"><div class="color-swatch__name">Navy Light</div><div class="color-swatch__hex">#1a3054</div><div class="color-swatch__role">Hover states</div></div></div>
-            <div class="color-swatch"><div class="color-swatch__block" style="background:#c5a059;"></div><div class="color-swatch__info"><div class="color-swatch__name">Gold</div><div class="color-swatch__hex">#c5a059</div><div class="color-swatch__role">Accent, CTAs, links</div></div></div>
-            <div class="color-swatch"><div class="color-swatch__block" style="background:#d4b06a;"></div><div class="color-swatch__info"><div class="color-swatch__name">Gold Hover</div><div class="color-swatch__hex">#d4b06a</div><div class="color-swatch__role">Interactive hover</div></div></div>
+            <div class="color-swatch"><div class="color-swatch__block" style="background:#D4A520;"></div><div class="color-swatch__info"><div class="color-swatch__name">Gold</div><div class="color-swatch__hex">#D4A520</div><div class="color-swatch__role">Accent, CTAs, links</div></div></div>
+            <div class="color-swatch"><div class="color-swatch__block" style="background:#E0B535;"></div><div class="color-swatch__info"><div class="color-swatch__name">Gold Hover</div><div class="color-swatch__hex">#E0B535</div><div class="color-swatch__role">Interactive hover</div></div></div>
           </div>
         </div>
         <div style="margin-bottom:1.5rem;">
@@ -1535,10 +1562,10 @@ body { font-family: var(--sans); background: var(--off-white); color: var(--ink)
         <div class="var-grid">
           <div class="var-item"><div class="var-dot" style="background:#0a192f;border:1px solid #e6e7ea;"></div><div><div class="var-name">--primary</div><div class="var-val">#0a192f — text, borders</div></div></div>
           <div class="var-item"><div class="var-dot" style="background:#ffffff;border:1px solid #e6e7ea;"></div><div><div class="var-name">--secondary</div><div class="var-val">#ffffff — backgrounds</div></div></div>
-          <div class="var-item"><div class="var-dot" style="background:#c5a059;"></div><div><div class="var-name">--tertiary</div><div class="var-val">#c5a059 — links, highlights</div></div></div>
+          <div class="var-item"><div class="var-dot" style="background:#D4A520;"></div><div><div class="var-name">--tertiary</div><div class="var-val">#D4A520 — links, highlights</div></div></div>
           <div class="var-item"><div class="var-dot" style="background:#0a192f;"></div><div><div class="var-name">--header_background</div><div class="var-val">#0a192f</div></div></div>
           <div class="var-item"><div class="var-dot" style="background:#ffffff;border:1px solid #e6e7ea;"></div><div><div class="var-name">--header_primary</div><div class="var-val">#ffffff — header text</div></div></div>
-          <div class="var-item"><div class="var-dot" style="background:#c5a059;"></div><div><div class="var-name">--highlight</div><div class="var-val">#c5a059 — post highlights</div></div></div>
+          <div class="var-item"><div class="var-dot" style="background:#D4A520;"></div><div><div class="var-name">--highlight</div><div class="var-val">#D4A520 — post highlights</div></div></div>
           <div class="var-item"><div class="var-dot" style="background:#dc2626;"></div><div><div class="var-name">--danger</div><div class="var-val">#dc2626</div></div></div>
           <div class="var-item"><div class="var-dot" style="background:#16a34a;"></div><div><div class="var-name">--success</div><div class="var-val">#16a34a</div></div></div>
         </div>
@@ -1549,12 +1576,12 @@ body { font-family: var(--sans); background: var(--off-white); color: var(--ink)
   --header-font-family: 'Playfair Display', Georgia, serif;
 }
 /* Discourse color scheme overrides */
-.d-header { border-bottom: 3px solid #c5a059; }
-.btn-primary { background: #c5a059; color: #0a192f; }
-.btn-primary:hover { background: #d4b06a; }
-nav.nav-pills .active { color: #0a192f; border-bottom: 2px solid #c5a059; }
+.d-header { border-bottom: 3px solid #D4A520; }
+.btn-primary { background: #D4A520; color: #0a192f; }
+.btn-primary:hover { background: #E0B535; }
+nav.nav-pills .active { color: #0a192f; border-bottom: 2px solid #D4A520; }
 a { color: #0a192f; }
-a:hover { color: #c5a059; }</pre>
+a:hover { color: #D4A520; }</pre>
         </div>
       </div>
     </div>
