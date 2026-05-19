@@ -99,9 +99,9 @@ Change the name in the **Categories** tab. Then update every company in the **Co
 
 ---
 
-## Adding an Advertiser (Sponsored Banner)
+## Adding an Advertiser (Sponsored Card)
 
-Advertisers appear as banner cards at the top of a category section. Go to the **Ads** tab and add a row:
+Advertisers appear as a card at the top of a category section. Go to the **Ads** tab and add a row:
 
 | Column | What it is |
 |---|---|
