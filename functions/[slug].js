@@ -335,6 +335,7 @@ export const onRequestGet = async ({ request, env, params }) => {
     * { box-sizing: border-box; }
     img, video, embed, object { max-width: 100%; height: auto; }
     iframe { max-width: 100%; }
+    .card--gam iframe { height: 250px !important; width: 300px !important; }
     .container{max-width:1280px;margin:0 auto;padding:1rem}
     .shadow-soft{box-shadow:0 1px 2px rgba(0,0,0,.05),0 1px 3px rgba(0,0,0,.1)}
     .hidden{display:none !important}
