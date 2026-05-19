@@ -107,10 +107,12 @@ Advertisers appear as a card at the top of a category section. Go to the **Ads**
 |---|---|
 | **active** | `TRUE` to show the ad, `FALSE` to pause it |
 | **category** | Which category section to show the ad in (must match exactly) |
-| **image_url** | Direct URL to the ad banner image |
-| **link** | The URL the banner links to when clicked |
+| **ad_unit** | Google Ad Manager ad unit path (e.g. `/12345678/mrf-directory-attorneys`). Renders a 300x250 GAM ad card. Takes priority over image_url if both are set. |
+| **image_url** | Direct URL to a 600x400 image. Used as a fallback if no ad_unit is set. |
+| **link** | The URL the image links to when clicked. Only used with image_url. |
 | **priority** | A number. Higher numbers appear first if multiple ads are in the same category. |
-| **counties** | Which county pages to show this ad on. Leave blank to show on all pages. |
+| **counties** | Which county pages to show this ad on. Use the county picker (Directory → Select counties) from a cell in this column. Leave blank to show on all pages. |
+| **nationwide** | `TRUE` to show this ad on the nationwide directory. Leave blank to use county targeting only. |
 
 Trigger a refresh when done.
 

@@ -141,6 +141,11 @@ export const onRequestGet = async ({ request, env, params }) => {
   }
 
   function renderAdCard(ad) {
+    const unitPath = ad && String(ad.ad_unit || '').trim();
+    if (unitPath) {
+      const divId = `gpt-${idSlug(ad.category || 'ad')}`;
+      return `<div id="${escapeAttr(divId)}" class="card card--ad card--gam"><script>googletag.cmd.push(function(){googletag.defineSlot('${escapeAttr(unitPath)}',[300,250],'${escapeAttr(divId)}').addService(googletag.pubads());googletag.pubads().enableSingleRequest();googletag.enableServices();googletag.display('${escapeAttr(divId)}');});<\/script></div>`;
+    }
     if (!ad || !ad.link || !ad.image_url) return '';
     return `<a href="${escapeAttr(ad.link)}" target="_blank" rel="noopener" class="card card--ad"><img src="${escapeAttr(ad.image_url)}" alt="Sponsored" loading="lazy" /></a>`;
   }
@@ -288,6 +293,8 @@ export const onRequestGet = async ({ request, env, params }) => {
     gtag('js', new Date());
     gtag('config', 'G-JH90NMTGP0');
   </script>
+  <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+  <script>window.googletag = window.googletag || {cmd: []};</script>
   <script>
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -329,6 +336,7 @@ export const onRequestGet = async ({ request, env, params }) => {
     .header-back-btn:hover{ background: #1a3454; transform: translateY(-1px); box-shadow: 0 2px 4px rgba(35, 69, 109, 0.2); }
     .card--ad { display: block; border: 1px solid var(--mrf-border); border-radius: 0.5rem; overflow: hidden; }
     .card--ad img { width: 100%; height: auto; display: block; }
+    .card--gam { min-width: 300px; min-height: 250px; display: flex; align-items: center; justify-content: center; background: #f9fafb; }
     @media (max-width: 767px){
       .directory-hero { padding: 28px 16px 24px; }
       :root{ --sticky-bar-height: 45px; }

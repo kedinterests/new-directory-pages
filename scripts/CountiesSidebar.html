@@ -28,6 +28,7 @@
       const currentValue = <?!= JSON.stringify(currentValue) ?>;
       const row = <?!= row ?>;
       const col = <?!= col ?>;
+      const sheetName = <?!= sheetName ?>;
 
       const selected = new Set();
       if (currentValue && currentValue.trim()) {
@@ -89,7 +90,7 @@
         google.script.run
           .withSuccessHandler(function() { google.script.host.close(); })
           .withFailureHandler(function(err) { alert('Error: ' + err); })
-          .setCountiesInCell(row, col, vals);
+          .setCountiesInCell(row, col, vals, sheetName);
       };
 
       render();

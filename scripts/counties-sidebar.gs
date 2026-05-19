@@ -13,6 +13,8 @@ function onOpen() {
     .addToUi();
 }
 
+const COUNTY_PICKER_SHEETS = ['Companies', 'Ads'];
+
 function showCountiesSidebar() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const range = ss.getActiveRange();
@@ -23,10 +25,13 @@ function showCountiesSidebar() {
   const sheet = range.getSheet();
   const sheetName = sheet.getName();
   const col = range.getColumn();
-  const companiesSheet = ss.getSheetByName('Companies');
-  const COUNTIES_COL = 11; // K (shifted from J after adding Tagline column)
-  if (sheetName !== 'Companies' || col !== COUNTIES_COL) {
-    SpreadsheetApp.getUi().alert('Select a cell in the Companies sheet, counties column (K) first.');
+  if (!COUNTY_PICKER_SHEETS.includes(sheetName)) {
+    SpreadsheetApp.getUi().alert('Select a cell in the counties column on the Companies or Ads sheet first.');
+    return;
+  }
+  const headerRow = sheet.getRange(1, col).getValue();
+  if (String(headerRow || '').toLowerCase().trim() !== 'counties') {
+    SpreadsheetApp.getUi().alert('Select a cell in the counties column first.');
     return;
   }
   const row = range.getRow();
@@ -37,6 +42,7 @@ function showCountiesSidebar() {
   template.currentValue = JSON.stringify(currentValue);
   template.row = row;
   template.col = col;
+  template.sheetName = JSON.stringify(sheetName);
   const html = template.evaluate().setTitle('Select counties').setWidth(320);
   SpreadsheetApp.getUi().showSidebar(html);
 }
@@ -55,15 +61,10 @@ function getCountiesForSidebar() {
   return { items };
 }
 
-function setCountiesInCell(row, col, selectedValues) {
+function setCountiesInCell(row, col, selectedValues, sheetName) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName('Companies');
+  const sheet = ss.getSheetByName(sheetName || 'Companies');
   if (!sheet) return;
   const cell = sheet.getRange(row, col);
-  const filtered = (selectedValues || []).filter(function(v) { return v && String(v).trim(); });
-  const finalValue = filtered.length > 0 ? filtered.join(', ') : '';
-  Logger.log('DEBUG: selectedValues = ' + JSON.stringify(selectedValues));
-  Logger.log('DEBUG: filtered = ' + JSON.stringify(filtered));
-  Logger.log('DEBUG: finalValue = "' + finalValue + '"');
-  cell.setValue(finalValue);
+  cell.setValue((selectedValues || []).filter(function(v) { return v && String(v).trim(); }).join(', '));
 }

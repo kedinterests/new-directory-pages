@@ -86,9 +86,14 @@ export const onRequestPost = async ({ request, env }) => {
       return withUtm;
     });
 
+    const isNationalSite = (site.division_type || '').toLowerCase() === 'national';
     const adsForSite = ads.filter(ad => {
       const adCounties = String(ad.counties || '').split(',').map(c => c.trim().toLowerCase()).filter(Boolean);
-      return adCounties.length === 0 || adCounties.includes(slugLower);
+      const adNationwide = ad.nationwide === true || String(ad.nationwide || '').toUpperCase() === 'TRUE';
+      if (!adCounties.length && !adNationwide) return true;
+      if (adNationwide && isNationalSite) return true;
+      if (adCounties.length && adCounties.includes(slugLower)) return true;
+      return false;
     });
 
     const displayLabel = buildDisplayLabel(site.division_type, site.division_name, site.state);
