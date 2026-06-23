@@ -52,12 +52,12 @@ export const onRequestPost = async ({ request, env }) => {
     const nw = row['nationwide?'];
     if (nw === true || nw === 'TRUE' || nw === 'true' || nw === 'yes' || nw === 'YES') {
       nationwideCompanies.push(row);
-    } else {
-      const rowCounties = String(row.counties || '').split(',').map(c => c.trim().toLowerCase()).filter(Boolean);
-      for (const c of rowCounties) {
-        if (!byCounty[c]) byCounty[c] = [];
-        byCounty[c].push(row);
-      }
+    }
+
+    const rowCounties = String(row.counties || '').split(',').map(c => c.trim().toLowerCase()).filter(Boolean);
+    for (const c of rowCounties) {
+      if (!byCounty[c]) byCounty[c] = [];
+      byCounty[c].push(row);
     }
   }
 
