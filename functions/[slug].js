@@ -262,7 +262,7 @@ export const onRequestGet = async ({ request, env, params }) => {
   return html(200, /* html */`<!doctype html>
 <html lang="en">
   <head>
-  <link rel="icon" type="image/png" sizes="48x48" href="https://www.mineralrightsforum.com/uploads/db5755/optimized/2X/5/53c419e5d847ede71cf80a938cf0156350637c44_2_32x32.png">
+  <link rel="icon" type="image/png" href="https://pub-06eb4d473d5a4ae3b3274a9a1919e3d7.r2.dev/MRF%20Square%20New%20Logo%20(1).png">
   <meta charset="utf-8">
   <link rel="canonical" href="${escapeAttr(pageUrl)}">
   <title>${escapeHtml(seo?.title || 'Directory')}</title>

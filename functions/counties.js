@@ -235,7 +235,7 @@ export const onRequestGet = async ({ request, env }) => {
   return html(200, /* html */`<!doctype html>
 <html lang="en">
   <head>
-    <link rel="icon" type="image/png" sizes="48x48" href="https://pub-06eb4d473d5a4ae3b3274a9a1919e3d7.r2.dev/mrf-favicon-48x48.png">
+    <link rel="icon" type="image/png" href="https://pub-06eb4d473d5a4ae3b3274a9a1919e3d7.r2.dev/MRF%20Square%20New%20Logo%20(1).png">
     <meta charset="utf-8">
     <link rel="canonical" href="${pageUrl}">
     <title>County Index of Mineral Service Professionals | Mineral Rights Forum</title>
