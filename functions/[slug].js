@@ -384,7 +384,7 @@ export const onRequestGet = async ({ request, env, params }) => {
     <div class="bg-white max-w-7xl mx-auto px-4 sm:px-6 py-3 border-b border-gray-200">
       <div class="flex items-center justify-center md:justify-between">
         <a href="https://www.mineralrightsforum.com" class="block w-fit">
-          <img src="https://www.mineralrightsforum.com/uploads/db5755/original/3X/7/7/7710a47c9cd8492b1935dd3b8d80584938456dd4.jpeg" alt="Mineral Rights Forum Logo" class="h-12 w-auto rounded-lg" onerror="this.onerror=null;this.src='https://placehold.co/150x40/d1d5db/4b5563?text=MRF+Logo'">
+          <img src="https://pub-06eb4d473d5a4ae3b3274a9a1919e3d7.r2.dev/MRF-Logo.png" alt="Mineral Rights Forum Logo" class="h-12 w-auto" onerror="this.onerror=null;this.src='https://placehold.co/150x40/d1d5db/4b5563?text=MRF+Logo'">
         </a>
         <a href="${escapeAttr(return_url || 'https://www.mineralrightsforum.com')}" class="header-back-btn" style="display: none;" id="returnBtn">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
